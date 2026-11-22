@@ -22,17 +22,17 @@ The app opens on the design-system screen (`/ds`) until Phase 1 adds sign-in.
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `npm start` | Expo dev server |
-| `npm run lint` / `lint:fix` | ESLint (Expo config + Prettier + Arriv screen rules) |
-| `npm run format` / `format:check` | Prettier |
-| `npm run typecheck` | `tsc --noEmit` (strict) |
-| `npm test` | Jest + React Native Testing Library |
-| `npm run export:web` | Production web build into `dist/` |
-| `npm run db:start` / `db:stop` / `db:reset` | Local Supabase |
-| `npm run db:types` | Regenerate `src/types/database.ts` after a migration |
-| `npx supabase test db` | pgTAP tests in `supabase/tests` (RLS) |
+| Script                                      | What it does                                         |
+| ------------------------------------------- | ---------------------------------------------------- |
+| `npm start`                                 | Expo dev server                                      |
+| `npm run lint` / `lint:fix`                 | ESLint (Expo config + Prettier + Arriv screen rules) |
+| `npm run format` / `format:check`           | Prettier                                             |
+| `npm run typecheck`                         | `tsc --noEmit` (strict)                              |
+| `npm test`                                  | Jest + React Native Testing Library                  |
+| `npm run export:web`                        | Production web build into `dist/`                    |
+| `npm run db:start` / `db:stop` / `db:reset` | Local Supabase                                       |
+| `npm run db:types`                          | Regenerate `src/types/database.ts` after a migration |
+| `npx supabase test db`                      | pgTAP tests in `supabase/tests` (RLS)                |
 
 ## Hosted Supabase (Sydney)
 
