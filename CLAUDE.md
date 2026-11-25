@@ -32,4 +32,4 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 - Test on iOS, Android and web (including mobile-width web) before calling a phase done.
 
 ## Current phase
-Phase 0: Foundation (update this line as phases finish).
+Phase 1: Auth + onboarding + profile (update this line as phases finish). Phase 0 done 25 Nov 2026.
