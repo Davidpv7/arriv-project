@@ -17,6 +17,7 @@ import {
   Text,
 } from '@/components/ds';
 import { useUserId } from '@/features/auth/session';
+import { useStartDirect } from '@/features/chat/api';
 import { useJoinedCommunities } from '@/features/communities/api';
 import { usePostList } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
@@ -245,6 +246,7 @@ function ConnectionActions({ profile }: { profile: ProfileWithVisa }) {
 
   return (
     <View style={styles.actions}>
+      <MessageButton profileId={profile.id} />
       {state.data.kind === 'none' && (
         <Button
           label={t('profile.connect')}
@@ -302,6 +304,23 @@ function ConnectionActions({ profile }: { profile: ProfileWithVisa }) {
         onConfirm={() => remove.mutate(profile.id, { onSuccess: () => setConfirmRemove(false) })}
       />
     </View>
+  );
+}
+
+/** Opens (or starts) the direct chat with this person. */
+function MessageButton({ profileId }: { profileId: string }) {
+  const { t } = useTranslation();
+  const start = useStartDirect();
+  return (
+    <Button
+      label={t('chat.message')}
+      icon="chat"
+      variant="onNavy"
+      loading={start.isPending}
+      onPress={() =>
+        start.mutate(profileId, { onSuccess: (id) => router.push(`/conversation/${id}`) })
+      }
+    />
   );
 }
 

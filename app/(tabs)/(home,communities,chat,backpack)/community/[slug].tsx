@@ -20,6 +20,7 @@ import {
   useMyMemberships,
   type Community,
 } from '@/features/communities/api';
+import { useCommunityConversationId } from '@/features/chat/api';
 import { usePostList } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
 import { asStampColor, communityInitials, gateCode } from '@/features/feed/format';
@@ -89,6 +90,7 @@ function GateSign({ community }: { community: Community }) {
   const leave = useLeaveCommunity();
   const [confirmLeave, setConfirmLeave] = useState(false);
   const role = memberships.data?.get(community.id);
+  const room = useCommunityConversationId(role ? community.id : undefined);
 
   return (
     <View style={styles.header}>
@@ -133,6 +135,14 @@ function GateSign({ community }: { community: Community }) {
               onPress={() =>
                 router.push({ pathname: '/compose', params: { community: community.id } })
               }
+            />
+          )}
+          {role && room.data && (
+            <Button
+              label={t('chat.openChat')}
+              icon="chat"
+              variant="onNavy"
+              onPress={() => router.push(`/conversation/${room.data}`)}
             />
           )}
           {role === 'owner' && (

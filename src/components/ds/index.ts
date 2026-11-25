@@ -1,3 +1,4 @@
+export { ActionSheet, type ActionSheetAction, type ActionSheetProps } from './ActionSheet';
 export { AirmailStripe } from './AirmailStripe';
 export { Avatar, type AvatarProps } from './Avatar';
 export { BoardingPass, type BoardingPassProps } from './BoardingPass';

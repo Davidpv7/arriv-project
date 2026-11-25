@@ -24,12 +24,23 @@ export type TabBarProps = {
   onPress: (key: TabKey) => void;
   /** Render inside a fixed-height preview (DS screen) instead of at the screen edge. */
   ignoreSafeArea?: boolean;
+  /** Tabs with something new (e.g. unread messages) show a sunshine dot. */
+  dots?: Partial<Record<Exclude<TabKey, 'create'>, boolean>>;
+  /** Screen-reader suffix for a tab with a dot, e.g. "unread messages" (from i18n). */
+  dotLabel?: string;
 };
 
 const PLUS = 62;
 
-/** Navy bottom navigation with the raised centre + stamp. Hide inside conversations. */
-export function TabBar({ active, labels, onPress, ignoreSafeArea = false }: TabBarProps) {
+/** Navy bottom navigation with the raised centre + stamp. Shown on every screen except full-screen tasks. */
+export function TabBar({
+  active,
+  labels,
+  onPress,
+  ignoreSafeArea = false,
+  dots,
+  dotLabel,
+}: TabBarProps) {
   const insets = useSafeAreaInsets();
   const bottom = ignoreSafeArea ? 14 : Math.max(14, insets.bottom);
 
@@ -71,12 +82,13 @@ export function TabBar({ active, labels, onPress, ignoreSafeArea = false }: TabB
           );
         }
         const isActive = key === active;
+        const dot = !!dots?.[key];
         return (
           <Pressable
             key={key}
             onPress={() => onPress(key)}
             accessibilityRole="tab"
-            accessibilityLabel={labels[key]}
+            accessibilityLabel={dot && dotLabel ? `${labels[key]}, ${dotLabel}` : labels[key]}
             accessibilityState={{ selected: isActive }}
             style={({ pressed }) => [
               styles.tab,
@@ -85,6 +97,7 @@ export function TabBar({ active, labels, onPress, ignoreSafeArea = false }: TabB
             ]}
           >
             <Icon name={ICONS[key]} size={26} color={isActive ? 'navy' : 'onNavy'} />
+            {dot && <View style={styles.dot} />}
           </Pressable>
         );
       })}
@@ -110,6 +123,17 @@ const styles = StyleSheet.create({
     marginTop: -30,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  dot: {
+    position: 'absolute',
+    top: 8,
+    right: 12,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.sunshine,
+    borderWidth: 2,
+    borderColor: colors.navy,
   },
   pressed: { opacity: 0.85 },
 });

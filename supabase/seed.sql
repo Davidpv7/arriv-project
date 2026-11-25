@@ -120,6 +120,16 @@ from (values
 ) as v(conversation_id, sender_id, body, ago)
 order by v.ago desc;
 
+-- A pending group invite: Mateo invites Ana (she sees it and can accept or decline).
+insert into public.conversations (id, kind, title, created_by) values
+  ('a0000000-0000-4000-8000-000000000003', 'group', 'Melbourne weekend trip', '22222222-2222-4222-8222-222222222222');
+insert into public.conversation_members (conversation_id, user_id, role) values
+  ('a0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222', 'owner');
+insert into public.conversation_invites (conversation_id, invitee_id, invited_by) values
+  ('a0000000-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+insert into public.messages (conversation_id, sender_id, body, created_at) values
+  ('a0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222', 'Who''s up for the Great Ocean Road in December?', now() - interval '2 hours');
+
 -- Demo messages are backdated; push the still-empty rooms below them in the inbox.
 update public.conversations c set last_message_at = now() - interval '7 days'
 where not exists (select 1 from public.messages m where m.conversation_id = c.id);

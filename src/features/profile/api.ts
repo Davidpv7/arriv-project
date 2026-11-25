@@ -204,3 +204,31 @@ export const useRemoveConnection = () =>
         `and(requester_id.eq.${me},addressee_id.eq.${them}),and(requester_id.eq.${them},addressee_id.eq.${me})`,
       ),
   );
+
+/**
+ * Find people by name or @handle (new chat, group invites). Excludes me; RLS already
+ * hides anyone in a block with me. Needs at least 2 characters.
+ */
+export function usePeopleSearch(query: string) {
+  const me = useUserId();
+  const q = query
+    .trim()
+    .replace(/^@/, '')
+    .replace(/[%_,()]/g, '');
+  return useQuery({
+    queryKey: ['people-search', me, q.toLowerCase()],
+    enabled: q.length >= 2,
+    queryFn: async (): Promise<ConnectionPerson[]> => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, handle, display_name, avatar_path, city')
+        .or(`handle.ilike.${q}%,display_name.ilike.%${q}%`)
+        .neq('id', me)
+        .not('onboarded_at', 'is', null)
+        .order('display_name')
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+  });
+}
