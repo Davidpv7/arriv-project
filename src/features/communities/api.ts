@@ -109,6 +109,7 @@ function useInvalidateCommunities() {
   return () => {
     void queryClient.invalidateQueries({ queryKey: communityKeys.all });
     void queryClient.invalidateQueries({ queryKey: ['feed'] });
+    void queryClient.invalidateQueries({ queryKey: ['chat'] }); // community chat rooms follow membership
   };
 }
 

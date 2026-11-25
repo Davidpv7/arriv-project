@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Keyboard, Platform } from 'react-native';
 
 import { TabBar, type TabKey } from '@/components/ds';
+import { useInboxRealtime, useMyGroupInvites, useUnreadTotal } from '@/features/chat/api';
 import { colors } from '@/theme/tokens';
 
 type TabBarRenderProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
@@ -41,6 +42,9 @@ function useKeyboardVisible() {
 function AppTabBar({ state, emitter, navigateToTab }: TabBarRenderProps) {
   const { t } = useTranslation();
   const keyboardVisible = useKeyboardVisible();
+  const unread = useUnreadTotal();
+  const invites = useMyGroupInvites();
+  useInboxRealtime(); // keeps the inbox (and this dot) live on every tab
   if (keyboardVisible) return null;
 
   const focused = state.routes[state.index];
@@ -56,6 +60,8 @@ function AppTabBar({ state, emitter, navigateToTab }: TabBarRenderProps) {
         chat: t('tabs.chat'),
         backpack: t('tabs.backpack'),
       }}
+      dots={{ chat: unread > 0 || (invites.data?.length ?? 0) > 0 }}
+      dotLabel={t('tabs.unreadDot')}
       onPress={(key) => {
         if (key === 'create') {
           router.push('/compose'); // opens the composer modal over the current tab

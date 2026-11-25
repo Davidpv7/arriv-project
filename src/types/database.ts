@@ -83,14 +83,14 @@ isOneToOne: false
                   ]
                 },"communities": {
                   Row: {
-                    "city": string | null,"created_at": string,"created_by": string,"description": string,"id": string,"is_private": boolean,"kind": Database["public"]['Enums']["community_kind"],"language": string | null,"member_count": number,"name": string,"slug": string,"stamp_color": string,"tags": (string)[],"visa_subclass": string | null
+                    "city": string | null,"created_at": string,"created_by": string | null,"description": string,"id": string,"is_private": boolean,"kind": Database["public"]['Enums']["community_kind"],"language": string | null,"member_count": number,"name": string,"slug": string,"stamp_color": string,"tags": (string)[],"visa_subclass": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "city"?: string | null,"created_at"?: string,"created_by": string,"description"?: string,"id"?: string,"is_private"?: boolean,"kind": Database["public"]['Enums']["community_kind"],"language"?: string | null,"member_count"?: number,"name": string,"slug"?: string,"stamp_color"?: string,"tags"?: (string)[],"visa_subclass"?: string | null
+                    "city"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string,"id"?: string,"is_private"?: boolean,"kind": Database["public"]['Enums']["community_kind"],"language"?: string | null,"member_count"?: number,"name": string,"slug"?: string,"stamp_color"?: string,"tags"?: (string)[],"visa_subclass"?: string | null
                   }
                   Update: {
-                    "city"?: string | null,"created_at"?: string,"created_by"?: string,"description"?: string,"id"?: string,"is_private"?: boolean,"kind"?: Database["public"]['Enums']["community_kind"],"language"?: string | null,"member_count"?: number,"name"?: string,"slug"?: string,"stamp_color"?: string,"tags"?: (string)[],"visa_subclass"?: string | null
+                    "city"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string,"id"?: string,"is_private"?: boolean,"kind"?: Database["public"]['Enums']["community_kind"],"language"?: string | null,"member_count"?: number,"name"?: string,"slug"?: string,"stamp_color"?: string,"tags"?: (string)[],"visa_subclass"?: string | null
                   }
                   Relationships: [
                     {
@@ -148,6 +148,116 @@ isOneToOne: false
     },{
       foreignKeyName: "connections_requester_id_fkey"
       columns: ["requester_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"conversation_invites": {
+                  Row: {
+                    "conversation_id": string,"created_at": string,"invited_by": string | null,"invitee_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "conversation_id": string,"created_at"?: string,"invited_by"?: string | null,"invitee_id": string
+                  }
+                  Update: {
+                    "conversation_id"?: string,"created_at"?: string,"invited_by"?: string | null,"invitee_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversation_invites_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversation_invites_invited_by_fkey"
+      columns: ["invited_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversation_invites_invitee_id_fkey"
+      columns: ["invitee_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"conversation_members": {
+                  Row: {
+                    "conversation_id": string,"joined_at": string,"last_read_at": string,"muted": boolean,"role": Database["public"]['Enums']["member_role"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "conversation_id": string,"joined_at"?: string,"last_read_at"?: string,"muted"?: boolean,"role"?: Database["public"]['Enums']["member_role"],"user_id": string
+                  }
+                  Update: {
+                    "conversation_id"?: string,"joined_at"?: string,"last_read_at"?: string,"muted"?: boolean,"role"?: Database["public"]['Enums']["member_role"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversation_members_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversation_members_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"conversations": {
+                  Row: {
+                    "community_id": string | null,"created_at": string,"created_by": string | null,"id": string,"kind": Database["public"]['Enums']["conversation_kind"],"last_message_at": string,"title": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "community_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["conversation_kind"],"last_message_at"?: string,"title"?: string | null
+                  }
+                  Update: {
+                    "community_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["conversation_kind"],"last_message_at"?: string,"title"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversations_community_id_fkey"
+      columns: ["community_id"]
+isOneToOne: true
+      referencedRelation: "communities"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversations_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"messages": {
+                  Row: {
+                    "attachment_mime": string | null,"attachment_name": string | null,"attachment_path": string | null,"body": string | null,"conversation_id": string,"created_at": string,"deleted_at": string | null,"edited_at": string | null,"id": number,"sender_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attachment_mime"?: string | null,"attachment_name"?: string | null,"attachment_path"?: string | null,"body"?: string | null,"conversation_id": string,"created_at"?: string,"deleted_at"?: string | null,"edited_at"?: string | null,"id"?: never,"sender_id": string
+                  }
+                  Update: {
+                    "attachment_mime"?: string | null,"attachment_name"?: string | null,"attachment_path"?: string | null,"body"?: string | null,"conversation_id"?: string,"created_at"?: string,"deleted_at"?: string | null,"edited_at"?: string | null,"id"?: never,"sender_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "messages_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "messages_sender_id_fkey"
+      columns: ["sender_id"]
 isOneToOne: false
       referencedRelation: "profiles"
       referencedColumns: ["id"]
@@ -268,8 +378,14 @@ isOneToOne: true
             "connection_count":
 { Args: { "p_user": string }; Returns: number
                            },
+"create_group":
+{ Args: { "p_invitee_ids": (string)[],"p_title": string }; Returns: string
+                           },
 "delete_comment":
 { Args: { "p_comment": string }; Returns: undefined
+                           },
+"delete_message":
+{ Args: { "p_message": number }; Returns: undefined
                            },
 "delete_post":
 { Args: { "p_post": string }; Returns: undefined
@@ -293,16 +409,30 @@ isOneToOne: true
         isOneToOne: false
         isSetofReturn: true
       } },
+"get_inbox":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "community_id": string,"conversation_id": string,"kind": Database["public"]['Enums']["conversation_kind"],"last_message_at": string,"last_message_body": string,"last_message_has_attachment": boolean,"last_message_id": number,"last_message_sender_id": string,"muted": boolean,"other_user_id": string,"title": string,"unread_count": number
+            }[]
+                           },
+"get_or_create_direct":
+{ Args: { "p_other_user": string }; Returns: string
+                           },
+"invite_to_group":
+{ Args: { "p_conversation": string,"p_user_ids": (string)[] }; Returns: number
+                           },
 "my_blocks":
 { Args: Record<PropertyKey, never>; Returns: {
               "blocked_id": string,"created_at": string,"display_name": string,"handle": string
             }[]
                            },
+"respond_to_group_invite":
+{ Args: { "p_accept": boolean,"p_conversation": string }; Returns: undefined
+                           },
 "suggest_communities":
 { Args: { "p_limit"?: number }; Returns: {
               "city": string | null,
 "created_at": string,
-"created_by": string,
+"created_by": string | null,
 "description": string,
 "id": string,
 "is_private": boolean,
@@ -320,10 +450,13 @@ isOneToOne: true
         to: "communities"
         isOneToOne: false
         isSetofReturn: true
-      } }
+      } },
+"transfer_community_ownership":
+{ Args: { "p_community": string,"p_new_owner": string }; Returns: undefined
+                           }
           }
           Enums: {
-            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","member_role": "owner"|"moderator"|"member","post_kind": "post"|"question"|"journey_update","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
+            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","conversation_kind": "direct"|"group"|"community","member_role": "owner"|"moderator"|"member","post_kind": "post"|"question"|"journey_update","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -443,7 +576,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"member_role": ["owner", "moderator", "member"],"post_kind": ["post", "question", "journey_update"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
+            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"conversation_kind": ["direct", "group", "community"],"member_role": ["owner", "moderator", "member"],"post_kind": ["post", "question", "journey_update"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
           }
         }
 } as const

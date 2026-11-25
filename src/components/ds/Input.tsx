@@ -9,6 +9,8 @@ export type InputProps = TextInputProps & {
   label: string;
   hint?: string;
   error?: string;
+  /** Keep the label for screen readers only (chat composer). */
+  hideLabel?: boolean;
 };
 
 /** Text field: DM Mono label above, card fill, pill radius. Never rotated. */
@@ -20,6 +22,7 @@ export function Input({
   onFocus,
   onBlur,
   multiline,
+  hideLabel = false,
   ...rest
 }: InputProps) {
   const [focused, setFocused] = useState(false);
@@ -27,13 +30,15 @@ export function Input({
 
   return (
     <View style={styles.wrap}>
-      <Text
-        variant="label"
-        color="muted"
-        nativeID={rest.nativeID ? `${rest.nativeID}-label` : undefined}
-      >
-        {label}
-      </Text>
+      {!hideLabel && (
+        <Text
+          variant="label"
+          color="muted"
+          nativeID={rest.nativeID ? `${rest.nativeID}-label` : undefined}
+        >
+          {label}
+        </Text>
+      )}
       <TextInput
         accessibilityLabel={label}
         accessibilityHint={hint}

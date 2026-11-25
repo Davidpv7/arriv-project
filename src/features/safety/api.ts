@@ -25,6 +25,7 @@ function useInvalidateAfterBlockChange() {
     void queryClient.invalidateQueries({ queryKey: ['connection'] });
     void queryClient.invalidateQueries({ queryKey: ['connections'] });
     void queryClient.invalidateQueries({ queryKey: ['connection-count'] });
+    void queryClient.invalidateQueries({ queryKey: ['chat'] }); // blocked people's messages and direct chats
   };
 }
 

@@ -90,3 +90,46 @@ insert into public.post_likes (post_id, user_id) values
   ('d0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222'),
   ('d0000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111'),
   ('d0000000-0000-4000-8000-000000000004', '22222222-2222-4222-8222-222222222222');
+
+-- ---------------------------------------------------------------------------
+-- Phase 3: chat (community rooms come from the communities trigger)
+-- Ana ↔ Mateo direct chat, a small group, and a few messages in Sydney Newcomers.
+-- ---------------------------------------------------------------------------
+insert into public.conversations (id, kind, title, created_by) values
+  ('a0000000-0000-4000-8000-000000000001', 'direct', null, '11111111-1111-4111-8111-111111111111'),
+  ('a0000000-0000-4000-8000-000000000002', 'group', 'Sydney flat hunt', '11111111-1111-4111-8111-111111111111');
+
+insert into public.conversation_members (conversation_id, user_id, role, last_read_at) values
+  ('a0000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'member', now() - interval '1 day'),
+  ('a0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222', 'member', now()),
+  ('a0000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'owner', now()),
+  ('a0000000-0000-4000-8000-000000000002', '22222222-2222-4222-8222-222222222222', 'member', now()),
+  ('a0000000-0000-4000-8000-000000000002', '33333333-3333-4333-8333-333333333333', 'member', now());
+
+insert into public.messages (conversation_id, sender_id, body, created_at)
+select v.conversation_id, v.sender_id, v.body, now() - v.ago
+from (values
+  ('a0000000-0000-4000-8000-000000000001'::uuid, '11111111-1111-4111-8111-111111111111'::uuid, 'Hey Mateo! Thanks for the bank tip.', interval '2 days'),
+  ('a0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222', 'No worries! Are you coming to the meetup on Saturday?', interval '20 hours'),
+  ('a0000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'Made this group so we can share rental listings.', interval '6 hours'),
+  ('a0000000-0000-4000-8000-000000000002', '33333333-3333-4333-8333-333333333333', 'Great idea, I''m looking near Newtown.', interval '5 hours'),
+  ((select id from public.conversations where community_id = 'c0000000-0000-4000-8000-000000000001'),
+   '22222222-2222-4222-8222-222222222222', 'Welcome to everyone who landed this week!', interval '4 hours'),
+  ((select id from public.conversations where community_id = 'c0000000-0000-4000-8000-000000000001'),
+   '11111111-1111-4111-8111-111111111111', 'Thanks! Anyone know a good place for a cheap SIM?', interval '3 hours')
+) as v(conversation_id, sender_id, body, ago)
+order by v.ago desc;
+
+-- A pending group invite: Mateo invites Ana (she sees it and can accept or decline).
+insert into public.conversations (id, kind, title, created_by) values
+  ('a0000000-0000-4000-8000-000000000003', 'group', 'Melbourne weekend trip', '22222222-2222-4222-8222-222222222222');
+insert into public.conversation_members (conversation_id, user_id, role) values
+  ('a0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222', 'owner');
+insert into public.conversation_invites (conversation_id, invitee_id, invited_by) values
+  ('a0000000-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+insert into public.messages (conversation_id, sender_id, body, created_at) values
+  ('a0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222', 'Who''s up for the Great Ocean Road in December?', now() - interval '2 hours');
+
+-- Demo messages are backdated; push the still-empty rooms below them in the inbox.
+update public.conversations c set last_message_at = now() - interval '7 days'
+where not exists (select 1 from public.messages m where m.conversation_id = c.id);
