@@ -1,0 +1,103 @@
+{
+  "common": {
+    "appName": "Arriv",
+    "loading": "Loading…"
+  },
+  "tabs": {
+    "home": "Home",
+    "communities": "Communities",
+    "create": "Create post or journey update",
+    "chat": "Chat",
+    "backpack": "My Backpack"
+  },
+  "boardingPass": {
+    "eyebrow": "Boarding pass",
+    "carrier": "Arriv · AU",
+    "visa": "Visa",
+    "day": "Day",
+    "stamps": "Stamps"
+  },
+  "board": {
+    "label": "Communities board",
+    "crew": "Crew",
+    "gate": "Gate",
+    "status": "Status",
+    "joined": "Joined",
+    "boardAction": "Board"
+  },
+  "postcard": {
+    "likes_one": "{{count}}",
+    "likes_other": "{{count}}",
+    "likeA11y": "Like. {{count}} likes",
+    "comments_one": "{{count}} comment",
+    "comments_other": "{{count}} comments",
+    "sendPostcard": "Send a postcard"
+  },
+  "backpack": {
+    "files_one": "{{count}} file",
+    "files_other": "{{count}} files"
+  },
+  "notice": {
+    "customsEyebrow": "Customs notice",
+    "customsBody": "This chat is shared experience, not immigration advice. For advice, talk to a registered migration agent or lawyer."
+  },
+  "ds": {
+    "title": "Design system",
+    "intro": "Every Arriv component, rendered with live tokens. Check it on iOS, Android and web.",
+    "colours": "Colours",
+    "type": "Type",
+    "buttons": "Buttons",
+    "inputs": "Inputs",
+    "stamps": "Stamps",
+    "postmarks": "Postmarks",
+    "boardingPass": "Boarding pass",
+    "postcard": "Postcard",
+    "departures": "Departures board",
+    "luggage": "Luggage tags",
+    "notice": "Notice",
+    "tabBar": "Tab bar",
+    "sample": {
+      "display": "Your journey in Australia.",
+      "title": "Departures",
+      "heading": "Student Visa Crew",
+      "body": "4 years and 3 visas later, I made it!",
+      "meta": "From Brazil · Sydney",
+      "label": "Boarding pass · Gate AU",
+      "labelLg": "Sydney newcomers",
+      "join": "Join",
+      "officialPage": "Official page",
+      "newCrew": "New crew",
+      "message": "Message",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailHint": "We never show your email on your profile.",
+      "handleLabel": "Handle",
+      "handleError": "Use 3–20 letters, numbers or _",
+      "bioLabel": "Bio",
+      "visas": "Visas",
+      "lawyers": "Lawyers",
+      "passport": "Passport",
+      "prGranted": "PR granted",
+      "subclass": "Subclass",
+      "granted": "Granted",
+      "verified": "Verified",
+      "stampDate": "21·11·26",
+      "name": "Ana Costa",
+      "fromCity": "São Paulo",
+      "toCity": "Sydney",
+      "unknown": "???",
+      "australia": "Australia",
+      "author": "Mateo R.",
+      "postMeta": "Sydney newcomers · 2h",
+      "communityName": "Sydney Newcomers",
+      "postBody": "4 years and 3 visas later, I made it! Ask me anything about the process.",
+      "crew1": "Sydney Newcomers",
+      "crew2": "Latinos en Sydney",
+      "crew3": "Student Visa 500 Crew Australia",
+      "identity": "Identity",
+      "visasFolder": "Visas",
+      "police": "Police checks",
+      "fileName": "Checklist_500.pdf"
+    }
+  }
+}

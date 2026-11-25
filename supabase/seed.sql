@@ -1,0 +1,1 @@
+-- Seed data (demo users, communities, visas) is added from Phase 1 onwards.
