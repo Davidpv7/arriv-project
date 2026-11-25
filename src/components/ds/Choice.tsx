@@ -96,6 +96,7 @@ export function ChoiceList<T extends string>({
 
 const styles = StyleSheet.create({
   chip: {
+    alignSelf: 'flex-start', // as wide as its label, even in a column
     minHeight: touchTarget,
     paddingHorizontal: space[4],
     borderRadius: radius.pill,

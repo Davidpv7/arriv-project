@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,6 +36,10 @@ function AppTabBar({ state, navigateToTab }: TabBarRenderProps) {
         backpack: t('tabs.backpack'),
       }}
       onPress={(key) => {
+        if (key === 'create') {
+          router.push('/compose'); // opens the composer modal over the current tab
+          return;
+        }
         const route = state.routes.find((r) => r.name === TAB_TO_ROUTE[key]);
         if (route) navigateToTab(route.key);
       }}

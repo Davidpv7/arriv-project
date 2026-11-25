@@ -225,6 +225,9 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - [x] **Lawyers and agents come after v1**
 - [x] **Free at launch**; tiers switched on later
 - [x] **Sign-in v1:** email + password, Google, Apple
+- [x] **Anyone can create a community** in v1 (25 Nov 2026); reporting is the safety net
+- [x] **One chat room per community** in v1 (26 Nov 2026); topic threads maybe later
+- [x] **Tab bar stays on every screen** (26 Nov 2026), except full-screen tasks (composer, start-a-crew wizard, onboarding). Each tab keeps its own history; tapping the active tab goes back to its top. No separate Home button. Planned as a follow-up after Phase 2.
 
 ## 11. Still open
 
@@ -233,7 +236,6 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - Free vs paid limits and pricing for all tiers
 - Home Affairs automation after v1
 - Moderation tools, policy and first moderators
-- Who can create communities (anyone, or with limits)
 - Logo and app icon
 - Secondary screens: notifications, settings, composer, community detail, onboarding steps
 - Web hosting, analytics, error monitoring

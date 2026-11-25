@@ -60,9 +60,18 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
         <Stack.Screen name="(onboarding)/arrival" />
         <Stack.Screen name="(onboarding)/visa" />
         <Stack.Screen name="(onboarding)/city" />
+        <Stack.Screen name="(onboarding)/crews" />
       </Stack.Protected>
       <Stack.Protected guard={signedIn && onboarded}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="community/[slug]" />
+        <Stack.Screen name="new-crew/name" />
+        <Stack.Screen name="new-crew/kind" />
+        <Stack.Screen name="new-crew/details" />
+        <Stack.Screen name="new-crew/about" />
+        <Stack.Screen name="new-crew/stamp" />
+        <Stack.Screen name="post/[id]" />
+        <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
         <Stack.Screen name="profile/[handle]" />
         <Stack.Screen name="profile/edit" />
         <Stack.Screen name="connections" />

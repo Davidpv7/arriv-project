@@ -1,4 +1,5 @@
 -- Local demo data. Applied by `npx supabase db reset` (never on the hosted project).
+-- Phase 2 adds six communities with posts, comments and likes (below).
 -- Sign in with any of these, password: arriv-demo-1
 --   ana@arriv.test   (onboarded, Brazil → Sydney, visa 500, connected to Mateo)
 --   mateo@arriv.test (onboarded, Colombia → Melbourne, visa 485 public)
@@ -51,3 +52,41 @@ where user_id = '22222222-2222-4222-8222-222222222222';
 
 insert into public.connections (requester_id, addressee_id, status, accepted_at) values
   ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222', 'accepted', now());
+
+-- ---------------------------------------------------------------------------
+-- Phase 2: communities, posts, comments, likes
+-- (creating a community makes its creator the owner via trigger)
+-- ---------------------------------------------------------------------------
+insert into public.communities (id, name, description, kind, city, language, visa_subclass, tags, stamp_color, created_by) values
+  ('c0000000-0000-4000-8000-000000000001', 'Sydney Newcomers', 'Just landed in Sydney? Ask anything: suburbs, banks, Opal cards, first jobs.', 'city', 'Sydney', null, null, '{newcomers,housing}', 'sky', '11111111-1111-4111-8111-111111111111'),
+  ('c0000000-0000-4000-8000-000000000002', 'Latinos en Sydney', 'La comunidad latina de Sydney: eventos, trabajo y apoyo.', 'language', 'Sydney', 'es', null, '{latam,events}', 'tangerine', '22222222-2222-4222-8222-222222222222'),
+  ('c0000000-0000-4000-8000-000000000003', 'Student Visa 500 Crew', 'Studying in Australia on a 500. Share your experience with enrolments, work hours and renewals.', 'visa', null, null, '500', '{students}', 'sunshine', '11111111-1111-4111-8111-111111111111'),
+  ('c0000000-0000-4000-8000-000000000004', 'Melbourne Movers', 'New to Melbourne? Coffee, trams and finding a rental.', 'city', 'Melbourne', null, null, '{newcomers}', 'card', '22222222-2222-4222-8222-222222222222'),
+  ('c0000000-0000-4000-8000-000000000005', 'Brasileiros na Austrália', 'Comunidade brasileira na Austrália.', 'culture', null, 'pt', null, '{brasil}', 'sky', '11111111-1111-4111-8111-111111111111'),
+  ('c0000000-0000-4000-8000-000000000006', 'Sponsored Workers 482', 'On a 482? Talk about sponsors, skills assessments and the path ahead.', 'visa', null, null, '482', '{work}', 'tangerine', '22222222-2222-4222-8222-222222222222');
+
+insert into public.community_members (community_id, user_id) values
+  ('c0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222'),
+  ('c0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222'),
+  ('c0000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111');
+
+insert into public.posts (id, author_id, community_id, kind, body, created_at) values
+  ('d0000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'c0000000-0000-4000-8000-000000000001', 'question',
+   'Which bank did you open your first account with? I''m trying to choose before my first payday.', now() - interval '3 hours'),
+  ('d0000000-0000-4000-8000-000000000002', '22222222-2222-4222-8222-222222222222', 'c0000000-0000-4000-8000-000000000001', 'post',
+   'Tip for newcomers: the Opal card caps your weekly fares. Sunday travel is cheap too!', now() - interval '1 day'),
+  ('d0000000-0000-4000-8000-000000000003', '22222222-2222-4222-8222-222222222222', 'c0000000-0000-4000-8000-000000000003', 'post',
+   'Reminder from my own experience: check your enrolment dates before booking flights home. Always confirm details on the official Home Affairs website.', now() - interval '2 days'),
+  ('d0000000-0000-4000-8000-000000000004', '11111111-1111-4111-8111-111111111111', null, 'post',
+   'One year in Sydney today. Thank you to everyone who answered my questions here!', now() - interval '5 days');
+
+insert into public.comments (id, post_id, author_id, parent_id, body, created_at) values
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222', null,
+   'I went with a big bank because the branch was near work, but compare the fees first.', now() - interval '2 hours'),
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'e0000000-0000-4000-8000-000000000001',
+   'Thanks Mateo, that helps!', now() - interval '1 hour');
+
+insert into public.post_likes (post_id, user_id) values
+  ('d0000000-0000-4000-8000-000000000001', '22222222-2222-4222-8222-222222222222'),
+  ('d0000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111'),
+  ('d0000000-0000-4000-8000-000000000004', '22222222-2222-4222-8222-222222222222');

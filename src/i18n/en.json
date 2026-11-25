@@ -204,7 +204,12 @@
       "otherLabel": "Your city or town",
       "otherPlaceholder": "Wollongong"
     },
-    "finish": "Print my boarding pass"
+    "finish": "Print my boarding pass",
+    "crews": {
+      "title": "Join your first crews",
+      "body": "People in the same city, on the same visa or speaking your language. Join as many as you like.",
+      "empty": "No suggestions yet. You can find crews later on the Departures board."
+    }
   },
   "visibility": {
     "public": "Everyone",
@@ -223,17 +228,11 @@
     "greeting": "Hi, {{name}}",
     "eyebrow": "Today in Australia",
     "profileA11y": "Your profile",
-    "feedTitle": "Your feed is on its way",
-    "feedBody": "Soon you'll see postcards from your communities and connections here.",
     "dayValue": "{{count}}",
     "noVisa": "—",
     "noDay": "—"
   },
   "tabsPlaceholder": {
-    "communities": "Departures board",
-    "communitiesBody": "Find crews by city, visa and language. Coming soon.",
-    "create": "Send a postcard",
-    "createBody": "Posts, questions and journey updates. Coming soon.",
     "chat": "Chat",
     "chatBody": "Direct messages and community chats. Coming soon.",
     "backpack": "My Backpack",
@@ -293,7 +292,8 @@
       "nameRequired": "Enter your name.",
       "bioTooLong": "Use 300 characters or fewer.",
       "origin": "Choose a country."
-    }
+    },
+    "crews": "Crews"
   },
   "connections": {
     "title": "Connections",
@@ -315,5 +315,184 @@
     "deleteSoon": "Delete account (coming soon)",
     "privacy": "Privacy",
     "privacyNote": "Your Backpack, notes and visa expiry are only ever visible to you."
+  },
+  "time": {
+    "now": "Now",
+    "minutes": "{{count}}m",
+    "hours": "{{count}}h",
+    "days": "{{count}}d"
+  },
+  "communities": {
+    "title": "Departures",
+    "eyebrow": "Communities",
+    "newCrew": "New crew",
+    "search": "Search crews",
+    "searchPlaceholder": "Sydney, 500, Latinos…",
+    "filters": {
+      "all": "All",
+      "near": "Near me",
+      "visa": "My visa",
+      "joined": "Joined"
+    },
+    "boardLabel": "Communities departures board",
+    "empty": "No crews match. Why not start one?",
+    "emptyVisa": "Add your visa subclass to your profile to see visa crews.",
+    "gate": "Gate {{code}}",
+    "onBoard_one": "{{count}} on board",
+    "onBoard_other": "{{count}} on board",
+    "join": "Join",
+    "leave": "Leave",
+    "owner": "You run this crew",
+    "joined": "Joined",
+    "writePostcard": "Write a postcard",
+    "about": "About",
+    "posts": "Postcards",
+    "noPosts": "No postcards yet. Be the first to write one.",
+    "notFound": "This crew isn't available.",
+    "leaveTitle": "Leave {{name}}?",
+    "leaveBody": "You'll stop seeing its postcards in your feed. You can join again any time.",
+    "kinds": {
+      "city": "City",
+      "visa": "Visa",
+      "language": "Language",
+      "culture": "Culture",
+      "interest": "Interest"
+    },
+    "colors": {
+      "tangerine": "Tangerine",
+      "sunshine": "Sunshine",
+      "sky": "Sky",
+      "card": "Paper"
+    },
+    "errors": {
+      "description": "Use 500 characters or fewer.",
+      "subclass": "Use the 3-digit subclass, like 500."
+    },
+    "wizard": {
+      "close": "Close",
+      "name": {
+        "title": "What's your crew called?",
+        "body": "Pick a name people will recognise on the departures board.",
+        "label": "Crew name",
+        "placeholder": "Perth Newcomers",
+        "hint": "3–40 characters. You can't change the link later, but you can rename it."
+      },
+      "kind": {
+        "title": "What brings the crew together?",
+        "body": "This helps the right people find it.",
+        "city": "People living in the same city or town.",
+        "visa": "People on the same visa path.",
+        "language": "People who speak the same language.",
+        "culture": "People who share a culture or home country.",
+        "interest": "A hobby, a job, a stage of life."
+      },
+      "details": {
+        "cityTitle": "Which city is it for?",
+        "cityBody": "It becomes the crew's gate on the departures board.",
+        "visaTitle": "Which visa?",
+        "visaBody": "The 3-digit subclass, like 500 or 482. People on that visa will see your crew suggested.",
+        "languageTitle": "Which language?",
+        "languageBody": "People who speak it will see your crew suggested.",
+        "placeTitle": "Where does the crew meet?",
+        "placeBody": "Pick a city, or keep it Australia-wide.",
+        "gate": "Gate",
+        "gateHint": "Optional. Leave it Australia-wide if anyone can join from anywhere."
+      },
+      "about": {
+        "title": "Tell people what it's about",
+        "body": "A short welcome helps people decide to board.",
+        "label": "Description",
+        "hint": "Up to 500 characters. You can edit this later.",
+        "examples": {
+          "city": "For example: \"New in town? Ask about suburbs, rentals and first jobs.\"",
+          "visa": "For example: \"Share your experience with renewals, work hours and study.\"",
+          "language": "For example: \"Un espacio para ayudarnos en Australia.\"",
+          "culture": "For example: \"Celebrate home, share recipes and meet up.\"",
+          "interest": "For example: \"Weekend rides around the city. All levels welcome.\""
+        }
+      },
+      "stamp": {
+        "title": "Design your stamp",
+        "body": "Choose a colour. This is how your crew will look.",
+        "preview": "On the departures board",
+        "create": "Create crew"
+      },
+      "errors": {
+        "name": "Use 3–40 characters.",
+        "city": "Choose a city.",
+        "visa": "Use the 3-digit subclass, like 500.",
+        "language": "Choose a language.",
+        "description": "Use 500 characters or fewer."
+      }
+    },
+    "create": {
+      "australiaWide": "Australia-wide",
+      "visa": "Visa subclass",
+      "note": "Crews are for sharing experience, not giving immigration advice."
+    }
+  },
+  "feed": {
+    "question": "Question",
+    "empty": "Your feed is quiet. Join a crew or connect with people to see their postcards here.",
+    "findCrews": "Find crews",
+    "loadMore": "Loading more…",
+    "end": "You're all caught up.",
+    "likeA11y": "Like. {{count}} likes",
+    "unlikeA11y": "Unlike. {{count}} likes",
+    "comments_one": "{{count}} comment",
+    "comments_other": "{{count}} comments",
+    "imageA11y": "Photo {{n}} of {{total}}",
+    "deletePost": "Delete postcard",
+    "deleteTitle": "Delete this postcard?",
+    "deleteBody": "It will be removed for everyone.",
+    "removePost": "Remove postcard",
+    "removeTitle": "Remove this postcard from the crew?",
+    "profilePost": "Profile postcard",
+    "suggested": "Crews for you"
+  },
+  "compose": {
+    "title": "Send a postcard",
+    "eyebrow": "Composer",
+    "close": "Close",
+    "kind": "What are you sending?",
+    "kinds": {
+      "post": "Postcard",
+      "question": "Question"
+    },
+    "where": "Where should it go?",
+    "profile": "My profile",
+    "body": "Your message",
+    "bodyPlaceholder": "Share an experience or ask the crew…",
+    "questionPlaceholder": "What would you like to ask?",
+    "remaining": "{{count}} left",
+    "addPhotos": "Add photos",
+    "photosHint": "Up to 4. Location data is removed.",
+    "removePhoto": "Remove photo {{n}}",
+    "send": "Send",
+    "sending": "Sending…",
+    "notice": "Share your own experience. For official information, check Home Affairs.",
+    "noCrews": "Join a crew to post there, or post to your profile.",
+    "errors": {
+      "body": "Write something first.",
+      "tooLong": "Use 2000 characters or fewer.",
+      "photos": "Couldn't add those photos. Try again."
+    }
+  },
+  "post": {
+    "title": "Postcard",
+    "comments": "Comments",
+    "noComments": "No comments yet. Start the conversation.",
+    "write": "Write a comment",
+    "writePlaceholder": "Add a comment…",
+    "reply": "Reply",
+    "replyingTo": "Replying to {{name}}",
+    "cancelReply": "Cancel reply",
+    "send": "Send comment",
+    "delete": "Delete",
+    "deleteCommentTitle": "Delete this comment?",
+    "notFound": "This postcard isn't available.",
+    "notFoundBody": "It may have been deleted, or you can't view it.",
+    "moreA11y": "Postcard options",
+    "edited": "edited"
   }
 }

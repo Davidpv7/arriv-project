@@ -6,10 +6,11 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { Button, Header, Screen, Text } from '@/components/ds';
 import { space } from '@/theme/tokens';
 
-export const ONBOARDING_STEPS = 4;
-
 export type StepLayoutProps = {
   step: number;
+  total: number;
+  /** Defaults to going back a step (hidden on step 1). Pass one to show a back/close on step 1. */
+  onBack?: () => void;
   title: string;
   body: string;
   children: ReactNode;
@@ -18,9 +19,11 @@ export type StepLayoutProps = {
   error?: string;
 };
 
-/** Shared frame for onboarding steps: step count, question, content, actions. */
+/** Shared frame for step-by-step flows (onboarding, starting a crew): step count, question, content, actions. */
 export function StepLayout({
   step,
+  total,
+  onBack,
   title,
   body,
   children,
@@ -37,9 +40,9 @@ export function StepLayout({
       <Screen scroll>
         <View style={styles.stack}>
           <Header
-            onBack={step > 1 && router.canGoBack() ? () => router.back() : undefined}
+            onBack={onBack ?? (step > 1 && router.canGoBack() ? () => router.back() : undefined)}
             backLabel={t('common.back')}
-            eyebrow={t('onboarding.step', { current: step, total: ONBOARDING_STEPS })}
+            eyebrow={t('onboarding.step', { current: step, total })}
             title={title}
           />
           <Text variant="body" color="muted">

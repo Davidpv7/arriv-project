@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DateField } from '@/components/ds';
-import { StepLayout } from '@/features/onboarding/StepLayout';
-import { useOnboarding } from '@/features/onboarding/store';
+import { ONBOARDING_STEPS, useOnboarding } from '@/features/onboarding/store';
+import { StepLayout } from '@/features/shared/StepLayout';
 import { arrivalSchema } from '@/features/profile/schemas';
 import { useErrorText } from '@/i18n/useErrorText';
 
@@ -26,6 +26,7 @@ export default function ArrivalStep() {
 
   return (
     <StepLayout
+      total={ONBOARDING_STEPS}
       step={2}
       title={t('onboarding.arrival.title')}
       body={t('onboarding.arrival.body')}

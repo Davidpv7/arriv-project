@@ -13,9 +13,14 @@ import {
   ListRow,
   PassportCover,
   Screen,
+  Stamp,
   Text,
 } from '@/components/ds';
 import { useUserId } from '@/features/auth/session';
+import { useJoinedCommunities } from '@/features/communities/api';
+import { usePostList } from '@/features/feed/api';
+import { PostCard } from '@/features/feed/components/PostCard';
+import { asStampColor, communityInitials } from '@/features/feed/format';
 import {
   useAcceptConnection,
   useConnectionCount,
@@ -117,18 +122,73 @@ export default function ProfileScreen() {
           <ConnectionsRow profile={p} isMe={isMe} />
         </Card>
 
-        <View style={styles.section}>
-          <Text variant="label" color="rust" accessibilityRole="header">
-            {t('profile.postcards')}
-          </Text>
-          <Card>
-            <Text variant="body" color="muted">
-              {t('profile.postcardsEmpty')}
-            </Text>
-          </Card>
-        </View>
+        <CrewsRow userId={p.id} />
+        <ProfilePosts authorId={p.id} />
       </View>
     </Screen>
+  );
+}
+
+/** Crews this person has joined, as a row of stamps. */
+function CrewsRow({ userId }: { userId: string }) {
+  const { t } = useTranslation();
+  const crews = useJoinedCommunities(userId);
+  if (!crews.data?.length) return null;
+  return (
+    <View style={styles.section}>
+      <Text variant="label" color="rust" accessibilityRole="header">
+        {t('profile.crews')}
+      </Text>
+      <View style={styles.stamps}>
+        {crews.data.map((c, i) => (
+          <Stamp
+            key={c.id}
+            label={communityInitials(c.name)}
+            fill={asStampColor(c.stamp_color)}
+            direction={i % 2 ? 1 : -1}
+            accessibilityLabel={c.name}
+            onPress={() => router.push(`/community/${c.slug}`)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+/** The person's postcards (first 20; RLS decides what this viewer may see). */
+function ProfilePosts({ authorId }: { authorId: string }) {
+  const { t } = useTranslation();
+  const posts = usePostList({ authorId });
+  const items = posts.data?.pages.flatMap((pg) => pg.posts) ?? [];
+  return (
+    <View style={styles.section}>
+      <Text variant="label" color="rust" accessibilityRole="header">
+        {t('profile.postcards')}
+      </Text>
+      {posts.isPending ? (
+        <ActivityIndicator color={colors.navy} />
+      ) : items.length === 0 ? (
+        <Card>
+          <Text variant="body" color="muted">
+            {t('profile.postcardsEmpty')}
+          </Text>
+        </Card>
+      ) : (
+        <>
+          {items.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+          {posts.hasNextPage && (
+            <Button
+              label={t('feed.loadMore')}
+              variant="secondary"
+              loading={posts.isFetchingNextPage}
+              onPress={() => void posts.fetchNextPage()}
+            />
+          )}
+        </>
+      )}
+    </View>
   );
 }
 
@@ -281,5 +341,6 @@ function OtherMenu({ profile }: { profile: ProfileWithVisa }) {
 const styles = StyleSheet.create({
   stack: { gap: space[5] },
   section: { gap: space[3] },
+  stamps: { flexDirection: 'row', flexWrap: 'wrap', gap: space[4], paddingVertical: space[1] },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: space[3], alignItems: 'center' },
 });

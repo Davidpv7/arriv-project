@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { StepLayout } from '@/features/onboarding/StepLayout';
-import { useOnboarding } from '@/features/onboarding/store';
+import { ONBOARDING_STEPS, useOnboarding } from '@/features/onboarding/store';
+import { StepLayout } from '@/features/shared/StepLayout';
 import { CountryField } from '@/features/profile/components/CountryField';
 
 export default function OriginStep() {
@@ -12,6 +12,7 @@ export default function OriginStep() {
 
   return (
     <StepLayout
+      total={ONBOARDING_STEPS}
       step={1}
       title={t('onboarding.origin.title')}
       body={t('onboarding.origin.body')}
