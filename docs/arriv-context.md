@@ -227,7 +227,7 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - [x] **Sign-in v1:** email + password, Google, Apple
 - [x] **Anyone can create a community** in v1 (25 Nov 2026); reporting is the safety net
 - [x] **One chat room per community** in v1 (26 Nov 2026); topic threads maybe later
-- [x] **Tab bar stays on every screen** (26 Nov 2026), except full-screen tasks (composer, start-a-crew wizard, onboarding). Each tab keeps its own history; tapping the active tab goes back to its top. No separate Home button. Planned as a follow-up after Phase 2.
+- [x] **Tab bar stays on every screen** (26 Nov 2026), except full-screen tasks (composer, start-a-crew wizard, onboarding). Each tab keeps its own history; tapping the active tab goes back to its top. No separate Home button. Done 26 Nov 2026 (per-tab stacks in `app/(tabs)/(home,communities,chat,backpack)/`).
 
 ## 11. Still open
 

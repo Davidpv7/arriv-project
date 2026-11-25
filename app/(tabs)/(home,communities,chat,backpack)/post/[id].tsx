@@ -79,7 +79,7 @@ export default function PostScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <Screen scroll edges={['top', 'bottom']}>
+      <Screen scroll edges={['top']}>
         <View style={styles.stack}>
           <Header
             onBack={goBack}
