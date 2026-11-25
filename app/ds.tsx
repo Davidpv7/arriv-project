@@ -38,6 +38,7 @@ const DARK_SWATCHES: ColorName[] = [
   'airmailRed',
   'airmailBlue',
   'boardDivider',
+  'scrim',
 ];
 
 function Section({

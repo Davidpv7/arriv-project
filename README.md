@@ -18,7 +18,21 @@ npm run db:start      # local Supabase in Docker; prints the API URL and publish
 npx expo start        # then press i (iOS), a (Android) or w (web)
 ```
 
-The app opens on the design-system screen (`/ds`) until Phase 1 adds sign-in.
+### Demo accounts (local only)
+
+`npm run db:reset` loads [supabase/seed.sql](supabase/seed.sql). Password for all: `arriv-demo-1`.
+
+| Email              | State                                                                       |
+| ------------------ | --------------------------------------------------------------------------- |
+| `ana@arriv.test`   | Onboarded, Brazil → Sydney, visa 500 (connections only), connected to Mateo |
+| `mateo@arriv.test` | Onboarded, Colombia → Melbourne, visa 485 (public)                          |
+| `lina@arriv.test`  | Not onboarded yet: opens onboarding                                         |
+
+### Testing on a phone
+
+Keep `EXPO_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`. In development the app swaps `127.0.0.1` for your computer's address on the network (the one Expo serves from), so Expo Go reaches your local Supabase. Phone and computer must be on the same Wi-Fi.
+
+The design-system screen is still at `/ds`.
 
 ## Scripts
 

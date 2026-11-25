@@ -23,6 +23,19 @@ const lineIcons = {
   heart: ['M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'],
   check: ['M5 12.5l4.5 4.5L19 7.5'],
   external: ['M14 4h6v6', 'M20 4l-9 9', 'M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'],
+  back: ['M15 5l-7 7 7 7'],
+  chevronRight: ['M9 5l7 7-7 7'],
+  close: ['M6 6l12 12', 'M18 6L6 18'],
+  search: ['M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13z', 'M20 20l-4.8-4.8'],
+  settings: ['M4 7h9', 'M17 7h3', 'M4 17h3', 'M11 17h9', 'M15 4.5v5', 'M9 14.5v5'],
+  more: ['M5 12h.01', 'M12 12h.01', 'M19 12h.01'],
+  edit: ['M4 20h4L19 9l-4-4L4 16z', 'M13.5 6.5l4 4'],
+  lock: ['M6 11h12v9H6z', 'M8.5 11V8a3.5 3.5 0 0 1 7 0v3'],
+  globe: [
+    'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z',
+    'M3 12h18',
+    'M12 3c2.5 2.6 3.5 5.6 3.5 9s-1 6.4-3.5 9c-2.5-2.6-3.5-5.6-3.5-9s1-6.4 3.5-9z',
+  ],
 } as const;
 
 export type IconName = keyof typeof lineIcons | 'plus' | 'send';
@@ -74,7 +87,7 @@ export function Icon({ name, size = 24, color = 'navy', filled = false }: IconPr
           key={d}
           d={d}
           stroke={ink}
-          strokeWidth={2.2}
+          strokeWidth={name === 'more' ? 3.4 : 2.2}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill={filled && name === 'heart' ? ink : 'none'}
