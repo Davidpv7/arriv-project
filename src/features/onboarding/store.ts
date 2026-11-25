@@ -2,6 +2,8 @@ import { create } from 'zustand';
 
 import type { Visibility } from '@/features/profile/schemas';
 
+export const ONBOARDING_STEPS = 5;
+
 /** Answers collected across the onboarding steps, saved together at the end. */
 type OnboardingState = {
   origin: string | null;

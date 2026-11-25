@@ -426,8 +426,9 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 ---
 
 ## 9. Open questions (decide before the phase that needs them)
-- Community chat for large communities: one room, or threads per topic? (Phase 3)
-- Can anyone create a community, or only after X days / admin approval? (Phase 2)
+- ~~Community chat for large communities: one room, or threads per topic? (Phase 3)~~ **Decided 26 Nov 2026:** one room per community in v1; consider topic threads later if rooms get busy.
+- ~~Can anyone create a community, or only after X days / admin approval? (Phase 2)~~ **Decided 25 Nov 2026:** anyone can create one in v1; reporting and moderation are the safety net. Revisit if spam appears.
+- ~~Deep navigation: how does someone get back home quickly?~~ **Decided 26 Nov 2026:** keep the tab bar on every screen except full-screen tasks (composer, start-a-crew wizard, onboarding); each tab has its own stack, and tapping the active tab pops to its top. No separate Home button. Do it as a follow-up after Phase 2 is committed.
 - Moderation: who are the first moderators; response time target? (Phase 7)
 - Legal review of the "not advice" wording and privacy policy before launch (Phase 8)
 - Home Affairs content: manual entry vs. a tool to flag pages that changed (after v1)

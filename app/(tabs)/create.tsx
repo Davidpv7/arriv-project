@@ -1,15 +1,7 @@
-import { useTranslation } from 'react-i18next';
+import { Redirect } from 'expo-router';
 
-import { ComingSoon } from '@/features/shared/ComingSoon';
-
+// The ＋ tab opens the composer as a modal (see the tab bar). This route only exists
+// so the tab has a screen; reaching it directly also opens the composer.
 export default function CreateTab() {
-  const { t } = useTranslation();
-  return (
-    <ComingSoon
-      title={t('tabsPlaceholder.create')}
-      body={t('tabsPlaceholder.createBody')}
-      stamp={t('common.soon')}
-      icon="plus"
-    />
-  );
+  return <Redirect href="/compose" />;
 }

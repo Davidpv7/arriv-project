@@ -1,5 +1,12 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+  type FlatListProps,
+} from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { colors, space } from '@/theme/tokens';
@@ -34,7 +41,49 @@ export function Screen({
   );
 }
 
+export type ListScreenProps<T> = Omit<FlatListProps<T>, 'contentContainerStyle'> & {
+  edges?: Edge[];
+  /** Pull to refresh. */
+  refreshing?: boolean;
+  onRefresh?: () => void;
+};
+
+/** Screen for long lists (feeds): a FlatList with the same padding, width and safe areas. */
+export function ListScreen<T>({
+  edges = ['top'],
+  refreshing,
+  onRefresh,
+  ...props
+}: ListScreenProps<T>) {
+  return (
+    <SafeAreaView style={[styles.flex, { backgroundColor: colors.paper }]} edges={edges}>
+      <FlatList
+        {...props}
+        style={styles.flex}
+        contentContainerStyle={[styles.content, styles.listContent]}
+        ItemSeparatorComponent={props.ItemSeparatorComponent ?? ListGap}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl
+              refreshing={!!refreshing}
+              onRefresh={onRefresh}
+              tintColor={colors.navy}
+              colors={[colors.tangerine]}
+            />
+          ) : undefined
+        }
+      />
+    </SafeAreaView>
+  );
+}
+
+function ListGap() {
+  return <View style={styles.gap} />;
+}
+
 const styles = StyleSheet.create({
+  listContent: { width: '100%', maxWidth: 600, alignSelf: 'center' },
+  gap: { height: space[4] },
   flex: { flex: 1 },
   content: { paddingHorizontal: space[5], paddingVertical: space[6] },
   inner: { width: '100%', maxWidth: 560, alignSelf: 'center' },

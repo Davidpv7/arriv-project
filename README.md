@@ -28,9 +28,13 @@ npx expo start        # then press i (iOS), a (Android) or w (web)
 | `mateo@arriv.test` | Onboarded, Colombia → Melbourne, visa 485 (public)                          |
 | `lina@arriv.test`  | Not onboarded yet: opens onboarding                                         |
 
+The seed also adds six crews (Sydney Newcomers, Latinos en Sydney, Student Visa 500 Crew, Melbourne Movers, Brasileiros na Austrália, Sponsored Workers 482) with a few postcards, comments and likes. Ana owns Sydney Newcomers, so she can remove posts there.
+
 ### Testing on a phone
 
 Keep `EXPO_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`. In development the app swaps `127.0.0.1` for your computer's address on the network (the one Expo serves from), so Expo Go reaches your local Supabase. Phone and computer must be on the same Wi-Fi.
+
+Adding photos opens the system photo picker. On iOS 14+ and Android 13+ it needs no permission prompt: the app only receives the photos the person picks.
 
 The design-system screen is still at `/ds`.
 

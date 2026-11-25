@@ -2,8 +2,8 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { StepLayout } from '@/features/onboarding/StepLayout';
-import { useOnboarding } from '@/features/onboarding/store';
+import { ONBOARDING_STEPS, useOnboarding } from '@/features/onboarding/store';
+import { StepLayout } from '@/features/shared/StepLayout';
 import { VisaFields } from '@/features/profile/components/VisaFields';
 import { visaSchema } from '@/features/profile/schemas';
 import { useErrorText } from '@/i18n/useErrorText';
@@ -26,6 +26,7 @@ export default function VisaStep() {
 
   return (
     <StepLayout
+      total={ONBOARDING_STEPS}
       step={3}
       title={t('onboarding.visa.title')}
       body={t('onboarding.visa.body')}

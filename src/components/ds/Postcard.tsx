@@ -17,6 +17,10 @@ export type PostcardProps = {
   meta: string;
   community?: { initials: string; fill?: FillColor; name: string };
   body: string;
+  /** Small DM Mono tag above the text, e.g. "QUESTION". */
+  tag?: string;
+  /** Long posts are cut to this many lines in lists; detail views pass undefined. */
+  bodyLines?: number;
   /** Journey updates only: one postmark to the right of the text. */
   postmark?: Omit<PostmarkProps, 'size'>;
   /** Images, a question tag, etc. go between body and footer. */
@@ -39,6 +43,8 @@ export function Postcard({
   meta,
   community,
   body,
+  tag,
+  bodyLines,
   postmark,
   children,
   likes,
@@ -74,8 +80,13 @@ export function Postcard({
           )}
         </View>
 
+        {tag ? (
+          <View style={styles.tag}>
+            <Text variant="label">{tag}</Text>
+          </View>
+        ) : null}
         <View style={styles.bodyRow}>
-          <Text variant="body" style={styles.flex}>
+          <Text variant="body" style={styles.flex} numberOfLines={bodyLines}>
             {body}
           </Text>
           {postmark && (
@@ -129,6 +140,13 @@ const styles = StyleSheet.create({
   who: { flex: 1 },
   name: { fontFamily: fonts.sans800, fontSize: 16, lineHeight: 20 },
   meta: { fontSize: 12 },
+  tag: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.sky,
+    borderRadius: radius.stamp,
+    paddingHorizontal: space[2],
+    paddingVertical: 2,
+  },
   bodyRow: { flexDirection: 'row', alignItems: 'center', gap: space[3] },
   postmark: { marginRight: -space[1] },
   foot: {
