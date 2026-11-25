@@ -44,6 +44,8 @@ export const colors = {
    * in the design system; not yet a named token in tokens.json.
    */
   boardDivider: '#3A4766',
+  /** Dimmed backdrop behind dialogs: navy at 55%. Not yet a named token in tokens.json. */
+  scrim: 'rgba(31, 42, 68, 0.55)',
 } as const;
 
 export type ColorName = keyof typeof colors;
