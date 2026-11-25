@@ -39,7 +39,7 @@ export default function Home() {
         ) : (
           <Card>
             <Text variant="body">{t('feed.empty')}</Text>
-            <Button label={t('feed.findCrews')} onPress={() => router.push('/communities')} />
+            <Button label={t('feed.findCrews')} onPress={() => router.navigate('/communities')} />
           </Card>
         )
       }

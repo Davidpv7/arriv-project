@@ -1,33 +1,54 @@
 import { router, Tabs } from 'expo-router';
-import type { ComponentProps } from 'react';
+import { useEffect, useState, type ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Keyboard, Platform } from 'react-native';
 
 import { TabBar, type TabKey } from '@/components/ds';
 import { colors } from '@/theme/tokens';
 
 type TabBarRenderProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
+type StackTab = Exclude<TabKey, 'create'>;
 
-const ROUTE_TO_TAB: Record<string, TabKey> = {
-  home: 'home',
-  communities: 'communities',
-  create: 'create',
-  chat: 'chat',
-  backpack: 'backpack',
+// Each tab is a group with its own stack: (home,communities,chat,backpack)/_layout.tsx.
+const ROUTE_TO_TAB: Record<string, StackTab> = {
+  '(home)': 'home',
+  '(communities)': 'communities',
+  '(chat)': 'chat',
+  '(backpack)': 'backpack',
 };
-const TAB_TO_ROUTE: Record<TabKey, string> = {
-  home: 'home',
-  communities: 'communities',
-  create: 'create',
-  chat: 'chat',
-  backpack: 'backpack',
+const TAB_TO_ROUTE: Record<StackTab, string> = {
+  home: '(home)',
+  communities: '(communities)',
+  chat: '(chat)',
+  backpack: '(backpack)',
 };
 
-function AppTabBar({ state, navigateToTab }: TabBarRenderProps) {
+/** Android resizes the window for the keyboard, which would lift the bar above it. */
+function useKeyboardVisible() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const show = Keyboard.addListener('keyboardDidShow', () => setVisible(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setVisible(false));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return visible;
+}
+
+function AppTabBar({ state, emitter, navigateToTab }: TabBarRenderProps) {
   const { t } = useTranslation();
-  const current = ROUTE_TO_TAB[state.routes[state.index]?.name ?? 'home'] ?? 'home';
+  const keyboardVisible = useKeyboardVisible();
+  if (keyboardVisible) return null;
+
+  const focused = state.routes[state.index];
+  const current = ROUTE_TO_TAB[focused?.name ?? ''] ?? 'home';
+
   return (
     <TabBar
-      active={current === 'create' ? 'home' : current}
+      active={current}
       labels={{
         home: t('tabs.home'),
         communities: t('tabs.communities'),
@@ -41,13 +62,20 @@ function AppTabBar({ state, navigateToTab }: TabBarRenderProps) {
           return;
         }
         const route = state.routes.find((r) => r.name === TAB_TO_ROUTE[key]);
-        if (route) navigateToTab(route.key);
+        if (!route) return;
+        // The tab's stack listens for this: on the active tab it pops back to the top.
+        const event = emitter.emit({
+          type: 'tabPress',
+          target: route.key,
+          canPreventDefault: true,
+        });
+        if (route.key !== focused?.key && !event.defaultPrevented) navigateToTab(route.key);
       }}
     />
   );
 }
 
-export const unstable_settings = { initialRouteName: 'home' };
+export const unstable_settings = { anchor: '(home)' };
 
 export default function TabsLayout() {
   return (
@@ -55,11 +83,11 @@ export default function TabsLayout() {
       tabBar={(props) => <AppTabBar {...props} />}
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.paper } }}
     >
-      <Tabs.Screen name="home" />
-      <Tabs.Screen name="communities" />
+      <Tabs.Screen name="(home)" />
+      <Tabs.Screen name="(communities)" />
       <Tabs.Screen name="create" />
-      <Tabs.Screen name="chat" />
-      <Tabs.Screen name="backpack" />
+      <Tabs.Screen name="(chat)" />
+      <Tabs.Screen name="(backpack)" />
     </Tabs>
   );
 }
