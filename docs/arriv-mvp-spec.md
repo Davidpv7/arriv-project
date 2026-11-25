@@ -47,7 +47,7 @@ This spec is the plan for building Arriv v1. Build it in the phase order in sect
 5. **Records a milestone.** Journey → Add stamp → "Visa granted", date, links grant letter from Backpack → optionally shares a journey update (without the document) to a community.
 6. **Gets a reminder.** Adds upcoming milestone "Visa expires" with reminder date → push notification on that date.
 7. **Reports something.** Long-press post/message → Report → reason → admin reviews.
-8. **Leaves.** Settings → Delete account → all their data and files are removed.
+8. **Leaves.** Settings → Delete account → for each community they own: delete it, or hand it to another member → all their data and files are removed. Communities they handed over stay.
 
 ---
 
@@ -129,7 +129,7 @@ Conventions: `snake_case`; `id uuid primary key default gen_random_uuid()` unles
 | stamp_color | text | design token name (`tangerine`, `sky`, …) |
 | is_private | boolean | default false (v1 UI: public only) |
 | member_count | int | maintained by trigger |
-| created_by | uuid → profiles | |
+| created_by | uuid → profiles | null once the creator's account is deleted. Who is in charge is the `owner` member, not `created_by` |
 | created_at | timestamptz | |
 
 **`community_members`**: `community_id`, `user_id` (PK pair), `role member_role default 'member'`, `joined_at`.
@@ -161,14 +161,16 @@ Creating a community adds the creator as `owner` and creates its `community` con
 | kind | conversation_kind | |
 | community_id | uuid null unique → communities | set for `community` kind |
 | title | text null | groups only |
-| created_by | uuid → profiles | |
+| created_by | uuid → profiles | null once the creator's account is deleted (the chat stays) |
 | last_message_at | timestamptz | trigger, for sorting the inbox |
 | created_at | timestamptz | |
 
 **`conversation_members`**: `conversation_id`, `user_id` (PK pair), `role member_role`, `last_read_at`, `muted boolean default false`, `joined_at`.
 - `direct`: exactly 2 members; one direct conversation per pair (create via RPC `get_or_create_direct(other_user)`).
 - `community`: membership mirrors `community_members` (trigger on join/leave).
-- `group`: up to 50 members, created by a user.
+- `group`: up to 50 members (pending invites count), created by a user. Adding someone is an invite they accept or decline (`conversation_invites`). If the owner leaves, the longest-standing member becomes owner; an empty group is removed.
+
+**`conversation_invites`**: `conversation_id`, `invitee_id` (PK pair), `invited_by`, `created_at`. Invitees see the group's name, not its messages or members, until they accept.
 
 **`messages`**
 | Column | Type | Notes |
@@ -291,12 +293,13 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 | profile_visas | Owner; or `public`; or `connections` and connected. Never if blocked | Own row |
 | connections | Either party | Insert as requester; addressee accepts; either deletes |
 | blocks | Blocker only | Own rows |
-| communities | Any signed-in user | Insert: any user (becomes owner). Update: owner/moderator. Delete: owner/admin |
+| communities | Any signed-in user | Insert: any user (becomes owner). Update: owner/moderator. Delete: current owner/admin. Ownership moves only via `transfer_community_ownership` |
 | community_members | Any signed-in user (member lists) | Join/leave self; owner/moderator can remove |
 | posts | Not deleted, not blocked, and: community post → anyone signed in (members only if private); profile post → anyone signed in | Insert: author = self, and member of community if set. Update/soft-delete: author; moderators of that community; admin |
 | post_media, comments, post_likes | Same as the parent post | Own rows; comments need read access to the post |
 | conversations | Members only | Insert via RPC only |
 | conversation_members | Members of that conversation | Via RPC/triggers; self can leave, update own `last_read_at`/`muted` |
+| conversation_invites | Invitee; members of that group | Via RPC; invitee declines, inviter or group owner/moderator cancels |
 | messages | Members only, not deleted, not from a blocked user | Insert: sender = self and member; edit/delete own |
 | backpack_folders, documents | **Owner only** | **Owner only** |
 | milestones | Owner; others only the stamp fields if `visibility` allows (expose via a view `public_milestones` without notes/dates of upcoming items) | Owner only |
@@ -336,13 +339,16 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 **RPC functions (Postgres)**
 - `get_home_feed(cursor timestamptz, limit int)`: posts from joined communities, connections and self, newest first, blocks excluded
 - `get_or_create_direct(other_user uuid)`: returns the direct conversation id
-- `create_group(title text, member_ids uuid[])`
+- `create_group(title text, invitee_ids uuid[])`: creator is owner; everyone else is invited
+- `invite_to_group(conversation uuid, user_ids uuid[])`, `respond_to_group_invite(conversation uuid, accept boolean)`
+- `get_inbox()`: one row per conversation with last message and unread count
+- `transfer_community_ownership(community uuid, new_owner uuid)`: old owner stays as moderator
 - `suggest_communities()`: by city, visa subclass, origin/language
 
 **Edge Functions**
 - `send-push`: sends Expo push notifications for new notifications
 - `milestone-reminders`: daily cron; notifies users whose `remind_on` = today
-- `delete-account`: deletes storage files then the auth user (cascades)
+- `delete-account`: deletes storage files then the auth user (cascades). The database refuses while the user still owns a community, so the app first asks, for each one: delete it, or hand it to a member
 - `delete-document`: removes the storage object with the row
 
 **Realtime**
@@ -430,5 +436,8 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - ~~Can anyone create a community, or only after X days / admin approval? (Phase 2)~~ **Decided 25 Nov 2026:** anyone can create one in v1; reporting and moderation are the safety net. Revisit if spam appears.
 - ~~Deep navigation: how does someone get back home quickly?~~ **Decided 26 Nov 2026:** keep the tab bar on every screen except full-screen tasks (composer, start-a-crew wizard, onboarding); each tab has its own stack, and tapping the active tab pops to its top. No separate Home button. Done 26 Nov 2026.
 - Moderation: who are the first moderators; response time target? (Phase 7)
+- ~~Adding people to a group chat: straight in, or a request?~~ **Decided 26 Nov 2026:** a request the person accepts or declines. Any member can invite.
+- ~~Communities vs group chats?~~ **Decided 26 Nov 2026:** keep both. Communities are public and joined instantly (feed + one chat room); group chats are private, invite-only and not discoverable (no join requests). In the UI always say "community"/"crew" or "group chat", never just "group".
+- ~~Deleting an account that owns communities?~~ **Decided 26 Nov 2026:** communities are never deleted by account deletion. The owner chooses, per community, to delete it or hand it to a member before the account can go (enforced in the database; delete-account screen in Phase 7).
 - Legal review of the "not advice" wording and privacy policy before launch (Phase 8)
 - Home Affairs content: manual entry vs. a tool to flag pages that changed (after v1)
