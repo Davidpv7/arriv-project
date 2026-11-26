@@ -367,16 +367,36 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"notifications": {
+                },"notification_settings": {
                   Row: {
-                    "actor_id": string | null,"created_at": string,"entity_id": string | null,"entity_type": string | null,"id": string,"read_at": string | null,"type": string,"user_id": string
+                    "comments": boolean,"community_joins": boolean,"connections": boolean,"likes": boolean,"messages": boolean,"reminders": boolean,"updated_at": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "actor_id"?: string | null,"created_at"?: string,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"read_at"?: string | null,"type": string,"user_id": string
+                    "comments"?: boolean,"community_joins"?: boolean,"connections"?: boolean,"likes"?: boolean,"messages"?: boolean,"reminders"?: boolean,"updated_at"?: string,"user_id": string
                   }
                   Update: {
-                    "actor_id"?: string | null,"created_at"?: string,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"read_at"?: string | null,"type"?: string,"user_id"?: string
+                    "comments"?: boolean,"community_joins"?: boolean,"connections"?: boolean,"likes"?: boolean,"messages"?: boolean,"reminders"?: boolean,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notification_settings_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: true
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"notifications": {
+                  Row: {
+                    "actor_id": string | null,"created_at": string,"entity_id": string | null,"entity_type": string | null,"id": string,"preview": string | null,"read_at": string | null,"type": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "actor_id"?: string | null,"created_at"?: string,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"preview"?: string | null,"read_at"?: string | null,"type": string,"user_id": string
+                  }
+                  Update: {
+                    "actor_id"?: string | null,"created_at"?: string,"entity_id"?: string | null,"entity_type"?: string | null,"id"?: string,"preview"?: string | null,"read_at"?: string | null,"type"?: string,"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -525,13 +545,50 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"reports": {
+                  Row: {
+                    "created_at": string,"details": string | null,"id": string,"reason": string,"reporter_id": string | null,"resolved_at": string | null,"resolved_by": string | null,"snapshot": NonNullable<Json>,"status": Database["public"]['Enums']["report_status"],"target_id": string,"target_type": Database["public"]['Enums']["report_target"],"target_user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"details"?: string | null,"id"?: string,"reason": string,"reporter_id"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"snapshot"?: NonNullable<Json>,"status"?: Database["public"]['Enums']["report_status"],"target_id": string,"target_type": Database["public"]['Enums']["report_target"],"target_user_id"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"details"?: string | null,"id"?: string,"reason"?: string,"reporter_id"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"snapshot"?: NonNullable<Json>,"status"?: Database["public"]['Enums']["report_status"],"target_id"?: string,"target_type"?: Database["public"]['Enums']["report_target"],"target_user_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "reports_reporter_id_fkey"
+      columns: ["reporter_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "reports_resolved_by_fkey"
+      columns: ["resolved_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "reports_target_user_id_fkey"
+      columns: ["target_user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
             [_ in never]: never
           }
           Functions: {
-            "connection_count":
+            "account_storage_paths":
+{ Args: { "p_user": string }; Returns: {
+              "bucket_id": string,"name": string
+            }[]
+                           },
+"connection_count":
 { Args: { "p_user": string }; Returns: number
                            },
 "create_group":
@@ -591,6 +648,9 @@ isOneToOne: false
 "register_push_token":
 { Args: { "p_platform": string,"p_token": string }; Returns: undefined
                            },
+"resolve_report":
+{ Args: { "p_remove": boolean,"p_report": string }; Returns: undefined
+                           },
 "respond_to_group_invite":
 { Args: { "p_accept": boolean,"p_conversation": string }; Returns: undefined
                            },
@@ -622,7 +682,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","conversation_kind": "direct"|"group"|"community","folder_kind": "identity"|"visa"|"police"|"education"|"work"|"health"|"other","member_role": "owner"|"moderator"|"member","milestone_kind": "visa"|"arrival"|"education"|"work"|"home"|"pr"|"citizenship"|"other","milestone_status": "done"|"upcoming","post_kind": "post"|"question"|"journey_update","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
+            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","conversation_kind": "direct"|"group"|"community","folder_kind": "identity"|"visa"|"police"|"education"|"work"|"health"|"other","member_role": "owner"|"moderator"|"member","milestone_kind": "visa"|"arrival"|"education"|"work"|"home"|"pr"|"citizenship"|"other","milestone_status": "done"|"upcoming","post_kind": "post"|"question"|"journey_update","report_status": "open"|"actioned"|"dismissed","report_target": "post"|"comment"|"message"|"profile"|"community","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -742,7 +802,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"conversation_kind": ["direct", "group", "community"],"folder_kind": ["identity", "visa", "police", "education", "work", "health", "other"],"member_role": ["owner", "moderator", "member"],"milestone_kind": ["visa", "arrival", "education", "work", "home", "pr", "citizenship", "other"],"milestone_status": ["done", "upcoming"],"post_kind": ["post", "question", "journey_update"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
+            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"conversation_kind": ["direct", "group", "community"],"folder_kind": ["identity", "visa", "police", "education", "work", "health", "other"],"member_role": ["owner", "moderator", "member"],"milestone_kind": ["visa", "arrival", "education", "work", "home", "pr", "citizenship", "other"],"milestone_status": ["done", "upcoming"],"post_kind": ["post", "question", "journey_update"],"report_status": ["open", "actioned", "dismissed"],"report_target": ["post", "comment", "message", "profile", "community"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
           }
         }
 } as const

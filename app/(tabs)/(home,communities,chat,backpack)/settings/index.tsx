@@ -5,12 +5,15 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Card, Divider, Header, ListRow, Notice, Screen, Text } from '@/components/ds';
 import { useSignOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/session';
+import { useIsAdmin, useOpenReportCount } from '@/features/safety/api';
 import { space } from '@/theme/tokens';
 
 export default function Settings() {
   const { t } = useTranslation();
   const { session } = useSession();
   const signOut = useSignOut();
+  const isAdmin = useIsAdmin();
+  const openReports = useOpenReportCount();
 
   return (
     <Screen scroll>
@@ -37,6 +40,12 @@ export default function Settings() {
               title={t('profile.viewConnections')}
               onPress={() => router.push('/connections')}
             />
+            <Divider />
+            <ListRow
+              icon="bell"
+              title={t('settings.notifications')}
+              onPress={() => router.push('/settings/notifications')}
+            />
           </Card>
           <Text variant="meta" color="muted">
             {t('settings.signedInAs', { email: session?.user.email ?? '' })}
@@ -57,6 +66,26 @@ export default function Settings() {
           <Notice eyebrow={t('settings.privacy')} body={t('settings.privacyNote')} tone="sky" />
         </View>
 
+        {isAdmin && (
+          <View style={styles.section}>
+            <Text variant="label" color="rust" accessibilityRole="header">
+              {t('settings.admin')}
+            </Text>
+            <Card flush>
+              <ListRow
+                icon="settings"
+                title={t('admin.reports')}
+                meta={
+                  openReports.data != null
+                    ? t('admin.reportsMeta', { count: openReports.data })
+                    : undefined
+                }
+                onPress={() => router.push('/settings/reports')}
+              />
+            </Card>
+          </View>
+        )}
+
         <View style={styles.actions}>
           <Button
             label={t('settings.signOut')}
@@ -65,9 +94,12 @@ export default function Settings() {
             loading={signOut.isPending}
             onPress={() => signOut.mutate()}
           />
-          <Text variant="meta" color="muted" align="center">
-            {t('settings.deleteSoon')}
-          </Text>
+          <Button
+            label={t('deleteAccount.link')}
+            variant="secondary"
+            fullWidth
+            onPress={() => router.push('/settings/delete')}
+          />
         </View>
       </View>
     </Screen>

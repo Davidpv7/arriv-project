@@ -24,5 +24,6 @@ export { Postmark, type PostmarkProps } from './Postmark';
 export { PromptDialog, type PromptDialogProps } from './PromptDialog';
 export { ListScreen, Screen, type ListScreenProps } from './Screen';
 export { Stamp, type StampProps } from './Stamp';
+export { SwitchRow, type SwitchRowProps } from './SwitchRow';
 export { TabBar, type TabBarProps, type TabKey } from './TabBar';
 export { Text, type TextProps } from './Text';

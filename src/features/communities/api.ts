@@ -185,3 +185,86 @@ export function useJoinedCommunities(userId?: string) {
     },
   });
 }
+
+// ---------------------------------------------------------------------------
+// Ownership (before deleting an account: hand over or delete each owned crew)
+// ---------------------------------------------------------------------------
+
+export type OwnedCommunity = Pick<Community, 'id' | 'slug' | 'name' | 'member_count'>;
+
+/** Communities I currently own. */
+export function useOwnedCommunities() {
+  const me = useUserId();
+  return useQuery({
+    queryKey: ['communities', 'owned', me],
+    queryFn: async (): Promise<OwnedCommunity[]> => {
+      const { data, error } = await supabase
+        .from('community_members')
+        .select('community:communities(id, slug, name, member_count)')
+        .eq('user_id', me)
+        .eq('role', 'owner');
+      if (error) throw error;
+      return data.flatMap((r) => (r.community ? [r.community] : []));
+    },
+  });
+}
+
+export type CommunityMember = {
+  user_id: string;
+  role: MemberRole;
+  profile: Pick<Tables<'profiles'>, 'id' | 'handle' | 'display_name'> | null;
+};
+
+/** Other members of a community (who it could be handed to). Blocked people are hidden by RLS. */
+export function useOtherMembers(communityId: string | null) {
+  const me = useUserId();
+  return useQuery({
+    queryKey: ['communities', 'members', communityId ?? ''],
+    enabled: !!communityId,
+    queryFn: async (): Promise<CommunityMember[]> => {
+      const { data, error } = await supabase
+        .from('community_members')
+        .select(
+          'user_id, role, profile:profiles!community_members_user_id_fkey(id, handle, display_name)',
+        )
+        .eq('community_id', communityId ?? '')
+        .neq('user_id', me)
+        .order('joined_at')
+        .limit(100);
+      if (error) throw error;
+      return data.filter((m) => m.profile);
+    },
+  });
+}
+
+/** Hand a community to another member; I stay on as a moderator. */
+export function useTransferOwnership() {
+  const invalidate = useInvalidateCommunities();
+  return useMutation({
+    mutationFn: async ({ communityId, newOwner }: { communityId: string; newOwner: string }) => {
+      const { error } = await supabase.rpc('transfer_community_ownership', {
+        p_community: communityId,
+        p_new_owner: newOwner,
+      });
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
+
+/** Delete a community I own (its posts and chat room go with it). */
+export function useDeleteCommunity() {
+  const invalidate = useInvalidateCommunities();
+  return useMutation({
+    mutationFn: async (communityId: string) => {
+      const { data, error } = await supabase
+        .from('communities')
+        .delete()
+        .eq('id', communityId)
+        .select('id');
+      if (error) throw error;
+      if (data.length === 0) throw new Error('Community not deleted');
+    },
+    onSuccess: invalidate,
+  });
+}

@@ -4,6 +4,7 @@
 --   ana@arriv.test   (onboarded, Brazil → Sydney, visa 500, connected to Mateo)
 --   mateo@arriv.test (onboarded, Colombia → Melbourne, visa 485 public)
 --   lina@arriv.test  (not onboarded yet: lands in onboarding)
+--   admin@arriv.test (admin: Settings → Admin → Reports)
 
 do $$
 declare
@@ -13,7 +14,8 @@ begin
     select * from (values
       ('11111111-1111-4111-8111-111111111111'::uuid, 'ana@arriv.test', 'Ana Costa'),
       ('22222222-2222-4222-8222-222222222222'::uuid, 'mateo@arriv.test', 'Mateo Rojas'),
-      ('33333333-3333-4333-8333-333333333333'::uuid, 'lina@arriv.test', 'Lina Park')
+      ('33333333-3333-4333-8333-333333333333'::uuid, 'lina@arriv.test', 'Lina Park'),
+      ('44444444-4444-4444-8444-444444444444'::uuid, 'admin@arriv.test', 'Arriv Admin')
     ) as t(id, email, display_name)
   loop
     insert into auth.users (
@@ -142,3 +144,21 @@ insert into public.milestones (user_id, kind, title, status, happened_on, due_on
   ('22222222-2222-4222-8222-222222222222', 'work', 'First job in Australia', 'done', current_date - 640, null, null, null, null, 'Barista in Fitzroy', 'private'),
   ('22222222-2222-4222-8222-222222222222', 'visa', 'Graduate visa granted', 'done', current_date - 170, null, null, '485', null, null, 'connections'),
   ('22222222-2222-4222-8222-222222222222', 'visa', 'Visa expires', 'upcoming', null, current_date + 560, current_date + 380, '485', null, 'Look at the 190 before this', 'private');
+
+-- Phase 7: a demo admin and two open reports to review (Settings -> Admin -> Reports).
+update public.profiles set
+  role = 'admin', bio = 'Demo admin account.', origin_country = 'AU', city = 'Sydney', onboarded_at = now()
+where id = '44444444-4444-4444-8444-444444444444';
+
+do $$
+begin
+  -- Reports are made as the reporter (the database records who and takes a snapshot).
+  perform set_config('request.jwt.claims', '{"sub":"22222222-2222-4222-8222-222222222222","role":"authenticated"}', true);
+  insert into public.reports (reporter_id, target_type, target_id, reason, details)
+  values ('22222222-2222-4222-8222-222222222222', 'post', 'd0000000-0000-4000-8000-000000000001', 'spam',
+    'Demo report: looks like an ad to me.');
+  perform set_config('request.jwt.claims', '{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}', true);
+  insert into public.reports (reporter_id, target_type, target_id, reason)
+  values ('11111111-1111-4111-8111-111111111111', 'profile', '22222222-2222-4222-8222-222222222222', 'other');
+  perform set_config('request.jwt.claims', '', true);
+end $$;

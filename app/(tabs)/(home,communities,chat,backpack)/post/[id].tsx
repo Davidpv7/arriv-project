@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import {
+  ActionSheet,
   Avatar,
   Button,
   Card,
@@ -34,6 +35,7 @@ import {
 import { PostCard } from '@/features/feed/components/PostCard';
 import { relativeTime } from '@/features/feed/format';
 import { initials } from '@/features/profile/format';
+import { ReportDialog } from '@/features/safety/components/ReportDialog';
 import { avatarUrl } from '@/lib/storage';
 import { colors, space } from '@/theme/tokens';
 
@@ -47,6 +49,8 @@ export default function PostScreen() {
   const memberships = useMyMemberships();
   const deletePost = useDeletePost();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [reporting, setReporting] = useState(false);
 
   if (post.isPending) {
     return (
@@ -85,18 +89,51 @@ export default function PostScreen() {
             onBack={goBack}
             backLabel={t('common.back')}
             right={
-              canDelete ? (
-                <IconButton
-                  icon="more"
-                  accessibilityLabel={t('post.moreA11y')}
-                  onPress={() => setConfirmDelete(true)}
-                />
-              ) : undefined
+              <IconButton
+                icon="more"
+                accessibilityLabel={t('post.moreA11y')}
+                onPress={() => setMenu(true)}
+              />
             }
           />
           <PostCard post={p} compact={false} />
           <Comments postId={p.id} canModerate={isMod} />
         </View>
+        <ActionSheet
+          visible={menu}
+          title={t('post.title')}
+          actions={[
+            ...(isAuthor
+              ? []
+              : [
+                  {
+                    label: t('report.action'),
+                    onPress: () => {
+                      setMenu(false);
+                      setReporting(true);
+                    },
+                  },
+                ]),
+            ...(canDelete
+              ? [
+                  {
+                    label: isAuthor ? t('feed.deletePost') : t('feed.removePost'),
+                    destructive: true,
+                    onPress: () => {
+                      setMenu(false);
+                      setConfirmDelete(true);
+                    },
+                  },
+                ]
+              : []),
+          ]}
+          cancelLabel={t('common.cancel')}
+          onCancel={() => setMenu(false)}
+        />
+        <ReportDialog
+          target={reporting ? { type: 'post', id: p.id } : null}
+          onClose={() => setReporting(false)}
+        />
         <ConfirmDialog
           visible={confirmDelete}
           title={isAuthor ? t('feed.deleteTitle') : t('feed.removeTitle')}
@@ -129,6 +166,7 @@ function Comments({ postId, canModerate }: { postId: string; canModerate: boolea
   const [body, setBody] = useState('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [toDelete, setToDelete] = useState<string | null>(null);
+  const [reporting, setReporting] = useState<string | null>(null);
 
   const all = comments.data ?? [];
   const topLevel = all.filter((c) => !c.parent_id);
@@ -179,6 +217,18 @@ function Comments({ postId, canModerate }: { postId: string; canModerate: boolea
             >
               <Text variant="label" color="rust">
                 {t('post.reply')}
+              </Text>
+            </Pressable>
+          )}
+          {c.author_id !== me && (
+            <Pressable
+              onPress={() => setReporting(c.id)}
+              accessibilityRole="button"
+              hitSlop={10}
+              style={styles.textButton}
+            >
+              <Text variant="label" color="muted">
+                {t('report.action')}
               </Text>
             </Pressable>
           )}
@@ -264,6 +314,10 @@ function Comments({ postId, canModerate }: { postId: string; canModerate: boolea
         onConfirm={() =>
           toDelete && remove.mutate(toDelete, { onSuccess: () => setToDelete(null) })
         }
+      />
+      <ReportDialog
+        target={reporting ? { type: 'comment', id: reporting } : null}
+        onClose={() => setReporting(null)}
       />
     </View>
   );

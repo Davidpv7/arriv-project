@@ -40,6 +40,7 @@ import { MessageBubble } from '@/features/chat/components/MessageBubble';
 import { conversationTitle, startsRun } from '@/features/chat/format';
 import { useMyMemberships } from '@/features/communities/api';
 import { gateCode } from '@/features/feed/format';
+import { ReportDialog } from '@/features/safety/components/ReportDialog';
 import { colors, space } from '@/theme/tokens';
 
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/chat'));
@@ -86,6 +87,7 @@ function Chat({ conversation }: { conversation: Conversation }) {
   const [selected, setSelected] = useState<ChatMessage | null>(null);
   const [editing, setEditing] = useState<ComposerEdit | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<ChatMessage | null>(null);
+  const [reporting, setReporting] = useState<ChatMessage | null>(null);
 
   const list = useMemo(
     () => messages.data?.pages.flatMap((p) => p.messages) ?? [],
@@ -116,6 +118,15 @@ function Chat({ conversation }: { conversation: Conversation }) {
       label: t('chat.actions.edit'),
       onPress: () => {
         setEditing({ id: selected.id, body: selected.body ?? '' });
+        setSelected(null);
+      },
+    });
+  }
+  if (selected && selected.sender_id !== me) {
+    actions.push({
+      label: t('report.action'),
+      onPress: () => {
+        setReporting(selected);
         setSelected(null);
       },
     });
@@ -155,9 +166,7 @@ function Chat({ conversation }: { conversation: Conversation }) {
                 message={item}
                 mine={item.sender_id === me}
                 showSender={conversation.kind !== 'direct' && startsRun(list, index)}
-                onLongPress={
-                  item.sender_id === me || canModerate ? () => setSelected(item) : undefined
-                }
+                onLongPress={() => setSelected(item)}
               />
             )}
             onEndReached={() => {
@@ -199,6 +208,10 @@ function Chat({ conversation }: { conversation: Conversation }) {
         actions={actions}
         cancelLabel={t('common.cancel')}
         onCancel={() => setSelected(null)}
+      />
+      <ReportDialog
+        target={reporting ? { type: 'message', id: String(reporting.id) } : null}
+        onClose={() => setReporting(null)}
       />
       <ConfirmDialog
         visible={!!confirmDelete}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
+  ActionSheet,
   Button,
   Card,
   ConfirmDialog,
@@ -37,6 +38,7 @@ import {
 import { initials, monthYear, visaText } from '@/features/profile/format';
 import { findCountry } from '@/features/profile/places';
 import { useBlockUser } from '@/features/safety/api';
+import { ReportDialog } from '@/features/safety/components/ReportDialog';
 import { avatarUrl } from '@/lib/storage';
 import { colors, space } from '@/theme/tokens';
 
@@ -383,13 +385,42 @@ function MessageButton({ profileId }: { profileId: string }) {
 function OtherMenu({ profile }: { profile: ProfileWithVisa }) {
   const { t } = useTranslation();
   const block = useBlockUser();
+  const [menu, setMenu] = useState(false);
   const [open, setOpen] = useState(false);
+  const [reporting, setReporting] = useState(false);
   return (
     <>
       <IconButton
         icon="more"
         accessibilityLabel={t('profile.moreA11y')}
-        onPress={() => setOpen(true)}
+        onPress={() => setMenu(true)}
+      />
+      <ActionSheet
+        visible={menu}
+        title={profile.display_name}
+        actions={[
+          {
+            label: t('report.action'),
+            onPress: () => {
+              setMenu(false);
+              setReporting(true);
+            },
+          },
+          {
+            label: t('profile.block'),
+            destructive: true,
+            onPress: () => {
+              setMenu(false);
+              setOpen(true);
+            },
+          },
+        ]}
+        cancelLabel={t('common.cancel')}
+        onCancel={() => setMenu(false)}
+      />
+      <ReportDialog
+        target={reporting ? { type: 'profile', id: profile.id } : null}
+        onClose={() => setReporting(false)}
       />
       <ConfirmDialog
         visible={open}
