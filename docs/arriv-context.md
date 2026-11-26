@@ -196,7 +196,7 @@ Open points:
 | Travel-theme visuals | **react-native-svg** + design-system tokens | Stamps, tags, perforations, postmarks |
 | App data & forms | TanStack Query, Zustand, react-hook-form + zod, i18next | |
 
-Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitoring, search (Postgres full-text to start).
+Web hosting: Vercel (decided 26 Nov 2026). Not yet decided: analytics, error monitoring, search (Postgres full-text to start).
 
 ## 9. Official information (Home Affairs)
 
@@ -237,9 +237,8 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - Free vs paid limits and pricing for all tiers
 - Home Affairs automation after v1
 - Moderation tools, policy and first moderators
-- Logo and app icon
 - Secondary screens: notifications, settings, composer, community detail, onboarding steps
-- Web hosting, analytics, error monitoring
+- Analytics, error monitoring (web hosting decided 26 Nov 2026: Vercel; app icon decided: the stamp)
 
 ## 12. Next steps
 

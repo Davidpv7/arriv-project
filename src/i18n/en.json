@@ -417,7 +417,8 @@
     "privacy": "Privacy",
     "privacyNote": "Your Backpack, notes and visa expiry are only ever visible to you.",
     "admin": "Admin",
-    "notifications": "Push notifications"
+    "notifications": "Push notifications",
+    "about": "About"
   },
   "time": {
     "now": "Now",
@@ -1049,5 +1050,256 @@
     "finalTitle": "Delete your account now?",
     "finalBody": "Your files and data are removed straight away. This can't be undone.",
     "ownsError": "You still own a community. Hand it over or delete it first."
+  },
+  "legal": {
+    "eyebrow": "Arriv · Legal",
+    "updated": "Last updated {{date}}",
+    "draftTitle": "Draft",
+    "draftBody": "This document is a draft under legal review and may change before Arriv's public launch.",
+    "links": {
+      "privacy": "Privacy policy",
+      "terms": "Terms of use",
+      "guidelines": "Community guidelines"
+    },
+    "signUpNotice": "By creating an account you confirm you're 18 or older and agree to the",
+    "and": "and",
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "Arriv is a community for people living in Australia on a visa. This policy explains what personal information we collect, why, who can see it, and the choices you have. We wrote it in plain English; if anything is unclear, contact us.",
+      "sections": [
+        {
+          "heading": "Who we are",
+          "body": [
+            "Arriv is operated by [Operator name] (ABN [ABN]) (\"Arriv\", \"we\", \"us\"). You can contact us at [contact email].",
+            "We handle personal information in line with the Privacy Act 1988 (Cth) and the Australian Privacy Principles."
+          ]
+        },
+        {
+          "heading": "What we collect",
+          "body": [
+            "• Account: your email address and password (stored securely by our sign-in provider), or your name and email from Google or Apple if you sign in with them.",
+            "• Profile: your name, handle, photo, bio, home country, city, the date you arrived and, if you add it, your visa subclass or visa name.",
+            "• What you share: posts, questions, journey updates, comments, likes, photos, chat messages and the files you send. We remove location data from photos before they are uploaded.",
+            "• Backpack: the documents and photos you upload, with their names and folders.",
+            "• Journey: your milestones, their dates, notes, reminders and the Backpack documents you link to them.",
+            "• Activity: communities you join or create, your connections, people you block, reports you make and your notification settings.",
+            "• Device: if you allow notifications, a push notification token for your device and its platform (iOS or Android).",
+            "• Technical: our hosting providers keep standard logs, such as IP addresses and the time of requests, for security and reliability.",
+            "We don't use advertising, tracking or analytics tools."
+          ]
+        },
+        {
+          "heading": "Sensitive information",
+          "body": [
+            "Some things you can add to Arriv may be sensitive, such as your nationality, your visa status and documents like passports, visas or police checks. You choose whether to add them, and we only collect them with your consent, when you add them yourself.",
+            "Your Backpack, your Journey notes, reminders and coming-up items are only ever visible to you. You choose who can see your visa status on your profile."
+          ]
+        },
+        {
+          "heading": "How we use your information",
+          "body": [
+            "• To run Arriv: show your profile and posts to the people you choose, deliver your messages, store your documents, and send the reminders and notifications you've turned on.",
+            "• To keep Arriv safe: review reports, remove content that breaks our rules, and prevent abuse and fraud.",
+            "• To answer your questions and requests, and to meet our legal obligations.",
+            "We don't sell your personal information and we don't use it for advertising."
+          ]
+        },
+        {
+          "heading": "Who can see what",
+          "body": [
+            "• Your profile (name, handle, photo, bio, home country and city) is visible to people signed in to Arriv. Your visa status follows your setting: everyone, your connections, or only you.",
+            "• Posts and comments in a community are visible to people signed in to Arriv (or only to members, for private communities). Posts on your profile are visible to people signed in.",
+            "• Chat messages and files are visible to the people in that chat. Messages are not end-to-end encrypted. If someone reports a message, Arriv's admins can see that message to review it.",
+            "• Backpack documents are visible only to you. Other people, community owners and Arriv's admins can't open them in the app. If you send a copy of a document to a chat, that copy is visible to the people in the chat.",
+            "• Journey stamps you mark as visible appear on your profile. Coming-up items, notes, reminders and linked documents stay private.",
+            "• Reports are seen by Arriv's admins. We don't tell people who reported them.",
+            "• People you block can't see your profile or content, and you won't see theirs."
+          ]
+        },
+        {
+          "heading": "Service providers and where your data is stored",
+          "body": [
+            "We use trusted providers to run Arriv. They process information only to provide their services to us.",
+            "• Supabase stores our database and files and handles sign-in. Your data is stored in Sydney, Australia.",
+            "• Expo delivers push notifications. The text of a notification (for example, who commented and a short preview) and your device token pass through Expo's service in the United States.",
+            "• Apple and Google deliver notifications to your device, and handle sign-in if you choose to sign in with them.",
+            "• Vercel hosts the Arriv website and web app, and may process technical logs outside Australia.",
+            "Because of this, some information may be handled in the United States and other countries where these providers operate."
+          ]
+        },
+        {
+          "heading": "Keeping your information secure",
+          "body": [
+            "Information travels over encrypted connections and is encrypted at rest by our storage provider. Access rules in our database make sure only the right people can read each piece of information. Backpack files are opened through links that expire after five minutes.",
+            "No system is completely secure, so please keep your password safe. If a data breach is likely to cause you serious harm, we will tell you and the Office of the Australian Information Commissioner (OAIC), as the law requires."
+          ]
+        },
+        {
+          "heading": "How long we keep it",
+          "body": [
+            "We keep your information while your account is open.",
+            "You can delete your account at any time in Settings. This removes your profile, posts, comments, likes, your own chat messages and the files you sent, your Backpack, your Journey, your connections and your notifications. Before you can delete your account, you'll be asked to hand over or delete any community you own. Things other people created stay, such as their messages in a group chat.",
+            "Copies may remain in our providers' backups for a limited time before they are overwritten. Records of reports are kept to help keep Arriv safe; when an account is deleted, its link to those records is removed."
+          ]
+        },
+        {
+          "heading": "Your choices and rights",
+          "body": [
+            "• You can see and correct most of your information yourself in the app, and choose who sees your visa status and your Journey stamps.",
+            "• You can turn each kind of push notification on or off, mute chats, and block or report people.",
+            "• You can delete your account in Settings.",
+            "• You can ask us for a copy of your personal information, or to correct it, by contacting us.",
+            "If you have a complaint about how we handle your information, contact us first. If you're not satisfied with our response within 30 days, you can complain to the OAIC at oaic.gov.au."
+          ]
+        },
+        {
+          "heading": "Age",
+          "body": [
+            "Arriv is for people aged 18 and over. We don't knowingly collect information from anyone under 18. If we learn that we have, we will delete it."
+          ]
+        },
+        {
+          "heading": "Changes to this policy",
+          "body": [
+            "We may update this policy as Arriv changes. We'll post the new version here, and tell you in the app about important changes."
+          ]
+        },
+        {
+          "heading": "Contact us",
+          "body": ["[Operator name], [contact email]."]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of use",
+      "intro": "These terms are an agreement between you and [Operator name] (ABN [ABN]) (\"Arriv\", \"we\", \"us\") about using Arriv. By creating an account or using Arriv, you agree to them. Please read them, especially the section about immigration advice.",
+      "sections": [
+        {
+          "heading": "Arriv is not immigration advice",
+          "body": [
+            "Arriv connects people living in Australia on a visa so they can share their own experience. Nothing on Arriv, from us or from other people, is legal or immigration advice, and Arriv is not a registered migration agent.",
+            "Visa rules, fees and processing times change. For official information, go to the Department of Home Affairs (homeaffairs.gov.au). For advice about your situation, talk to a registered migration agent (you can check the register at mara.gov.au) or a lawyer.",
+            "You are responsible for the decisions you make. We're not responsible for decisions made because of something posted on Arriv."
+          ]
+        },
+        {
+          "heading": "Who can use Arriv",
+          "body": [
+            "• You must be 18 or older.",
+            "• Use your own account, give accurate information, and keep your sign-in details safe. You're responsible for what happens on your account.",
+            "• Don't use Arriv if we have closed your account before, unless we've said you can."
+          ]
+        },
+        {
+          "heading": "Your content",
+          "body": [
+            "You own what you post and upload. You give Arriv permission to store, copy, display and deliver it to the people you share it with, only as needed to run Arriv. This permission ends when you delete the content or your account, except for copies others already have (for example, a file you sent them) and records we keep for safety.",
+            "Only post things you have the right to share. Don't post other people's documents or private information without their permission."
+          ]
+        },
+        {
+          "heading": "Community rules",
+          "body": [
+            "Follow our community guidelines. In particular, don't:",
+            "• harass, threaten, bully or discriminate against anyone;",
+            "• scam or mislead people, ask for money or documents, or offer to sell visas, sponsorships or jobs in exchange for visas;",
+            "• pretend to be a government officer, a migration agent, a lawyer or someone else;",
+            "• give immigration advice for a fee unless you are registered to do so;",
+            "• post false information on purpose, spam, or advertise without permission;",
+            "• post sexual, violent, hateful or illegal content;",
+            "• try to break, overload or get around Arriv's security."
+          ]
+        },
+        {
+          "heading": "Communities and moderation",
+          "body": [
+            "People who create communities own them and can moderate them. Arriv's admins review reports and may remove content, and may suspend or close accounts that break these terms or put others at risk. We don't have to tell you who reported something."
+          ]
+        },
+        {
+          "heading": "Your Backpack",
+          "body": [
+            "Your Backpack is private storage for your own documents. Keep your own copies of important documents. Your Backpack isn't an official record and doesn't replace the originals."
+          ]
+        },
+        {
+          "heading": "Ending your account",
+          "body": [
+            "You can delete your account at any time in Settings. We may suspend or close your account if you break these terms, if the law requires it, or to protect other people. If we close Arriv, we'll try to give you notice so you can save your documents."
+          ]
+        },
+        {
+          "heading": "Arriv as it is",
+          "body": [
+            "We work hard to keep Arriv running and safe, but we provide it \"as is\" and can't promise it will always be available or free of errors. We may change, add or remove features."
+          ]
+        },
+        {
+          "heading": "Our responsibility",
+          "body": [
+            "Nothing in these terms limits your rights under the Australian Consumer Law. To the extent the law allows, we're not responsible for content posted by other people, for decisions you make based on it, or for indirect losses. Where our liability can be limited, it is limited to supplying the service again."
+          ]
+        },
+        {
+          "heading": "Law",
+          "body": [
+            "These terms are governed by the law of New South Wales, Australia, and you and we agree to the courts of New South Wales."
+          ]
+        },
+        {
+          "heading": "Changes and contact",
+          "body": [
+            "We may update these terms. We'll post the new version here and tell you in the app about important changes. If you keep using Arriv after that, you accept the new terms.",
+            "Questions: [Operator name], [contact email]."
+          ]
+        }
+      ]
+    },
+    "guidelines": {
+      "title": "Community guidelines",
+      "intro": "Arriv works when people feel safe sharing their journey. These guidelines apply everywhere on Arriv: posts, comments, chats, profiles and communities.",
+      "sections": [
+        {
+          "heading": "Share experience, not advice",
+          "body": [
+            "Tell people what happened to you and what helped. Don't tell people what they must do about their visa. Point them to Home Affairs for official information, and to a registered migration agent or lawyer for advice."
+          ]
+        },
+        {
+          "heading": "Watch out for scams",
+          "body": [
+            "• Never send money, passport details or documents to someone you met on Arriv.",
+            "• Nobody can sell you a visa, and no real employer charges you for sponsorship.",
+            "• The Department of Home Affairs will never contact you through Arriv.",
+            "• If something feels wrong, report it."
+          ]
+        },
+        {
+          "heading": "Be kind",
+          "body": [
+            "No harassment, bullying, threats, hate or discrimination, including about someone's country, language, religion, gender, sexuality or visa."
+          ]
+        },
+        {
+          "heading": "Respect privacy",
+          "body": [
+            "Don't share other people's documents, visa details, addresses or photos without their permission. Keep private conversations private."
+          ]
+        },
+        {
+          "heading": "Keep it real",
+          "body": [
+            "Use your own identity. Don't pretend to be a government officer, migration agent, lawyer or anyone else. Don't spam or advertise without permission."
+          ]
+        },
+        {
+          "heading": "If something's wrong",
+          "body": [
+            "Report the post, comment, message, person or community from its menu. Arriv's admins review every report and the person isn't told who reported them. You can also block someone from their profile: you won't see each other any more.",
+            "Breaking these guidelines can mean your content is removed or your account is suspended or closed."
+          ]
+        }
+      ]
+    }
   }
 }

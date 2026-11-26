@@ -66,6 +66,31 @@ export default function Settings() {
           <Notice eyebrow={t('settings.privacy')} body={t('settings.privacyNote')} tone="sky" />
         </View>
 
+        <View style={styles.section}>
+          <Text variant="label" color="rust" accessibilityRole="header">
+            {t('settings.about')}
+          </Text>
+          <Card flush>
+            <ListRow
+              icon="document"
+              title={t('legal.links.guidelines')}
+              onPress={() => router.push('/guidelines')}
+            />
+            <Divider />
+            <ListRow
+              icon="document"
+              title={t('legal.links.terms')}
+              onPress={() => router.push('/terms')}
+            />
+            <Divider />
+            <ListRow
+              icon="lock"
+              title={t('legal.links.privacy')}
+              onPress={() => router.push('/privacy')}
+            />
+          </Card>
+        </View>
+
         {isAdmin && (
           <View style={styles.section}>
             <Text variant="label" color="rust" accessibilityRole="header">

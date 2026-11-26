@@ -57,3 +57,7 @@ coverage/
 # Firebase (repo is public): google-services.json lives in EAS env; never commit service-account keys
 google-services.json
 *firebase-adminsdk*.json
+
+# Vercel CLI link (per machine)
+.vercel
+.env*

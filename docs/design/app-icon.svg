@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><rect width="1024" height="1024" fill="#1F2A44"/>
+    <defs>
+      <mask id="perf">
+        <rect width="1024" height="1024" fill="white"/>
+        <g fill="black"><circle cx="290.6" cy="232" r="22"/><circle cx="290.6" cy="792" r="22"/><circle cx="347.8" cy="232" r="22"/><circle cx="347.8" cy="792" r="22"/><circle cx="405" cy="232" r="22"/><circle cx="405" cy="792" r="22"/><circle cx="462.2" cy="232" r="22"/><circle cx="462.2" cy="792" r="22"/><circle cx="519.4" cy="232" r="22"/><circle cx="519.4" cy="792" r="22"/><circle cx="576.6" cy="232" r="22"/><circle cx="576.6" cy="792" r="22"/><circle cx="633.8000000000001" cy="232" r="22"/><circle cx="633.8000000000001" cy="792" r="22"/><circle cx="691.0000000000001" cy="232" r="22"/><circle cx="691.0000000000001" cy="792" r="22"/><circle cx="748.2000000000002" cy="232" r="22"/><circle cx="748.2000000000002" cy="792" r="22"/><circle cx="262" cy="260.6" r="22"/><circle cx="762" cy="260.6" r="22"/><circle cx="262" cy="317.8" r="22"/><circle cx="762" cy="317.8" r="22"/><circle cx="262" cy="375" r="22"/><circle cx="762" cy="375" r="22"/><circle cx="262" cy="432.2" r="22"/><circle cx="762" cy="432.2" r="22"/><circle cx="262" cy="489.4" r="22"/><circle cx="762" cy="489.4" r="22"/><circle cx="262" cy="546.6" r="22"/><circle cx="762" cy="546.6" r="22"/><circle cx="262" cy="603.8000000000001" r="22"/><circle cx="762" cy="603.8000000000001" r="22"/><circle cx="262" cy="661.0000000000001" r="22"/><circle cx="762" cy="661.0000000000001" r="22"/><circle cx="262" cy="718.2000000000002" r="22"/><circle cx="762" cy="718.2000000000002" r="22"/><circle cx="262" cy="775.4000000000002" r="22"/><circle cx="762" cy="775.4000000000002" r="22"/></g>
+        
+      </mask>
+    </defs>
+    <g transform="translate(512 512) scale(1) translate(-512 -512) rotate(-6 512 512)">
+      <rect x="262" y="232" width="500" height="560" fill="#FF7A2F" mask="url(#perf)"/>
+      <rect x="302" y="272" width="420" height="480" fill="none" stroke="#1F2A44" stroke-width="10" opacity="0.18"/>
+      <g fill="#1F2A44"><g transform="translate(512 512) scale(15) translate(-12 -12)"><path d="M12 2c-.8 0-1.5.7-1.5 1.5V9L3 13.5v2l7.5-2.5v5.5L8 20.5V22l4-1 4 1v-1.5l-2.5-2V13l7.5 2.5v-2L13.5 9V3.5C13.5 2.7 12.8 2 12 2z"/></g></g>
+    </g></svg>
