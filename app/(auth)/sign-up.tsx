@@ -10,6 +10,7 @@ import { OAuthButtons } from '@/features/auth/components/OAuthButtons';
 import { signUpSchema, type SignUpValues } from '@/features/auth/schemas';
 import { useErrorText } from '@/i18n/useErrorText';
 import { space } from '@/theme/tokens';
+import { SignUpLegalNotice } from '@/features/legal/LegalLinks';
 
 export default function SignUp() {
   const { t } = useTranslation();
@@ -111,6 +112,7 @@ export default function SignUp() {
             loading={signUp.isPending}
             onPress={() => void onSubmit()}
           />
+          <SignUpLegalNotice />
           <Notice eyebrow={t('notice.customsEyebrow')} body={t('auth.signUp.terms')} tone="sky" />
           <Link href="/sign-in" replace style={styles.link}>
             <Text variant="meta" color="rust">

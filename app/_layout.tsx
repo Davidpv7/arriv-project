@@ -82,6 +82,10 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
       <Stack.Screen name="index" />
       <Stack.Screen name="auth/callback" />
       <Stack.Screen name="ds" />
+      {/* Public legal pages: open signed in or out (the app stores link to them). */}
+      <Stack.Screen name="privacy" />
+      <Stack.Screen name="terms" />
+      <Stack.Screen name="guidelines" />
     </Stack>
   );
 }
