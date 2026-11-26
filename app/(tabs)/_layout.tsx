@@ -5,6 +5,7 @@ import { Keyboard, Platform } from 'react-native';
 
 import { TabBar, type TabKey } from '@/components/ds';
 import { useInboxRealtime, useMyGroupInvites, useUnreadTotal } from '@/features/chat/api';
+import { useNotificationsRealtime } from '@/features/notifications/api';
 import { usePushNotifications } from '@/lib/notifications';
 import { colors } from '@/theme/tokens';
 
@@ -46,6 +47,7 @@ function AppTabBar({ state, emitter, navigateToTab }: TabBarRenderProps) {
   const unread = useUnreadTotal();
   const invites = useMyGroupInvites();
   useInboxRealtime(); // keeps the inbox (and this dot) live on every tab
+  useNotificationsRealtime(); // and the Home bell
   if (keyboardVisible) return null;
 
   const focused = state.routes[state.index];

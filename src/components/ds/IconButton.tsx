@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { colors, radius, touchTarget, type ColorName } from '@/theme/tokens';
 
@@ -13,6 +13,8 @@ export type IconButtonProps = {
   /** Card-filled circle behind the icon (on paper). */
   filled?: boolean;
   disabled?: boolean;
+  /** A small tangerine dot for "something new" (say so in accessibilityLabel too). */
+  dot?: boolean;
 };
 
 /** 44×44 icon-only button. */
@@ -23,6 +25,7 @@ export function IconButton({
   color = 'navy',
   filled = false,
   disabled,
+  dot = false,
 }: IconButtonProps) {
   return (
     <Pressable
@@ -39,6 +42,7 @@ export function IconButton({
       ]}
     >
       <Icon name={icon} color={color} />
+      {dot && <View style={styles.dot} />}
     </Pressable>
   );
 }
@@ -54,4 +58,15 @@ const styles = StyleSheet.create({
   filled: { backgroundColor: colors.card },
   pressed: { opacity: 0.7 },
   disabled: { opacity: 0.4 },
+  dot: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.tangerine,
+    borderWidth: 2,
+    borderColor: colors.paper,
+  },
 });

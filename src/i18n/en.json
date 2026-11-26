@@ -414,9 +414,10 @@
     "blockedEmpty": "You haven't blocked anyone.",
     "unblock": "Unblock",
     "signOut": "Sign out",
-    "deleteSoon": "Delete account (coming soon)",
     "privacy": "Privacy",
-    "privacyNote": "Your Backpack, notes and visa expiry are only ever visible to you."
+    "privacyNote": "Your Backpack, notes and visa expiry are only ever visible to you.",
+    "admin": "Admin",
+    "notifications": "Push notifications"
   },
   "time": {
     "now": "Now",
@@ -900,5 +901,153 @@
     "theirEyebrow": "Passport · @{{handle}}",
     "theirEmpty": "No stamps to show. {{name}} may keep their Journey private.",
     "theirNote": "You see the stamps {{name}} shares with you. Notes, documents and coming-up items are always private."
+  },
+  "report": {
+    "action": "Report",
+    "title": {
+      "post": "Report this post",
+      "comment": "Report this comment",
+      "message": "Report this message",
+      "profile": "Report this person",
+      "community": "Report this community"
+    },
+    "reason": "Why are you reporting it?",
+    "reasons": {
+      "spam": "Spam or selling",
+      "harassment": "Harassment or hate",
+      "scam": "Scam or fraud",
+      "false_information": "False information",
+      "other": "Something else"
+    },
+    "details": "More details (optional)",
+    "detailsPlaceholder": "Anything that helps us understand",
+    "note": "Arriv's admins review every report. The person isn't told who reported them.",
+    "messageNote": "Arriv's admins will see this message to review it. The person isn't told who reported them.",
+    "send": "Send report",
+    "thanksTitle": "Thanks for telling us",
+    "thanksBody": "An admin will review it. If someone is bothering you, you can also block them from their profile."
+  },
+  "admin": {
+    "reports": "Reports",
+    "reportsMeta_one": "{{count}} open",
+    "reportsMeta_other": "{{count}} open",
+    "eyebrow": "Admin · Moderation",
+    "title": "Reports",
+    "open": "Open",
+    "closed": "Closed",
+    "emptyOpen": "No open reports.",
+    "emptyClosed": "Nothing reviewed yet.",
+    "targets": {
+      "post": "Post",
+      "comment": "Comment",
+      "message": "Message",
+      "profile": "Person",
+      "community": "Community"
+    },
+    "by": "Reported by {{name}} · {{when}}",
+    "about": "About {{name}}",
+    "unknown": "someone",
+    "statuses": {
+      "actioned": "Removed",
+      "dismissed": "Dismissed",
+      "open": "Open"
+    },
+    "remove": "Remove",
+    "dismiss": "Dismiss",
+    "removeTitle": "Remove this {{thing}}?",
+    "removeBody": "It disappears for everyone, and all open reports about it are closed.",
+    "removeCommunityBody": "The community, its posts and its chat are deleted for everyone. This can't be undone.",
+    "profileNote": "To suspend this person, ban them in the Supabase dashboard (Authentication → Users). Then dismiss or close the report here.",
+    "viewPost": "Open post",
+    "viewProfile": "Open profile",
+    "viewCommunity": "Open community",
+    "attachment": "Attachment: {{name}}"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "eyebrow": "Arrivals",
+    "open": "Notifications",
+    "openUnread_one": "Notifications, {{count}} unread",
+    "openUnread_other": "Notifications, {{count}} unread",
+    "empty": "Nothing new yet. Comments, likes, connection requests and Journey reminders show up here.",
+    "someone": "Someone",
+    "gone": "This is no longer available.",
+    "settingsLink": "Push settings",
+    "types": {
+      "comment": "{{name}} commented on your post",
+      "reply": "{{name}} replied to your comment",
+      "like": "{{name}} liked your post",
+      "connection_request": "{{name}} wants to connect",
+      "connection_accepted": "{{name}} accepted your connection request",
+      "community_join": "{{name}} joined {{community}}",
+      "milestone_reminder": "Reminder: {{title}}"
+    },
+    "unreadA11y": "unread",
+    "push": {
+      "eyebrow": "Settings",
+      "title": "Push notifications",
+      "intro": "Choose what Arriv sends to your phone. Everything still appears in your notifications list. To silence one chat, mute it in the chat's details.",
+      "off": "Notifications are off for Arriv on this phone. Turn them on in your phone's Settings to get these.",
+      "unavailable": "Push notifications arrive in the Arriv app on your phone.",
+      "kinds": {
+        "messages": {
+          "label": "Messages",
+          "hint": "Direct and group chats. Community chats never send pushes."
+        },
+        "comments": {
+          "label": "Comments and replies",
+          "hint": "On your posts and comments."
+        },
+        "likes": {
+          "label": "Likes",
+          "hint": "When someone likes your post."
+        },
+        "connections": {
+          "label": "Connections",
+          "hint": "Requests and accepted requests."
+        },
+        "community_joins": {
+          "label": "New crew members",
+          "hint": "When someone joins a crew you own."
+        },
+        "reminders": {
+          "label": "Journey reminders",
+          "hint": "At 9am on the day you picked."
+        }
+      }
+    }
+  },
+  "deleteAccount": {
+    "link": "Delete account",
+    "eyebrow": "Settings · Account",
+    "title": "Delete your account",
+    "intro": "This can't be undone. Deleting your account removes:",
+    "removes": [
+      "Your profile, posts, comments and likes",
+      "Your own chat messages and the files you sent",
+      "Your Backpack and every document in it",
+      "Your Journey, stamps and reminders",
+      "Your connections and notifications"
+    ],
+    "stays": "Group chats you were in stay for the other people, and communities you hand over stay too.",
+    "ownedTitle": "Communities you own",
+    "ownedBody": "Before you go, hand each one to another member or delete it.",
+    "members_one": "{{count}} member",
+    "members_other": "{{count}} members",
+    "handOver": "Hand over",
+    "handOverTitle": "Hand {{name}} to…",
+    "handOverEmpty": "Nobody else is in this community yet. You can delete it instead.",
+    "handOverConfirmTitle": "Hand {{name}} to {{person}}?",
+    "handOverConfirmBody": "They become the owner. You stay on as a moderator until your account is deleted.",
+    "handOverConfirm": "Hand over",
+    "deleteCommunity": "Delete community",
+    "deleteCommunityTitle": "Delete {{name}}?",
+    "deleteCommunityBody": "Its posts and chat room are deleted for everyone. This can't be undone.",
+    "confirmLabel": "Type DELETE to confirm",
+    "confirmWord": "DELETE",
+    "submit": "Delete my account",
+    "finalTitle": "Delete your account now?",
+    "finalBody": "Your files and data are removed straight away. This can't be undone.",
+    "ownsError": "You still own a community. Hand it over or delete it first."
   }
 }

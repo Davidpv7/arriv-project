@@ -8,6 +8,7 @@ import {
   Card,
   ConfirmDialog,
   Header,
+  IconButton,
   ListScreen,
   Screen,
   Stamp,
@@ -24,6 +25,7 @@ import { useCommunityConversationId } from '@/features/chat/api';
 import { usePostList } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
 import { asStampColor, communityInitials, gateCode } from '@/features/feed/format';
+import { ReportDialog } from '@/features/safety/components/ReportDialog';
 import { colors, radius, space } from '@/theme/tokens';
 
 const goBack = () => (router.canGoBack() ? router.back() : router.replace('/communities'));
@@ -89,12 +91,29 @@ function GateSign({ community }: { community: Community }) {
   const join = useJoinCommunity();
   const leave = useLeaveCommunity();
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const role = memberships.data?.get(community.id);
   const room = useCommunityConversationId(role ? community.id : undefined);
 
   return (
     <View style={styles.header}>
-      <Header onBack={goBack} backLabel={t('common.back')} />
+      <Header
+        onBack={goBack}
+        backLabel={t('common.back')}
+        right={
+          role === 'owner' ? undefined : (
+            <IconButton
+              icon="more"
+              accessibilityLabel={t('report.title.community')}
+              onPress={() => setReporting(true)}
+            />
+          )
+        }
+      />
+      <ReportDialog
+        target={reporting ? { type: 'community', id: community.id } : null}
+        onClose={() => setReporting(false)}
+      />
       <View style={styles.sign}>
         <View style={styles.signTop}>
           <View style={styles.flex}>

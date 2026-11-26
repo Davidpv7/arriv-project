@@ -7,6 +7,7 @@ import {
   BoardingPass,
   Button,
   Card,
+  IconButton,
   ListScreen,
   Screen,
   Stamp,
@@ -15,6 +16,7 @@ import {
 import { useHomeFeed } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
 import { useMilestones } from '@/features/journey/api';
+import { useUnreadNotificationCount } from '@/features/notifications/api';
 import { useMyProfile, type ProfileWithVisa } from '@/features/profile/api';
 import { boardingPass, initials } from '@/features/profile/format';
 import { avatarUrl } from '@/lib/storage';
@@ -77,6 +79,7 @@ function HomeHeader({ profile }: { profile: ProfileWithVisa }) {
   const pass = boardingPass(profile);
   const firstName = profile.display_name.split(' ')[0];
   const milestones = useMilestones();
+  const unread = useUnreadNotificationCount().data ?? 0;
   const stampCount = milestones.data?.filter((m) => m.status === 'done').length;
   const openProfile = () => router.push(`/profile/${profile.handle}`);
 
@@ -91,6 +94,14 @@ function HomeHeader({ profile }: { profile: ProfileWithVisa }) {
             {t('home.greeting', { name: firstName })}
           </Text>
         </View>
+        <IconButton
+          icon="bell"
+          dot={unread > 0}
+          accessibilityLabel={
+            unread > 0 ? t('notifications.openUnread', { count: unread }) : t('notifications.open')
+          }
+          onPress={() => router.push('/notifications')}
+        />
         <Pressable
           onPress={openProfile}
           accessibilityRole="link"

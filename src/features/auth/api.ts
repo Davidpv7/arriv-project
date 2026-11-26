@@ -101,3 +101,20 @@ export function useOAuthSignIn() {
     },
   });
 }
+
+/**
+ * Deletes my account through the delete-account Edge Function (it removes my files,
+ * then the account; the database removes the rest). Refused while I own a community.
+ */
+export function useDeleteAccount() {
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke<{ ok: boolean }>('delete-account', {
+        method: 'POST',
+      });
+      if (error || !data?.ok) throw error ?? new Error('Account not deleted');
+      // The account no longer exists; clear the local session (the server one is gone).
+      await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    },
+  });
+}

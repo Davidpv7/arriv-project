@@ -229,11 +229,13 @@ Rules: a done stamp has `happened_on` (no due or reminder date); an upcoming ite
 Removed on 26 Nov 2026 (see §9). There is no `visas` table. The work-in-progress version (tickets, admin entry, Home Affairs links) is kept in a local git stash named "Phase 6 visa guide (removed from v1…)" in case it returns.
 
 ### 3.8 Safety and system
-**`reports`**: `id`, `reporter_id`, `target_type report_target`, `target_id text`, `reason text` (spam, harassment, scam, false information, other), `details text null`, `status report_status default 'open'`, `created_at`, `resolved_by`, `resolved_at`.
+**`reports`**: `id`, `reporter_id`, `target_type report_target`, `target_id text`, `target_user_id` (who wrote/owns it), `reason text` (spam, harassment, scam, false_information, other), `details text null`, `snapshot jsonb`, `status report_status default 'open'`, `created_at`, `resolved_by`, `resolved_at`. The database checks the reporter could see the thing, records who reported and takes a snapshot (so admins can judge a message in a chat they're not in, or something later edited). One open report per person per thing; nobody can report themselves. Admins resolve with `resolve_report(report, remove)`: remove (post, comment, message, community) or dismiss; all open reports about the same thing close together.
 
-**`notifications`**: `id`, `user_id`, `type text` (message, comment, reply, like, connection_request, connection_accepted, community_join, milestone_reminder), `actor_id null`, `entity_type text`, `entity_id text`, `read_at null`, `created_at`.
+**`notifications`**: `id`, `user_id`, `type text` (message, comment, reply, like, connection_request, connection_accepted, community_join, milestone_reminder), `actor_id null`, `entity_type text`, `entity_id text`, `preview text null`, `read_at null`, `created_at`. Written only by database triggers. Chat messages are push only (no row).
 
-**`push_tokens`**: `user_id`, `token text unique`, `platform text` (ios, android, web), `updated_at`.
+**`notification_settings`**: one row per person (missing = all on): `messages`, `comments` (and replies), `likes`, `connections`, `community_joins`, `reminders`. Controls pushes only; the in-app list shows everything.
+
+**`push_tokens`**: `token` (PK), `user_id`, `platform text` (ios, android), `updated_at`. Claimed through `register_push_token`.
 
 ### 3.9 Later (do not build in v1, but don't block)
 - `professionals` (user_id, kind agent/lawyer, registration_number, firm, specialties, languages, verified_at, verified_by)
@@ -292,9 +294,10 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 | backpack_folders, documents | **Owner only** | **Owner only** |
 | milestones | Owner only; others see done stamps' faces through `get_stamps()` if `visibility` allows | Owner only |
 | milestone_documents | Owner only | Owner only, both rows owned |
-| reports | Reporter reads own; admin reads all | Insert: any signed-in user; update: admin |
+| reports | Reporter reads own; admin reads all (the reported person never sees reports) | Insert: any signed-in user, only what they can see; resolve: admin via `resolve_report` |
 | notifications | Owner | System (service role / triggers); owner updates `read_at` |
-| push_tokens | Owner | Owner |
+| push_tokens | Owner | Via `register_push_token`; owner deletes |
+| notification_settings | Owner | Owner |
 
 ---
 
@@ -340,7 +343,7 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 - `milestone-reminders` (pg_cron, every 15 minutes): reminders reach people at 9am in their profile city's time zone on `remind_on`; each one creates a `notifications` row and a push. Missed runs catch up for up to two days.
 - `prune-push-tokens` (pg_cron, hourly): removes tokens Expo reports as `DeviceNotRegistered`.
 - No Edge Function or service-role key is involved.
-- `delete-account`: deletes storage files then the auth user (cascades). The database refuses while the user still owns a community, so the app first asks, for each one: delete it, or hand it to a member
+- `delete-account` (built in Phase 7): checks the caller's token, refuses (409) while they own a community, removes every file they own (`account_storage_paths`: Backpack, avatar, post photos, chat uploads), then deletes the auth user so the database cascades the rest. The app's Settings → Delete account screen first walks them through handing over or deleting each owned community, then asks them to type DELETE. Deploy with `npx supabase functions deploy delete-account`.
 
 **Realtime**
 - Subscribe to `messages` for open conversations and the inbox; `notifications` for the badge. RLS applies to Realtime.
@@ -428,7 +431,9 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - ~~Community chat for large communities: one room, or threads per topic? (Phase 3)~~ **Decided 26 Nov 2026:** one room per community in v1; consider topic threads later if rooms get busy.
 - ~~Can anyone create a community, or only after X days / admin approval? (Phase 2)~~ **Decided 25 Nov 2026:** anyone can create one in v1; reporting and moderation are the safety net. Revisit if spam appears.
 - ~~Deep navigation: how does someone get back home quickly?~~ **Decided 26 Nov 2026:** keep the tab bar on every screen except full-screen tasks (composer, start-a-crew wizard, onboarding); each tab has its own stack, and tapping the active tab pops to its top. No separate Home button. Done 26 Nov 2026.
-- Moderation: who are the first moderators; response time target? (Phase 7)
+- ~~Moderation: who are the first moderators? (Phase 7)~~ **Decided 26 Nov 2026:** David is the only admin for now. Response time target: not set yet.
+- **Admin how-to:** make someone an admin in the dashboard (Table editor → `profiles` → set `role` to `admin`); they then see Settings → Admin → Reports. To suspend a person, ban them in Authentication → Users, then close their report in the app.
+- ~~Phase 7 notifications and moderation~~ **Decided 26 Nov 2026:** chat messages are push only (no list entry) and community chat rooms never push; people get simple per-kind push toggles; admins can remove or dismiss in the app, and suspend accounts in the dashboard.
 - ~~Adding people to a group chat: straight in, or a request?~~ **Decided 26 Nov 2026:** a request the person accepts or declines. Any member can invite.
 - ~~Communities vs group chats?~~ **Decided 26 Nov 2026:** keep both. Communities are public and joined instantly (feed + one chat room); group chats are private, invite-only and not discoverable (no join requests). In the UI always say "community"/"crew" or "group chat", never just "group".
 - ~~Deleting an account that owns communities?~~ **Decided 26 Nov 2026:** communities are never deleted by account deletion. The owner chooses, per community, to delete it or hand it to a member before the account can go (enforced in the database; delete-account screen in Phase 7).
