@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ListRow } from '@/components/ds';
@@ -10,10 +11,12 @@ type Props = {
   /** Shown before the type, e.g. the folder on the recent list. */
   context?: string;
   onPress: () => void;
+  /** Replaces the chevron, e.g. an unlink button. */
+  right?: ReactNode;
 };
 
 /** One line of the baggage receipt: name, then type · size · date. Never a preview. */
-export function DocumentRow({ doc, context, onPress }: Props) {
+export function DocumentRow({ doc, context, onPress, right }: Props) {
   const { t } = useTranslation();
   const meta = t('backpack.docMeta', {
     type: typeLabel(doc.mime_type),
@@ -27,6 +30,7 @@ export function DocumentRow({ doc, context, onPress }: Props) {
       title={doc.name}
       meta={full}
       onPress={onPress}
+      right={right}
       accessibilityLabel={t('backpack.docA11y', { name: doc.name, meta: full })}
     />
   );

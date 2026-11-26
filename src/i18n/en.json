@@ -11,7 +11,8 @@
     "error": "Something went wrong. Please try again.",
     "comingSoon": "Coming soon",
     "notFound": "We couldn't find that page.",
-    "soon": "Soon"
+    "soon": "Soon",
+    "done": "Done"
   },
   "tabs": {
     "home": "Home",
@@ -325,7 +326,11 @@
     "profileA11y": "Your profile",
     "dayValue": "{{count}}",
     "noVisa": "—",
-    "noDay": "—"
+    "noDay": "—",
+    "journey": "Journey",
+    "journeyA11y": "My Journey: your stamps and reminders",
+    "passport": "Passport",
+    "passportA11y": "Your passport: your profile"
   },
   "tabsPlaceholder": {
     "chat": "Chat",
@@ -359,6 +364,9 @@
     "requests_one": "{{count}} connection request",
     "requests_other": "{{count}} connection requests",
     "viewConnections": "Connections and requests",
+    "stamps": "Stamps",
+    "stampsEmpty": "No stamps to show yet.",
+    "myJourney": "Open my Journey",
     "postcards": "Postcards",
     "postcardsEmpty": "No postcards yet.",
     "notFound": "This passport isn't available.",
@@ -386,7 +394,8 @@
       "bioTooLong": "Use 300 characters or fewer.",
       "origin": "Choose a country."
     },
-    "crews": "Crews"
+    "crews": "Crews",
+    "seeJourney": "See {{name}}'s Journey"
   },
   "connections": {
     "title": "Connections",
@@ -541,7 +550,8 @@
     "removePost": "Remove postcard",
     "removeTitle": "Remove this postcard from the crew?",
     "profilePost": "Profile postcard",
-    "suggested": "Crews for you"
+    "suggested": "Crews for you",
+    "journeyUpdate": "Journey update"
   },
   "compose": {
     "title": "Send a postcard",
@@ -550,7 +560,8 @@
     "kind": "What are you sending?",
     "kinds": {
       "post": "Postcard",
-      "question": "Question"
+      "question": "Question",
+      "journey_update": "Journey update"
     },
     "where": "Where should it go?",
     "profile": "My profile",
@@ -569,7 +580,11 @@
       "body": "Write something first.",
       "tooLong": "Use 2000 characters or fewer.",
       "photos": "Couldn't add those photos. Try again."
-    }
+    },
+    "stamp": "Which stamp?",
+    "noStamps": "Add a stamp to your Journey first. Only things that have happened can be shared.",
+    "journeyPlaceholder": "Tell the crew what happened…",
+    "stampHint": "Shares the stamp only. Notes and documents stay private."
   },
   "post": {
     "title": "Postcard",
@@ -710,5 +725,180 @@
       "group": "No group chats yet. Tap New chat to start one.",
       "community": "No community chats yet. Join a community to get its chat room."
     }
+  },
+  "journey": {
+    "title": "My Journey",
+    "eyebrow": "Passport · Stamps",
+    "intro": "Your milestones in Australia, stamped in your passport.",
+    "stamps": "Stamps",
+    "upcoming": "Coming up",
+    "nextStamp": "Next stamp?",
+    "addStamp": "Add a stamp",
+    "empty": "No stamps yet. Add the day you landed, your visa grant or your first job.",
+    "upcomingEmpty": "Nothing coming up. Add things like your visa expiry and get a reminder.",
+    "kinds": {
+      "visa": "Visa",
+      "arrival": "Arrival",
+      "education": "Education",
+      "work": "Work",
+      "home": "Home",
+      "pr": "PR",
+      "citizenship": "Citizenship",
+      "other": "Other"
+    },
+    "dueIn_one": "in {{count}} day",
+    "dueIn_other": "in {{count}} days",
+    "dueToday": "today",
+    "overdue": "past due",
+    "dueOn": "Due {{date}}",
+    "remindOn": "Reminder {{date}}",
+    "reminderSent": "Reminder sent",
+    "upcomingMeta": "{{due}} · {{when}}",
+    "stampA11y": "{{title}}, {{kind}}, {{date}}",
+    "visibility": {
+      "public": "Everyone",
+      "connections": "Connections",
+      "private": "Only me"
+    },
+    "form": {
+      "newTitle": "Add a stamp",
+      "editTitle": "Edit stamp",
+      "eyebrow": "My Journey",
+      "kind": "What kind of milestone?",
+      "title": "Title",
+      "titlePlaceholder": "e.g. Student visa granted",
+      "status": "Has it happened?",
+      "statusDone": "It happened",
+      "statusUpcoming": "Coming up",
+      "happenedOn": "Date",
+      "dueOn": "Due date",
+      "remindOn": "Remind me on (optional)",
+      "remindHint": "You'll get a notification at 9am on this day.",
+      "subclass": "Visa subclass (optional)",
+      "subclassPlaceholder": "e.g. 500",
+      "place": "Place code (optional)",
+      "placePlaceholder": "e.g. SYD",
+      "placeHint": "Up to 4 letters, like an airport code.",
+      "notes": "Private notes (optional)",
+      "notesHint": "Only you can see these.",
+      "visibilityLabel": "Who can see this stamp on your profile?",
+      "visibilityHint": "Coming-up items, notes, reminders and documents are always only for you.",
+      "save": "Save stamp"
+    },
+    "detail": {
+      "options": "Stamp options",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteTitle": "Delete this stamp?",
+      "deleteBody": "It will be removed from your Journey. Journey updates you've shared keep the stamp.",
+      "markDone": "It happened today",
+      "share": "Share to the feed",
+      "shareHint": "Shares the stamp only. Your notes and documents stay private.",
+      "notes": "Private notes",
+      "documents": "Linked documents",
+      "documentsHint": "Only you can see these. Linking doesn't share them.",
+      "linkDocument": "Link a document",
+      "unlinkA11y": "Unlink {{name}}",
+      "noDocuments": "No documents linked yet.",
+      "reminder": "Reminder",
+      "seenBy": "Visible to: {{who}}",
+      "pushOff": "Notifications are off, so this reminder can't reach you. Turn them on for Arriv in your phone's Settings.",
+      "pushUnavailable": "Reminders arrive as notifications in the Arriv app on your phone.",
+      "notFound": "Stamp not found",
+      "notFoundBody": "It may have been deleted."
+    },
+    "link": {
+      "eyebrow": "From your Backpack",
+      "title": "Link a document",
+      "body": "Pick documents that go with this milestone, like a grant letter. Linking doesn't share them with anyone.",
+      "empty": "Your Backpack is empty. Pack documents from the Backpack tab first.",
+      "linked": "Linked"
+    },
+    "errors": {
+      "date": "Enter a real date.",
+      "dateRequired": "Enter the date.",
+      "dateFuture": "That date is in the future. Choose \"Coming up\" instead.",
+      "remindAfterDue": "The reminder must be on or before the due date.",
+      "remindPast": "Pick today or a later day.",
+      "titleRequired": "Give it a title.",
+      "subclass": "Use the 3-digit subclass, like 500.",
+      "tooLong": "That's too long.",
+      "place": "Use up to 4 letters or numbers, like SYD."
+    },
+    "wizard": {
+      "kind": {
+        "title": "What are you stamping?",
+        "body": "Pick the kind of milestone. It sets the style of the stamp.",
+        "visa": "A visa granted, applied for or expiring",
+        "arrival": "Landing in Australia or in a new city",
+        "education": "Starting or finishing a course",
+        "work": "A new job or new work rights",
+        "home": "A lease, a move or a first home",
+        "pr": "Permanent residency",
+        "citizenship": "Becoming an Australian citizen",
+        "other": "Anything else worth a stamp"
+      },
+      "when": {
+        "title": "Has it happened yet?",
+        "body": "Stamps are for things that happened. Coming-up items, like a visa expiry, can remind you.",
+        "done": "Yes, it happened",
+        "doneHint": "It becomes a stamp in your passport.",
+        "upcoming": "Not yet, it's coming up",
+        "upcomingHint": "Keep track of it and get a reminder."
+      },
+      "details": {
+        "title": "Name your stamp",
+        "body": "A short title, plus a couple of details for the stamp."
+      },
+      "remind": {
+        "title": "Want a reminder?",
+        "body": "Pick a day and you'll get a notification at 9am. You can skip this."
+      },
+      "visibility": {
+        "title": "Who can see this stamp?",
+        "body": "It shows on your profile and your Journey page. Notes, reminders and documents always stay private.",
+        "private": "Only you",
+        "connections": "People you're connected with",
+        "public": "Anyone on Arriv"
+      },
+      "notes": {
+        "title": "Any private notes?",
+        "body": "Case numbers, what to do next… Only you can see these. You can skip this."
+      },
+      "suggest": {
+        "visa": {
+          "done": "Visa granted",
+          "upcoming": "Visa expires"
+        },
+        "arrival": {
+          "done": "Landed in Australia",
+          "upcoming": "Flying to Australia"
+        },
+        "education": {
+          "done": "Started my course",
+          "upcoming": "Course starts"
+        },
+        "work": {
+          "done": "First job in Australia",
+          "upcoming": "New job starts"
+        },
+        "home": {
+          "done": "Moved into my place",
+          "upcoming": "Lease ends"
+        },
+        "pr": {
+          "done": "PR granted",
+          "upcoming": "PR application"
+        },
+        "citizenship": {
+          "done": "Became an Australian citizen",
+          "upcoming": "Citizenship ceremony"
+        }
+      }
+    },
+    "theirTitle": "{{name}}'s Journey",
+    "theirEyebrow": "Passport · @{{handle}}",
+    "theirEmpty": "No stamps to show. {{name}} may keep their Journey private.",
+    "theirNote": "You see the stamps {{name}} shares with you. Notes, documents and coming-up items are always private."
   }
 }

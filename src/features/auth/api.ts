@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { Platform } from 'react-native';
 
+import { unregisterPush } from '@/lib/notifications';
 import { env, supabase } from '@/lib/supabase';
 
 import type { SignInValues, SignUpValues } from './schemas';
@@ -60,6 +61,7 @@ export function useSignUp() {
 export function useSignOut() {
   return useMutation({
     mutationFn: async () => {
+      await unregisterPush();
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     },

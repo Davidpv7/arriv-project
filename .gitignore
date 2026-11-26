@@ -53,3 +53,7 @@ supabase/.temp
 
 # tests
 coverage/
+
+# Firebase (repo is public): google-services.json lives in EAS env; never commit service-account keys
+google-services.json
+*firebase-adminsdk*.json

@@ -31,6 +31,8 @@ const lineIcons = {
   more: ['M5 12h.01', 'M12 12h.01', 'M19 12h.01'],
   edit: ['M4 20h4L19 9l-4-4L4 16z', 'M13.5 6.5l4 4'],
   lock: ['M6 11h12v9H6z', 'M8.5 11V8a3.5 3.5 0 0 1 7 0v3'],
+  bell: ['M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z', 'M10 21a2 2 0 0 0 4 0'],
+  calendar: ['M4 6h16v14H4z', 'M4 10h16', 'M8 3v5', 'M16 3v5'],
   /** Photo (chat composer). */
   image: ['M4 5h16v14H4z', 'M4 16l4.5-4.5 4 4 2.5-2.5L20 18', 'M15.5 9.5h.01'],
   /** Paperclip: attach a file (chat composer). */

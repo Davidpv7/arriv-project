@@ -71,6 +71,12 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
         <Stack.Screen name="new-crew/details" />
         <Stack.Screen name="new-crew/about" />
         <Stack.Screen name="new-crew/stamp" />
+        <Stack.Screen name="new-stamp/kind" />
+        <Stack.Screen name="new-stamp/when" />
+        <Stack.Screen name="new-stamp/details" />
+        <Stack.Screen name="new-stamp/remind" />
+        <Stack.Screen name="new-stamp/visibility" />
+        <Stack.Screen name="new-stamp/notes" />
         <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
       </Stack.Protected>
       <Stack.Screen name="index" />

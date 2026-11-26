@@ -143,7 +143,7 @@ Creating a community adds the creator as `owner` and creates its `community` con
 | community_id | uuid null → communities | null = profile post |
 | kind | post_kind | |
 | body | text | 1–2000 chars |
-| milestone_id | uuid null → milestones | for journey updates; shows the stamp, never the documents |
+| milestone_id | uuid null → milestones | for journey updates; `stamp jsonb` holds the stamp's face, filled by the database |
 | like_count, comment_count | int | triggers |
 | created_at, edited_at, deleted_at | timestamptz | soft delete |
 
@@ -221,7 +221,11 @@ Upload: the app picks the document id, uploads to `{owner_id}/{id}`, then insert
 | visibility | visibility | default `private` (controls who sees the stamp on the profile) |
 | created_at, updated_at | timestamptz | |
 
-**`milestone_documents`**: `milestone_id`, `document_id` (PK pair). Both must belong to the same user (check in RLS).
+Rules: a done stamp has `happened_on` (no due or reminder date); an upcoming item has `due_on`, and `remind_on` (if set) is on or before it. `reminded_at` records when the reminder was sent and is cleared when `remind_on` changes. Others never read this table: `get_stamps(user)` returns only done stamps' faces (kind, title, date, subclass, place) as their visibility allows, never notes, upcoming items or reminders.
+
+**`milestone_documents`**: `milestone_id`, `document_id`, `user_id` (PK on the pair). Composite foreign keys make both belong to the same user; owner-only RLS.
+
+**Journey updates**: `posts.milestone_id` plus `posts.stamp jsonb`, a snapshot of the stamp's face that the database fills when the post is made (only from the author's own done stamp). Readers see the stamp, never the milestone row or its documents.
 
 ### 3.7 Visa guide
 **`visas`**: admin-managed reference content
@@ -302,7 +306,7 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 | conversation_invites | Invitee; members of that group | Via RPC; invitee declines, inviter or group owner/moderator cancels |
 | messages | Members only, not deleted, not from a blocked user | Insert: sender = self and member; edit/delete own |
 | backpack_folders, documents | **Owner only** | **Owner only** |
-| milestones | Owner; others only the stamp fields if `visibility` allows (expose via a view `public_milestones` without notes/dates of upcoming items) | Owner only |
+| milestones | Owner only; others see done stamps' faces through `get_stamps()` if `visibility` allows | Owner only |
 | milestone_documents | Owner only | Owner only, both rows owned |
 | visas | Signed-in users read `is_published`; admin reads all | Admin only |
 | reports | Reporter reads own; admin reads all | Insert: any signed-in user; update: admin |
@@ -346,8 +350,13 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 - `suggest_communities()`: by city, visa subclass, origin/language
 
 **Edge Functions**
-- `send-push`: sends Expo push notifications for new notifications
-- `milestone-reminders`: daily cron; notifies users whose `remind_on` = today
+
+**Push (built in Phase 5, in the database)**
+- `register_push_token(token, platform)`: a device's Expo token belongs to whoever signed in on it last.
+- `private.send_push(user, title, body, data)`: queues one request to Expo's push service for all of a person's devices (pg_net). Phase 7 reuses it for other notifications.
+- `milestone-reminders` (pg_cron, every 15 minutes): reminders reach people at 9am in their profile city's time zone on `remind_on`; each one creates a `notifications` row and a push. Missed runs catch up for up to two days.
+- `prune-push-tokens` (pg_cron, hourly): removes tokens Expo reports as `DeviceNotRegistered`.
+- No Edge Function or service-role key is involved.
 - `delete-account`: deletes storage files then the auth user (cascades). The database refuses while the user still owns a community, so the app first asks, for each one: delete it, or hand it to a member
 
 **Realtime**
@@ -379,9 +388,11 @@ arriv/
 │  ├─ conversation/[id].tsx
 │  ├─ folder/[id].tsx · document/[id] (index, send) · backpack-upload.tsx
 │  ├─ conversation/[id]/backpack.tsx   # send a Backpack copy from the composer
-│  ├─ journey/index.tsx · journey/[id].tsx
+│  ├─ journey/index.tsx · journey/[id] (index, edit, documents)
+│  ├─ new-stamp/ (kind, when, details, remind | visibility, notes)   # full-screen wizard
+│  ├─ profile/[handle]/journey.tsx   # someone else's stamps, as they allow
 │  ├─ visas/index.tsx · visas/[subclass].tsx
-│  ├─ profile/[handle].tsx
+│  ├─ profile/[handle]/index.tsx
 │  ├─ compose.tsx                 # modal: post / question / journey update
 │  └─ settings/ (index, account, privacy, notifications, delete)
 ├─ src/
@@ -443,3 +454,7 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - Home Affairs content: manual entry vs. a tool to flag pages that changed (after v1)
 - ~~Backpack folders: defaults only, or people's own too? (Phase 4)~~ **Decided 26 Nov 2026:** the six default folders are always there (rename, not delete); people can add, rename and delete their own folders (empty first).
 - ~~Where does sharing a Backpack copy to a chat start? (Phase 4)~~ **Decided 26 Nov 2026:** both a "Send a copy to a chat" button on the document and a Backpack button in the chat composer. Either way the person confirms "This file will be visible to everyone in this chat" first.
+- ~~Journey reminders: server push or on-device? (Phase 5)~~ **Decided 26 Nov 2026:** real server push, sent at 9am in the person's city (from their profile; Sydney time if unknown). EAS project `@jdavid07/arriv`.
+- ~~Can upcoming items (e.g. visa expiry) show on a profile? (Phase 5)~~ **Decided 26 Nov 2026:** no. Only done stamps are ever shown to others, and only as their visibility allows.
+- **Deferred 26 Nov 2026:** the real-phone push check for Phase 5 (and the Apple Developer / Firebase push credentials it needs) moves to Phase 8 launch prep. Everything else in Phase 5 is built and tested; the server side was verified against Expo's push service.
+- **Home shortcuts (26 Nov 2026):** a row of large stamps fits three on a phone. v1: Journey, Passport, Visas (Phase 6). When Lawyers arrives (after v1), drop Passport (the avatar and boarding pass already open the profile) so the row stays at three.
