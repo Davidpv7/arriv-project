@@ -1070,7 +1070,7 @@
         {
           "heading": "Who we are",
           "body": [
-            "Arriv is operated by [Operator name] (ABN [ABN]) (\"Arriv\", \"we\", \"us\"). You can contact us at [contact email].",
+            "Arriv is operated by [Operator name] (ABN [ABN]) (\"Arriv\", \"we\", \"us\"). You can contact us at hello@arrivsocial.com.",
             "We handle personal information in line with the Privacy Act 1988 (Cth) and the Australian Privacy Principles."
           ]
         },
@@ -1166,7 +1166,7 @@
         },
         {
           "heading": "Contact us",
-          "body": ["[Operator name], [contact email]."]
+          "body": ["[Operator name], hello@arrivsocial.com."]
         }
       ]
     },
@@ -1250,7 +1250,7 @@
           "heading": "Changes and contact",
           "body": [
             "We may update these terms. We'll post the new version here and tell you in the app about important changes. If you keep using Arriv after that, you accept the new terms.",
-            "Questions: [Operator name], [contact email]."
+            "Questions: [Operator name], hello@arrivsocial.com."
           ]
         }
       ]
