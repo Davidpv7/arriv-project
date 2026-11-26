@@ -8,9 +8,11 @@
     "scheme": "arriv",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "app.arriv"
     },
     "android": {
+      "package": "app.arriv",
       "adaptiveIcon": {
         "backgroundColor": "#F7F0E1",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -43,12 +45,24 @@
           "photosPermission": "Arriv uses your photos so you can add pictures to posts, chats and your private Backpack.",
           "microphonePermission": false
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#1F2A44"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#F7F0E1"
+    "backgroundColor": "#F7F0E1",
+    "extra": {
+      "eas": {
+        "projectId": "79024557-8fe9-43cc-8a61-3614c73283c0"
+      }
+    },
+    "owner": "jdavid07"
   }
 }

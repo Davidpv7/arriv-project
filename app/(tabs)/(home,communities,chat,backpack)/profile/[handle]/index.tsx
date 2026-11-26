@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   Button,
@@ -22,6 +22,8 @@ import { useJoinedCommunities } from '@/features/communities/api';
 import { usePostList } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
 import { asStampColor, communityInitials } from '@/features/feed/format';
+import { useStamps } from '@/features/journey/api';
+import { StampTile } from '@/features/journey/components/StampTile';
 import {
   useAcceptConnection,
   useConnectionCount,
@@ -123,10 +125,64 @@ export default function ProfileScreen() {
           <ConnectionsRow profile={p} isMe={isMe} />
         </Card>
 
+        <StampsRow userId={p.id} isMe={isMe} handle={p.handle} name={p.display_name} />
         <CrewsRow userId={p.id} />
         <ProfilePosts authorId={p.id} />
       </View>
     </Screen>
+  );
+}
+
+/** Journey stamps this viewer may see (the database applies each stamp's visibility). */
+function StampsRow({
+  userId,
+  isMe,
+  handle,
+  name,
+}: {
+  userId: string;
+  isMe: boolean;
+  handle: string;
+  name: string;
+}) {
+  const { t } = useTranslation();
+  const stamps = useStamps(userId);
+  const items = stamps.data ?? [];
+  if (!isMe && items.length === 0) return null;
+  return (
+    <View style={styles.section}>
+      <Text variant="label" color="rust" accessibilityRole="header">
+        {t('profile.stamps')}
+      </Text>
+      {items.length === 0 ? (
+        <Text variant="meta" color="muted">
+          {t('profile.stampsEmpty')}
+        </Text>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.journeyStamps}>
+            {items.map((stamp, i) => (
+              <StampTile
+                key={stamp.id}
+                stamp={stamp}
+                index={i}
+                size={96}
+                onPress={() =>
+                  router.push(isMe ? `/journey/${stamp.id}` : `/profile/${handle}/journey`)
+                }
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
+      <Button
+        label={
+          isMe ? t('profile.myJourney') : t('profile.seeJourney', { name: name.split(' ')[0] })
+        }
+        variant="secondary"
+        onPress={() => router.push(isMe ? '/journey' : `/profile/${handle}/journey`)}
+      />
+    </View>
   );
 }
 
@@ -361,5 +417,6 @@ const styles = StyleSheet.create({
   stack: { gap: space[5] },
   section: { gap: space[3] },
   stamps: { flexDirection: 'row', flexWrap: 'wrap', gap: space[4], paddingVertical: space[1] },
+  journeyStamps: { flexDirection: 'row', gap: space[2], paddingVertical: space[2] },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: space[3], alignItems: 'center' },
 });

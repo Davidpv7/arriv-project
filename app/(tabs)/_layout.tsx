@@ -5,6 +5,7 @@ import { Keyboard, Platform } from 'react-native';
 
 import { TabBar, type TabKey } from '@/components/ds';
 import { useInboxRealtime, useMyGroupInvites, useUnreadTotal } from '@/features/chat/api';
+import { usePushNotifications } from '@/lib/notifications';
 import { colors } from '@/theme/tokens';
 
 type TabBarRenderProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
@@ -84,6 +85,7 @@ function AppTabBar({ state, emitter, navigateToTab }: TabBarRenderProps) {
 export const unstable_settings = { anchor: '(home)' };
 
 export default function TabsLayout() {
+  usePushNotifications(); // signed in from here on
   return (
     <Tabs
       tabBar={(props) => <AppTabBar {...props} />}

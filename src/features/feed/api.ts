@@ -189,10 +189,12 @@ export function useToggleLike() {
 }
 
 export type NewPost = {
-  kind: 'post' | 'question';
+  kind: 'post' | 'question' | 'journey_update';
   body: string;
   communityId: string | null;
   images: PickedImage[];
+  /** Journey updates only: the done stamp to share (the database copies its face). */
+  milestoneId?: string | null;
 };
 
 /** Creates the post, then strips EXIF/resizes and uploads images under its id. */
@@ -200,11 +202,17 @@ export function useCreatePost() {
   const me = useUserId();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ kind, body, communityId, images }: NewPost) => {
+    mutationFn: async ({ kind, body, communityId, images, milestoneId }: NewPost) => {
       const prepared = await Promise.all(images.map(prepareImage));
       const { data, error } = await supabase
         .from('posts')
-        .insert({ author_id: me, community_id: communityId, kind, body: body.trim() })
+        .insert({
+          author_id: me,
+          community_id: communityId,
+          kind,
+          body: body.trim(),
+          milestone_id: kind === 'journey_update' ? (milestoneId ?? null) : null,
+        })
         .select('id')
         .single();
       if (error) throw error;

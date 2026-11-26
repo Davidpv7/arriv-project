@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PhotoGrid, Postcard } from '@/components/ds';
+import { parseStamp, stampInk, stampLines } from '@/features/journey/rules';
 import { initials } from '@/features/profile/format';
 import { avatarUrl } from '@/lib/storage';
 
@@ -22,6 +23,7 @@ export const PostCard = memo(function PostCard({ post, compact = true }: PostCar
   const author = post.author;
   const where = post.community?.name ?? t('feed.profilePost');
   const openPost = () => router.push(`/post/${post.id}`);
+  const stamp = post.kind === 'journey_update' ? parseStamp(post.stamp) : null;
 
   return (
     <Postcard
@@ -41,7 +43,21 @@ export const PostCard = memo(function PostCard({ post, compact = true }: PostCar
             }
           : undefined
       }
-      tag={post.kind === 'question' ? t('feed.question') : undefined}
+      tag={
+        post.kind === 'question'
+          ? t('feed.question')
+          : stamp
+            ? `${t('feed.journeyUpdate')} · ${stamp.title}`
+            : undefined
+      }
+      postmark={
+        stamp
+          ? {
+              lines: stampLines(stamp, t(`journey.kinds.${stamp.kind}`)),
+              ink: stampInk(stamp.kind),
+            }
+          : undefined
+      }
       body={post.body}
       bodyLines={compact ? 8 : undefined}
       onPress={compact ? openPost : undefined}

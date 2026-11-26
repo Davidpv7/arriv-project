@@ -15,6 +15,7 @@ export { IconButton, type IconButtonProps } from './IconButton';
 export { Input, type InputProps } from './Input';
 export { ListRow, type ListRowProps } from './ListRow';
 export { FileChip, LuggageTag, type FileChipProps, type LuggageTagProps } from './LuggageTag';
+export { NextStamp, type NextStampProps } from './NextStamp';
 export { Notice, type NoticeProps } from './Notice';
 export { PassportCover, type PassportCoverProps } from './PassportCover';
 export { PhotoGrid, type Photo, type PhotoGridProps } from './PhotoGrid';

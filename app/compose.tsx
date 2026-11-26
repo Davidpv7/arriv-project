@@ -16,20 +16,29 @@ import {
 } from '@/components/ds';
 import { useJoinedCommunities } from '@/features/communities/api';
 import { useCreatePost } from '@/features/feed/api';
+import { useMilestones } from '@/features/journey/api';
+import { splitJourney } from '@/features/journey/rules';
 import { MAX_IMAGES, pickImages, type PickedImage } from '@/features/feed/images';
 import { space } from '@/theme/tokens';
 
 const MAX_BODY = 2000;
-type Kind = 'post' | 'question';
+type Kind = 'post' | 'question' | 'journey_update';
+const KINDS: Kind[] = ['post', 'question', 'journey_update'];
 
-/** Composer modal: postcard or question, to a crew or to your profile, with up to 4 photos. */
+/**
+ * Composer modal: postcard, question or journey update (shares one done stamp, never its
+ * notes or documents), to a crew or to your profile, with up to 4 photos.
+ */
 export default function Compose() {
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{ community?: string }>();
+  const params = useLocalSearchParams<{ community?: string; milestone?: string }>();
   const joined = useJoinedCommunities();
   const create = useCreatePost();
+  const milestones = useMilestones();
+  const stamps = splitJourney(milestones.data ?? []).done;
 
-  const [kind, setKind] = useState<Kind>('post');
+  const [kind, setKind] = useState<Kind>(params.milestone ? 'journey_update' : 'post');
+  const [milestoneId, setMilestoneId] = useState<string | null>(params.milestone ?? null);
   const [communityId, setCommunityId] = useState<string | null>(params.community ?? null);
   const [body, setBody] = useState('');
   const [images, setImages] = useState<PickedImage[]>([]);
@@ -51,8 +60,9 @@ export default function Compose() {
     setError(undefined);
     if (!body.trim()) return setError(t('compose.errors.body'));
     if (body.length > MAX_BODY) return setError(t('compose.errors.tooLong'));
+    if (kind === 'journey_update' && !milestoneId) return setError(t('compose.noStamps'));
     create.mutate(
-      { kind, body, communityId, images },
+      { kind, body, communityId, images, milestoneId },
       {
         onSuccess: (postId) => {
           router.dismiss();
@@ -80,7 +90,7 @@ export default function Compose() {
               {t('compose.kind')}
             </Text>
             <View style={styles.chips} accessibilityRole="radiogroup">
-              {(['post', 'question'] as const).map((k) => (
+              {KINDS.map((k) => (
                 <Chip
                   key={k}
                   label={t(`compose.kinds.${k}`)}
@@ -90,6 +100,33 @@ export default function Compose() {
               ))}
             </View>
           </View>
+
+          {kind === 'journey_update' && (
+            <View style={styles.group}>
+              <Text variant="label" color="muted">
+                {t('compose.stamp')}
+              </Text>
+              {stamps.length === 0 ? (
+                <Text variant="meta" color="muted">
+                  {t('compose.noStamps')}
+                </Text>
+              ) : (
+                <View style={styles.chips} accessibilityRole="radiogroup">
+                  {stamps.map((m) => (
+                    <Chip
+                      key={m.id}
+                      label={m.title}
+                      selected={milestoneId === m.id}
+                      onPress={() => setMilestoneId(m.id)}
+                    />
+                  ))}
+                </View>
+              )}
+              <Text variant="meta" color="muted">
+                {t('compose.stampHint')}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.group}>
             <Text variant="label" color="muted">
@@ -120,7 +157,11 @@ export default function Compose() {
           <Input
             label={t('compose.body')}
             placeholder={
-              kind === 'question' ? t('compose.questionPlaceholder') : t('compose.bodyPlaceholder')
+              kind === 'question'
+                ? t('compose.questionPlaceholder')
+                : kind === 'journey_update'
+                  ? t('compose.journeyPlaceholder')
+                  : t('compose.bodyPlaceholder')
             }
             value={body}
             onChangeText={setBody}

@@ -1,5 +1,5 @@
 -- Local demo data. Applied by `npx supabase db reset` (never on the hosted project).
--- Phase 2 adds six communities with posts, comments and likes (below).
+-- Phase 2 adds six communities with posts, comments and likes; Phase 5 gives Mateo Journey stamps (below).
 -- Sign in with any of these, password: arriv-demo-1
 --   ana@arriv.test   (onboarded, Brazil → Sydney, visa 500, connected to Mateo)
 --   mateo@arriv.test (onboarded, Colombia → Melbourne, visa 485 public)
@@ -133,3 +133,12 @@ insert into public.messages (conversation_id, sender_id, body, created_at) value
 -- Demo messages are backdated; push the still-empty rooms below them in the inbox.
 update public.conversations c set last_message_at = now() - interval '7 days'
 where not exists (select 1 from public.messages m where m.conversation_id = c.id);
+
+-- Phase 5: Mateo's Journey, one stamp per visibility so the rules are easy to see.
+-- Ana (connected) sees the public and connections stamps; anyone else sees only the
+-- public one; nobody but Mateo sees the private stamp or the coming-up visa expiry.
+insert into public.milestones (user_id, kind, title, status, happened_on, due_on, remind_on, visa_subclass, place, notes, visibility) values
+  ('22222222-2222-4222-8222-222222222222', 'arrival', 'Landed in Melbourne', 'done', current_date - 700, null, null, null, 'MEL', null, 'public'),
+  ('22222222-2222-4222-8222-222222222222', 'work', 'First job in Australia', 'done', current_date - 640, null, null, null, null, 'Barista in Fitzroy', 'private'),
+  ('22222222-2222-4222-8222-222222222222', 'visa', 'Graduate visa granted', 'done', current_date - 170, null, null, '485', null, null, 'connections'),
+  ('22222222-2222-4222-8222-222222222222', 'visa', 'Visa expires', 'upcoming', null, current_date + 560, current_date + 380, '485', null, 'Look at the 190 before this', 'private');

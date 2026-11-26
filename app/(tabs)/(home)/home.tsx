@@ -2,9 +2,19 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, BoardingPass, Button, Card, ListScreen, Screen, Text } from '@/components/ds';
+import {
+  Avatar,
+  BoardingPass,
+  Button,
+  Card,
+  ListScreen,
+  Screen,
+  Stamp,
+  Text,
+} from '@/components/ds';
 import { useHomeFeed } from '@/features/feed/api';
 import { PostCard } from '@/features/feed/components/PostCard';
+import { useMilestones } from '@/features/journey/api';
 import { useMyProfile, type ProfileWithVisa } from '@/features/profile/api';
 import { boardingPass, initials } from '@/features/profile/format';
 import { avatarUrl } from '@/lib/storage';
@@ -66,6 +76,8 @@ function HomeHeader({ profile }: { profile: ProfileWithVisa }) {
   const { t } = useTranslation();
   const pass = boardingPass(profile);
   const firstName = profile.display_name.split(' ')[0];
+  const milestones = useMilestones();
+  const stampCount = milestones.data?.filter((m) => m.status === 'done').length;
   const openProfile = () => router.push(`/profile/${profile.handle}`);
 
   return (
@@ -107,12 +119,34 @@ function HomeHeader({ profile }: { profile: ProfileWithVisa }) {
           fields={[
             { label: t('boardingPass.visa'), value: pass.visa ?? t('home.noVisa') },
             { label: t('boardingPass.day'), value: pass.day ? String(pass.day) : t('home.noDay') },
-            // Journey stamps arrive in Phase 5.
-            { label: t('boardingPass.stamps'), value: '0' },
+            {
+              label: t('boardingPass.stamps'),
+              value: stampCount == null ? '—' : String(stampCount),
+            },
           ]}
           showPlane
         />
       </Pressable>
+      <View style={styles.shortcuts}>
+        <Stamp
+          size="lg"
+          label={t('home.journey')}
+          icon="plane"
+          fill="sunshine"
+          direction={-1}
+          accessibilityLabel={t('home.journeyA11y')}
+          onPress={() => router.push('/journey')}
+        />
+        <Stamp
+          size="lg"
+          label={t('home.passport')}
+          icon="globe"
+          fill="sky"
+          accessibilityLabel={t('home.passportA11y')}
+          onPress={openProfile}
+        />
+        {/* Visas joins in Phase 6. Three fit on a phone: when Lawyers comes (after v1) it replaces Passport. */}
+      </View>
     </View>
   );
 }
@@ -121,5 +155,6 @@ const styles = StyleSheet.create({
   header: { gap: space[5], marginBottom: space[5] },
   greeting: { flexDirection: 'row', alignItems: 'center', gap: space[3] },
   flex: { flex: 1 },
+  shortcuts: { flexDirection: 'row', gap: space[4], paddingHorizontal: space[1] },
   footer: { marginVertical: space[5] },
 });
