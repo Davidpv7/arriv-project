@@ -16,6 +16,7 @@ import { SessionProvider, useSession } from '@/features/auth/session';
 import { useMyProfile } from '@/features/profile/api';
 import { queryClient } from '@/lib/query-client';
 import { colors } from '@/theme/tokens';
+import { useDocumentTitle } from '@/lib/documentTitle';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -31,6 +32,7 @@ export const unstable_settings = { anchor: 'index' };
  */
 function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
   const { session, isLoading } = useSession();
+  useDocumentTitle(); // web: "Chat · Arriv" in the browser tab
   const profile = useMyProfile();
   const signedIn = !!session;
   const profileReady = !signedIn || profile.isSuccess || profile.isError;

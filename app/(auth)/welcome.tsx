@@ -2,12 +2,15 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { BoardingPass, Button, Screen, Text } from '@/components/ds';
+import { BoardingPass, Button, Screen, Text, useIsWide } from '@/components/ds';
+import { Landing } from '@/features/landing/Landing';
 import { space } from '@/theme/tokens';
 
-/** Navy "AU Arrivals" screen with a blank boarding pass. */
+/** Navy "AU Arrivals" screen with a blank boarding pass. Desktop: the landing page. */
 export default function Welcome() {
   const { t } = useTranslation();
+  const wide = useIsWide();
+  if (wide) return <Landing />;
   return (
     <Screen scroll background="navy" edges={['top', 'bottom']}>
       <View style={styles.stack}>

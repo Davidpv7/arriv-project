@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { FileChip, IconButton, Input, Text } from '@/components/ds';
 import {
@@ -167,6 +167,16 @@ export function Composer({
             multiline
             maxLength={4000}
             style={styles.field}
+            accessibilityHint={Platform.OS === 'web' ? t('chat.composer.enterHint') : undefined}
+            onKeyPress={(e) => {
+              // Web: Enter sends, Shift+Enter makes a new line (phones use the send button).
+              if (Platform.OS !== 'web') return;
+              const key = e.nativeEvent as unknown as { key: string; shiftKey?: boolean };
+              if (key.key === 'Enter' && !key.shiftKey) {
+                (e as unknown as { preventDefault: () => void }).preventDefault();
+                void submit();
+              }
+            }}
           />
         </View>
         <IconButton

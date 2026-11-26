@@ -16,6 +16,8 @@ export type ScreenProps = {
   scroll?: boolean;
   background?: 'paper' | 'navy';
   edges?: Edge[];
+  /** Content width cap; desktop layouts with columns pass a wider one. Default 560. */
+  maxWidth?: number;
 };
 
 /** Screen container: paper ground, safe areas, 20px side padding, max width for wide web. */
@@ -24,17 +26,19 @@ export function Screen({
   scroll = false,
   background = 'paper',
   edges = ['top'],
+  maxWidth,
 }: ScreenProps) {
   const bg = { backgroundColor: colors[background] };
+  const cap = maxWidth ? { maxWidth } : null;
   return (
     <SafeAreaView style={[styles.flex, bg]} edges={edges}>
       {scroll ? (
         <ScrollView contentContainerStyle={styles.content} style={styles.flex}>
-          <View style={styles.inner}>{children}</View>
+          <View style={[styles.inner, cap]}>{children}</View>
         </ScrollView>
       ) : (
         <View style={[styles.flex, styles.content]}>
-          <View style={[styles.inner, styles.flex]}>{children}</View>
+          <View style={[styles.inner, cap, styles.flex]}>{children}</View>
         </View>
       )}
     </SafeAreaView>

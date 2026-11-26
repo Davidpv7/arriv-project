@@ -20,7 +20,8 @@
     "create": "Create post or journey update",
     "chat": "Chat",
     "backpack": "My Backpack",
-    "unreadDot": "unread messages"
+    "unreadDot": "unread messages",
+    "newPostcard": "New postcard"
   },
   "boardingPass": {
     "eyebrow": "Boarding pass",
@@ -330,7 +331,8 @@
     "journey": "Journey",
     "journeyA11y": "My Journey: your stamps and reminders",
     "passport": "Passport",
-    "passportA11y": "Your passport: your profile"
+    "passportA11y": "Your passport: your profile",
+    "crewsForYou": "Crews for you"
   },
   "tabsPlaceholder": {
     "chat": "Chat",
@@ -533,7 +535,9 @@
       "australiaWide": "Australia-wide",
       "visa": "Visa subclass",
       "note": "Crews are for sharing experience, not giving immigration advice."
-    }
+    },
+    "pickTitle": "Pick a crew",
+    "pickBody": "Choose a community on the departures board to see its gate, postcards and chat."
   },
   "feed": {
     "question": "Question",
@@ -648,7 +652,8 @@
       "cancelEdit": "Cancel editing",
       "save": "Save",
       "blocked": "You can't send messages in this chat.",
-      "addFromBackpack": "Send from your Backpack"
+      "addFromBackpack": "Send from your Backpack",
+      "enterHint": "Enter to send · Shift+Enter for a new line"
     },
     "attachment": {
       "type": "Only photos, PDFs and Word documents can be sent.",
@@ -726,7 +731,9 @@
       "direct": "No direct messages yet. Message someone from their profile, or tap New chat.",
       "group": "No group chats yet. Tap New chat to start one.",
       "community": "No community chats yet. Join a community to get its chat room."
-    }
+    },
+    "pickTitle": "Pick a chat",
+    "pickBody": "Choose a conversation on the left, or start a new one."
   },
   "journey": {
     "title": "My Journey",
@@ -1301,5 +1308,38 @@
         }
       ]
     }
+  },
+  "landing": {
+    "eyebrow": "AU Arrivals · For everyone on a visa",
+    "title": "Your journey in Australia, with people on the same path.",
+    "body": "Join crews by city, visa and language. Ask questions, chat, keep your documents in a private Backpack and stamp your milestones as you go.",
+    "stores": "The iPhone and Android apps are coming soon. Use Arriv on the web in the meantime.",
+    "postmarkTop": "Arrived",
+    "postmarkBottom": "Day 1",
+    "stamps": {
+      "crews": "Crews",
+      "chat": "Chat",
+      "backpack": "Backpack"
+    },
+    "features": {
+      "crews": {
+        "title": "Find your crew",
+        "body": "Communities by city, visa and language, from Sydney newcomers to student visa crews."
+      },
+      "ask": {
+        "title": "Ask people who've been there",
+        "body": "Questions, postcards and journey updates from people on the same path. Shared experience, never official advice."
+      },
+      "backpack": {
+        "title": "Keep your documents safe",
+        "body": "A private Backpack for your passport, visa letters and police checks. Only you can see it."
+      }
+    },
+    "copyright": "© Arriv",
+    "contact": "hello@arrivsocial.com"
+  },
+  "web": {
+    "defaultTitle": "Arriv · Your journey in Australia",
+    "profileTitle": "Profile"
   }
 }

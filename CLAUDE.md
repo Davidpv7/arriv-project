@@ -30,6 +30,7 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 - Text on coloured fills is navy, never white. Touch targets ≥ 44px. Rotate stamps/tags only, never text blocks or inputs.
 - Never state visa fees, processing times or rules in the app; point people to Home Affairs. Don't invent figures. (The visa guide was removed from v1 on 26 Nov 2026.)
 - Test on iOS, Android and web (including mobile-width web) before calling a phase done.
+- Every new screen works at phone width and desktop width (≥ 1024px, `useIsWide()`): pick its desktop layout (centred column, side column, or list + detail panes like Chat and Communities) and check both. Phones must not change.
 
 ## Current phase
 Phase 8: Launch prep (update this line as phases finish). Phase 0 and Phase 1 done 25 Nov 2026. Phase 2, 3, 4, 5 and 7 done 26 Nov 2026 (real-phone push check deferred to Phase 8). Phase 6 (visa guide) removed from v1 on 26 Nov 2026.
