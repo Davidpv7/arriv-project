@@ -32,4 +32,4 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 - Test on iOS, Android and web (including mobile-width web) before calling a phase done.
 
 ## Current phase
-Phase 4: Backpack (update this line as phases finish). Phase 0 and Phase 1 done 25 Nov 2026. Phase 2 and Phase 3 done 26 Nov 2026.
+Phase 5: Journey (update this line as phases finish). Phase 0 and Phase 1 done 25 Nov 2026. Phase 2, Phase 3 and Phase 4 done 26 Nov 2026.
