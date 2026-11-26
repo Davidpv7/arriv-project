@@ -16,6 +16,7 @@ import {
   Screen,
   Stamp,
   Text,
+  useIsWide,
 } from '@/components/ds';
 import { useUserId } from '@/features/auth/session';
 import { useStartDirect } from '@/features/chat/api';
@@ -48,6 +49,7 @@ export default function ProfileScreen() {
   const me = useUserId();
   const profile = useProfileByHandle(handle);
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
+  const wide = useIsWide();
 
   if (profile.isPending) {
     return (
@@ -73,63 +75,84 @@ export default function ProfileScreen() {
   const p = profile.data;
   const isMe = p.id === me;
 
+  const identity = (
+    <>
+      <Header
+        onBack={goBack}
+        backLabel={t('common.back')}
+        right={
+          isMe ? (
+            <IconButton
+              icon="settings"
+              accessibilityLabel={t('profile.settings')}
+              onPress={() => router.push('/settings')}
+            />
+          ) : (
+            <OtherMenu profile={p} />
+          )
+        }
+      />
+      <PassportCover
+        eyebrow={t('profile.eyebrow')}
+        name={p.display_name}
+        handle={p.handle}
+        initials={initials(p.display_name)}
+        avatarUri={avatarUrl(p.avatar_path)}
+        route={
+          findCountry(p.origin_country)
+            ? t('profile.route', { from: findCountry(p.origin_country)!.alpha3 })
+            : undefined
+        }
+        since={
+          monthYear(p.arrived_on)
+            ? t('profile.since', { date: monthYear(p.arrived_on) })
+            : undefined
+        }
+        bio={p.bio}
+      >
+        {isMe ? (
+          <Button
+            label={t('profile.edit')}
+            variant="onNavy"
+            icon="edit"
+            onPress={() => router.push('/profile/edit')}
+          />
+        ) : (
+          <ConnectionActions profile={p} />
+        )}
+      </PassportCover>
+
+      <Card flush>
+        <VisaRow profile={p} isMe={isMe} />
+        <Divider />
+        <ConnectionsRow profile={p} isMe={isMe} />
+      </Card>
+    </>
+  );
+  const activity = (
+    <>
+      <StampsRow userId={p.id} isMe={isMe} handle={p.handle} name={p.display_name} />
+      <CrewsRow userId={p.id} />
+      <ProfilePosts authorId={p.id} />
+    </>
+  );
+
+  // Desktop: passport and details on the left, stamps, crews and postcards on the right.
+  if (wide) {
+    return (
+      <Screen scroll maxWidth={1120}>
+        <View style={styles.columns}>
+          <View style={[styles.stack, styles.left]}>{identity}</View>
+          <View style={[styles.stack, styles.flex]}>{activity}</View>
+        </View>
+      </Screen>
+    );
+  }
   return (
     <Screen scroll>
       <View style={styles.stack}>
-        <Header
-          onBack={goBack}
-          backLabel={t('common.back')}
-          right={
-            isMe ? (
-              <IconButton
-                icon="settings"
-                accessibilityLabel={t('profile.settings')}
-                onPress={() => router.push('/settings')}
-              />
-            ) : (
-              <OtherMenu profile={p} />
-            )
-          }
-        />
-        <PassportCover
-          eyebrow={t('profile.eyebrow')}
-          name={p.display_name}
-          handle={p.handle}
-          initials={initials(p.display_name)}
-          avatarUri={avatarUrl(p.avatar_path)}
-          route={
-            findCountry(p.origin_country)
-              ? t('profile.route', { from: findCountry(p.origin_country)!.alpha3 })
-              : undefined
-          }
-          since={
-            monthYear(p.arrived_on)
-              ? t('profile.since', { date: monthYear(p.arrived_on) })
-              : undefined
-          }
-          bio={p.bio}
-        >
-          {isMe ? (
-            <Button
-              label={t('profile.edit')}
-              variant="onNavy"
-              icon="edit"
-              onPress={() => router.push('/profile/edit')}
-            />
-          ) : (
-            <ConnectionActions profile={p} />
-          )}
-        </PassportCover>
-
-        <Card flush>
-          <VisaRow profile={p} isMe={isMe} />
-          <Divider />
-          <ConnectionsRow profile={p} isMe={isMe} />
-        </Card>
-
-        <StampsRow userId={p.id} isMe={isMe} handle={p.handle} name={p.display_name} />
-        <CrewsRow userId={p.id} />
-        <ProfilePosts authorId={p.id} />
+        {identity}
+        {activity}
       </View>
     </Screen>
   );
@@ -446,6 +469,9 @@ function OtherMenu({ profile }: { profile: ProfileWithVisa }) {
 
 const styles = StyleSheet.create({
   stack: { gap: space[5] },
+  columns: { flexDirection: 'row', alignItems: 'flex-start', gap: space[6] + space[2] },
+  left: { width: 400 },
+  flex: { flex: 1 },
   section: { gap: space[3] },
   stamps: { flexDirection: 'row', flexWrap: 'wrap', gap: space[4], paddingVertical: space[1] },
   journeyStamps: { flexDirection: 'row', gap: space[2], paddingVertical: space[2] },

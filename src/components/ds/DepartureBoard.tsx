@@ -49,6 +49,8 @@ export type DepartureRowProps = {
   onPress?: () => void;
   accessibilityLabel?: string;
   isLast?: boolean;
+  /** Desktop: the crew open beside the board. */
+  selected?: boolean;
 };
 
 /** One community on the departures board. The whole row links to the community. */
@@ -60,6 +62,7 @@ export function DepartureRow({
   onPress,
   accessibilityLabel,
   isLast,
+  selected = false,
 }: DepartureRowProps) {
   const shown = name.length > NAME_MAX ? `${name.slice(0, NAME_MAX - 1)}…` : name;
   return (
@@ -67,10 +70,12 @@ export function DepartureRow({
       onPress={onPress}
       accessibilityRole="link"
       accessibilityLabel={accessibilityLabel ?? `${name}, ${gate}, ${statusLabel}`}
-      style={({ pressed }) => [
+      accessibilityState={{ selected }}
+      style={({ pressed, hovered }) => [
         styles.row,
         styles.item,
         !isLast && styles.divider,
+        (selected || hovered) && styles.selected,
         pressed && styles.pressed,
       ]}
     >
@@ -100,6 +105,7 @@ const styles = StyleSheet.create({
     paddingBottom: space[2],
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: space[2], paddingHorizontal: 6 },
+  selected: { backgroundColor: colors.boardDivider },
   header: { paddingBottom: space[2] },
   item: { minHeight: 54 },
   divider: { borderBottomWidth: 1, borderBottomColor: colors.boardDivider },

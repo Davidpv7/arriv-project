@@ -13,6 +13,7 @@ import {
   PromptDialog,
   Screen,
   Text,
+  useIsWide,
 } from '@/components/ds';
 import {
   isFolderLimit,
@@ -38,9 +39,10 @@ export default function BackpackTab() {
   const byId = new Map((folders.data ?? []).map((f) => [f.id, f]));
   const recent = (documents.data ?? []).slice(0, RECENT);
   const failed = folders.isError || documents.isError;
+  const wide = useIsWide();
 
   return (
-    <Screen scroll>
+    <Screen scroll maxWidth={wide ? 1120 : undefined}>
       <View style={styles.stack}>
         <Header eyebrow={t('backpack.eyebrow')} title={t('backpack.title')} />
         <View style={styles.privacy}>
@@ -52,7 +54,7 @@ export default function BackpackTab() {
         <Button
           label={t('backpack.pack')}
           icon="plus"
-          fullWidth
+          fullWidth={!wide}
           onPress={() => router.push('/backpack-upload')}
         />
 
@@ -70,62 +72,129 @@ export default function BackpackTab() {
           </Card>
         )}
 
-        <View style={styles.section}>
-          <View style={styles.sectionHead}>
-            <Text variant="label" color="rust" accessibilityRole="header" style={styles.flex}>
-              {t('backpack.folders')}
-            </Text>
-            <Button
-              label={t('backpack.newFolder')}
-              variant="secondary"
-              icon="plus"
-              onPress={() => {
-                create.reset();
-                setNaming(true);
-              }}
-            />
-          </View>
-          {folders.isPending ? (
-            <ActivityIndicator color={colors.navy} />
-          ) : (
-            <View style={styles.tags}>
-              {(folders.data ?? []).map((folder, i) => (
-                <FolderTag key={folder.id} folder={folder} index={i} />
-              ))}
-            </View>
-          )}
-        </View>
-
-        <View style={styles.section}>
-          <Text variant="label" color="rust" accessibilityRole="header">
-            {t('backpack.recent')}
-          </Text>
-          {documents.isPending ? (
-            <ActivityIndicator color={colors.navy} />
-          ) : recent.length === 0 ? (
-            <Card>
-              <Text variant="body" color="muted">
-                {t('backpack.empty')}
-              </Text>
-            </Card>
-          ) : (
-            <Card flush>
-              {recent.map((doc, i) => {
-                const folder = byId.get(doc.folder_id);
-                return (
-                  <View key={doc.id}>
-                    {i > 0 && <Divider />}
-                    <DocumentRow
-                      doc={doc}
-                      context={folder ? folderName(t, folder) : undefined}
-                      onPress={() => router.push(`/document/${doc.id}`)}
-                    />
+        {wide ? (
+          // Desktop: luggage tags on the left, the recent receipt on the right.
+          <View style={styles.columns}>
+            <View style={styles.flex}>
+              <View style={styles.section}>
+                <View style={styles.sectionHead}>
+                  <Text variant="label" color="rust" accessibilityRole="header" style={styles.flex}>
+                    {t('backpack.folders')}
+                  </Text>
+                  <Button
+                    label={t('backpack.newFolder')}
+                    variant="secondary"
+                    icon="plus"
+                    onPress={() => {
+                      create.reset();
+                      setNaming(true);
+                    }}
+                  />
+                </View>
+                {folders.isPending ? (
+                  <ActivityIndicator color={colors.navy} />
+                ) : (
+                  <View style={[styles.tags, styles.tagsLeft]}>
+                    {(folders.data ?? []).map((folder, i) => (
+                      <FolderTag key={folder.id} folder={folder} index={i} />
+                    ))}
                   </View>
-                );
-              })}
-            </Card>
-          )}
-        </View>
+                )}
+              </View>
+            </View>
+            <View style={styles.receipt}>
+              <View style={styles.section}>
+                <Text variant="label" color="rust" accessibilityRole="header">
+                  {t('backpack.recent')}
+                </Text>
+                {documents.isPending ? (
+                  <ActivityIndicator color={colors.navy} />
+                ) : recent.length === 0 ? (
+                  <Card>
+                    <Text variant="body" color="muted">
+                      {t('backpack.empty')}
+                    </Text>
+                  </Card>
+                ) : (
+                  <Card flush>
+                    {recent.map((doc, i) => {
+                      const folder = byId.get(doc.folder_id);
+                      return (
+                        <View key={doc.id}>
+                          {i > 0 && <Divider />}
+                          <DocumentRow
+                            doc={doc}
+                            context={folder ? folderName(t, folder) : undefined}
+                            onPress={() => router.push(`/document/${doc.id}`)}
+                          />
+                        </View>
+                      );
+                    })}
+                  </Card>
+                )}
+              </View>
+            </View>
+          </View>
+        ) : (
+          <>
+            <View style={styles.section}>
+              <View style={styles.sectionHead}>
+                <Text variant="label" color="rust" accessibilityRole="header" style={styles.flex}>
+                  {t('backpack.folders')}
+                </Text>
+                <Button
+                  label={t('backpack.newFolder')}
+                  variant="secondary"
+                  icon="plus"
+                  onPress={() => {
+                    create.reset();
+                    setNaming(true);
+                  }}
+                />
+              </View>
+              {folders.isPending ? (
+                <ActivityIndicator color={colors.navy} />
+              ) : (
+                <View style={styles.tags}>
+                  {(folders.data ?? []).map((folder, i) => (
+                    <FolderTag key={folder.id} folder={folder} index={i} />
+                  ))}
+                </View>
+              )}
+            </View>
+
+            <View style={styles.section}>
+              <Text variant="label" color="rust" accessibilityRole="header">
+                {t('backpack.recent')}
+              </Text>
+              {documents.isPending ? (
+                <ActivityIndicator color={colors.navy} />
+              ) : recent.length === 0 ? (
+                <Card>
+                  <Text variant="body" color="muted">
+                    {t('backpack.empty')}
+                  </Text>
+                </Card>
+              ) : (
+                <Card flush>
+                  {recent.map((doc, i) => {
+                    const folder = byId.get(doc.folder_id);
+                    return (
+                      <View key={doc.id}>
+                        {i > 0 && <Divider />}
+                        <DocumentRow
+                          doc={doc}
+                          context={folder ? folderName(t, folder) : undefined}
+                          onPress={() => router.push(`/document/${doc.id}`)}
+                        />
+                      </View>
+                    );
+                  })}
+                </Card>
+              )}
+            </View>
+          </>
+        )}
       </View>
 
       <PromptDialog
@@ -173,6 +242,9 @@ function FolderTag({ folder, index }: { folder: BackpackFolder; index: number })
 }
 
 const styles = StyleSheet.create({
+  columns: { flexDirection: 'row', alignItems: 'flex-start', gap: space[6] + space[2] },
+  receipt: { width: 420 },
+  tagsLeft: { justifyContent: 'flex-start' },
   stack: { gap: space[5] },
   flex: { flex: 1 },
   privacy: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
