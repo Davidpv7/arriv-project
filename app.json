@@ -35,7 +35,15 @@
         }
       ],
       "expo-secure-store",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Arriv uses the camera so you can photograph documents for your private Backpack.",
+          "photosPermission": "Arriv uses your photos so you can add pictures to posts, chats and your private Backpack.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

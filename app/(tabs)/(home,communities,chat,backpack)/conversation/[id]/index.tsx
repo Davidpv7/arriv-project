@@ -183,6 +183,7 @@ function Chat({ conversation }: { conversation: Conversation }) {
             error={messages.isError ? 'common.error' : null}
             editing={editing}
             onCancelEdit={() => setEditing(null)}
+            onPickBackpack={() => router.push(`/conversation/${id}/backpack`)}
             onSend={(draft) => send.mutateAsync(draft)}
             onSaveEdit={async (e) => {
               await edit.mutateAsync(e);

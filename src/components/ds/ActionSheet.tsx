@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { colors, radius, space } from '@/theme/tokens';
 
@@ -20,7 +20,7 @@ export type ActionSheetProps = {
   onCancel: () => void;
 };
 
-/** A short list of actions (long-press on a message). Cross-platform, works on web. */
+/** A list of actions (long-press on a message, pick a folder). Cross-platform, works on web. */
 export function ActionSheet({ visible, title, actions, cancelLabel, onCancel }: ActionSheetProps) {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
@@ -29,7 +29,7 @@ export function ActionSheet({ visible, title, actions, cancelLabel, onCancel }: 
           <Text variant="heading" accessibilityRole="header">
             {title}
           </Text>
-          <View style={styles.actions}>
+          <ScrollView style={styles.list} contentContainerStyle={styles.actions}>
             {actions.map((a) => (
               <Button
                 key={a.label}
@@ -39,8 +39,8 @@ export function ActionSheet({ visible, title, actions, cancelLabel, onCancel }: 
                 onPress={a.onPress}
               />
             ))}
-            <Button label={cancelLabel} variant="secondary" fullWidth onPress={onCancel} />
-          </View>
+          </ScrollView>
+          <Button label={cancelLabel} variant="secondary" fullWidth onPress={onCancel} />
         </Pressable>
       </Pressable>
     </Modal>
@@ -63,5 +63,7 @@ const styles = StyleSheet.create({
     padding: space[5],
     gap: space[3],
   },
+  // Long lists (moving a file to one of many folders) scroll; Cancel stays visible.
+  list: { flexGrow: 0, maxHeight: 420 },
   actions: { gap: space[2] },
 });

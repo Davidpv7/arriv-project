@@ -186,22 +186,22 @@ Creating a community adds the creator as `owner` and creates its `community` con
 > **Sharing from Backpack** into chat makes a **copy** in `chat-attachments` after the user confirms ("This file will be visible to everyone in this chat"). Backpack files themselves are never readable by others in v1.
 
 ### 3.5 My Backpack
-**`backpack_folders`**: `id`, `owner_id`, `name`, `kind folder_kind`, `position int`, `created_at`. Six default folders created at sign-up: Identity, Visas, Police checks, Education, Work, Other.
+**`backpack_folders`**: `id`, `owner_id`, `name`, `kind folder_kind`, `position int`, `created_at`. Six default folders created at sign-up: Identity, Visas, Police checks, Education, Work, Other. Default folders have a `kind` and can be renamed but not deleted; `name` stays null until renamed, so the app shows the translated default name. Folders people add have no `kind`, need a `name`, and can be deleted once empty. At most 30 folders each.
 
 **`documents`**
 | Column | Type | Notes |
 |---|---|---|
 | id | uuid PK | |
 | owner_id | uuid → profiles | |
-| folder_id | uuid → backpack_folders | |
+| folder_id | uuid → backpack_folders | one of the owner's own folders (composite FK on `folder_id, owner_id`) |
 | name | text | user-editable display name |
-| storage_path | text | `backpack/{owner_id}/{document_id}` |
-| mime_type | text | allow: pdf, jpg, png, heic, docx |
-| size_bytes | bigint | max 20 MB per file |
+| storage_path | text | `{owner_id}/{document_id}` in the `backpack` bucket |
+| mime_type | text | allow: pdf, jpg, png, webp, heic, docx. Copied from the stored file on insert |
+| size_bytes | bigint | max 20 MB per file. Copied from the stored file on insert |
 | uploaded_by | uuid → profiles | = owner in v1; lawyers later |
 | created_at, updated_at | timestamptz | |
 
-Hard delete: deleting a document removes the row and the storage object (Edge Function or trigger + storage API).
+Upload: the app picks the document id, uploads to `{owner_id}/{id}`, then inserts the row; a row can't be added without its file. Hard delete: the app deletes the row, then the storage object, both under owner-only rules (no service role needed). Photos are re-encoded before upload, which strips EXIF location.
 
 ### 3.6 My Journey
 **`milestones`**
@@ -349,7 +349,6 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 - `send-push`: sends Expo push notifications for new notifications
 - `milestone-reminders`: daily cron; notifies users whose `remind_on` = today
 - `delete-account`: deletes storage files then the auth user (cascades). The database refuses while the user still owns a community, so the app first asks, for each one: delete it, or hand it to a member
-- `delete-document`: removes the storage object with the row
 
 **Realtime**
 - Subscribe to `messages` for open conversations and the inbox; `notifications` for the badge. RLS applies to Realtime.
@@ -378,7 +377,8 @@ arriv/
 │  ├─ community/[slug].tsx
 │  ├─ post/[id].tsx
 │  ├─ conversation/[id].tsx
-│  ├─ backpack/[folderId].tsx · document/[id].tsx
+│  ├─ folder/[id].tsx · document/[id] (index, send) · backpack-upload.tsx
+│  ├─ conversation/[id]/backpack.tsx   # send a Backpack copy from the composer
 │  ├─ journey/index.tsx · journey/[id].tsx
 │  ├─ visas/index.tsx · visas/[subclass].tsx
 │  ├─ profile/[handle].tsx
@@ -441,3 +441,5 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - ~~Deleting an account that owns communities?~~ **Decided 26 Nov 2026:** communities are never deleted by account deletion. The owner chooses, per community, to delete it or hand it to a member before the account can go (enforced in the database; delete-account screen in Phase 7).
 - Legal review of the "not advice" wording and privacy policy before launch (Phase 8)
 - Home Affairs content: manual entry vs. a tool to flag pages that changed (after v1)
+- ~~Backpack folders: defaults only, or people's own too? (Phase 4)~~ **Decided 26 Nov 2026:** the six default folders are always there (rename, not delete); people can add, rename and delete their own folders (empty first).
+- ~~Where does sharing a Backpack copy to a chat start? (Phase 4)~~ **Decided 26 Nov 2026:** both a "Send a copy to a chat" button on the document and a Backpack button in the chat composer. Either way the person confirms "This file will be visible to everyone in this chat" first.

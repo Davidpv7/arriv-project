@@ -26,13 +26,23 @@ type Props = {
   busy: boolean;
   /** An error to show from outside the composer (e.g. messages failed to load). */
   error: ComposerError | null;
+  /** Opens the Backpack picker (sends a copy of a document after confirming). */
+  onPickBackpack: () => void;
 };
 
 const isNoPermission = (e: unknown) =>
   typeof e === 'object' && e !== null && 'code' in e && e.code === '42501';
 
-/** Bottom bar: photo, file, message, paper-plane send. Edit mode reuses the same field. */
-export function Composer({ onSend, onSaveEdit, editing, onCancelEdit, busy, error }: Props) {
+/** Bottom bar: photo, file, Backpack, message, paper-plane send. Edit mode reuses the field. */
+export function Composer({
+  onSend,
+  onSaveEdit,
+  editing,
+  onCancelEdit,
+  busy,
+  error,
+  onPickBackpack,
+}: Props) {
   const { t } = useTranslation();
   const [body, setBody] = useState('');
   const [attachment, setAttachment] = useState<PickedAttachment | null>(null);
@@ -137,6 +147,12 @@ export function Composer({ onSend, onSaveEdit, editing, onCancelEdit, busy, erro
               icon="attach"
               accessibilityLabel={t('chat.composer.addFile')}
               onPress={() => void pick(pickChatFile)}
+              disabled={busy}
+            />
+            <IconButton
+              icon="backpack"
+              accessibilityLabel={t('chat.composer.addFromBackpack')}
+              onPress={onPickBackpack}
               disabled={busy}
             />
           </>
