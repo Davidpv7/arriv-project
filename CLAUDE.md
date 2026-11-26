@@ -1,6 +1,6 @@
 # Arriv
 
-Mobile-first social network for people living in Australia on a visa: communities, chat, a private document "Backpack", a milestone "Journey" and a simplified visa guide. Arriv connects people; it never gives immigration advice.
+Mobile-first social network for people living in Australia on a visa: communities, chat, a private document "Backpack" and a milestone "Journey". Arriv connects people; it never gives immigration advice.
 
 ## Read first
 - `docs/arriv-context.md`: product context and decisions
@@ -28,8 +28,8 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 - All user-facing text goes through i18n (`src/i18n/en.json`).
 - Colours, spacing, radii and fonts come from tokens. No hard-coded hex values in screens.
 - Text on coloured fills is navy, never white. Touch targets ≥ 44px. Rotate stamps/tags only, never text blocks or inputs.
-- Visa fees and processing times must link to Home Affairs. Don't invent figures.
+- Never state visa fees, processing times or rules in the app; point people to Home Affairs. Don't invent figures. (The visa guide was removed from v1 on 26 Nov 2026.)
 - Test on iOS, Android and web (including mobile-width web) before calling a phase done.
 
 ## Current phase
-Phase 5: Journey (update this line as phases finish). Phase 0 and Phase 1 done 25 Nov 2026. Phase 2, Phase 3 and Phase 4 done 26 Nov 2026.
+Phase 7: Safety + notifications (update this line as phases finish). Phase 0 and Phase 1 done 25 Nov 2026. Phase 2, 3, 4 and 5 done 26 Nov 2026 (Phase 5 real-phone push check deferred to Phase 8). Phase 6 (visa guide) removed from v1 on 26 Nov 2026.

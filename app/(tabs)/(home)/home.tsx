@@ -145,7 +145,7 @@ function HomeHeader({ profile }: { profile: ProfileWithVisa }) {
           accessibilityLabel={t('home.passportA11y')}
           onPress={openProfile}
         />
-        {/* Visas joins in Phase 6. Three fit on a phone: when Lawyers comes (after v1) it replaces Passport. */}
+        {/* Three fit on a phone: Lawyers (after v1) becomes the third. */}
       </View>
     </View>
   );
