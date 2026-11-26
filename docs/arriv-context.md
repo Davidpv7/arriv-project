@@ -33,7 +33,7 @@ Arriv is a **mobile-first social network for people living in Australia on a vis
 | Chat | Direct messages and group chats |
 | My Backpack | Personal document drive |
 | My Journey | Timeline of the user's migration milestones |
-| Visas | Simplified visa info, linked to official Home Affairs pages |
+| Visas | ~~Simplified visa info~~ removed from v1 (26 Nov 2026); maybe later |
 | Migration Lawyers | Directory of verified agents and lawyers, with reviews (after v1) |
 | Profile | Identity, visa status, posts, connections, communities |
 
@@ -59,7 +59,7 @@ The whole app uses the language of travel. The user's migration journey is a tri
 | Visa guide | Each visa is a **ticket**: subclass on the stub; processing, fee and stay in mono; "Official page" + "Ask the crew" |
 | Lawyers ("Trusted guides") | **ID badges** with a round "Verified" postmark, registration number, client reviews, specialties, Message button (after v1) |
 | Profile | **Passport cover** (navy, photo, name, BRA → AUS, since date), visa-visibility control, stats stub, tabs Postcards / Stamps / Crews |
-| Shortcuts | Perforated **postage stamps** (Visas, Lawyers, Passport) |
+| Shortcuts | Perforated **postage stamps** (Journey, Passport; Lawyers later) |
 
 All main screens are sketched and linked as a clickable prototype.
 
@@ -130,7 +130,7 @@ The original web mockups were a **guide only**. Mobile is the priority. v1 scope
 - Upcoming items and reminders (for example, visa expiry)
 - Milestones can be shared to the feed as Journey Updates (the stamp only, never the documents)
 
-### Visas
+### Visas (removed from v1, 26 Nov 2026)
 - Browse by category: Work, Study, Family, Visitor, Humanitarian
 - Each visa shows subclass, short description, processing time, fee, duration and key eligibility points
 - Always labelled as **simplified information** with a link to the official Department of Home Affairs page
@@ -203,6 +203,7 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - The goal is to use the Department of Home Affairs website for visa details, processing times and news, so ~100+ visas aren't maintained by hand
 - No official API is known. v1: visa entries added by an admin, each linking to the official page, with a "last checked" date
 - Automating updates is still open, to be researched after v1
+- **Decided 26 Nov 2026:** no visa guide in v1. Home Affairs updates its pages often and can't be read automatically, so hand-entered visa details would go stale. Revisit only with a reliable official source.
 
 ## 10. Decisions made
 
@@ -221,7 +222,7 @@ Not yet decided: web hosting (EAS Hosting or Vercel), analytics, error monitorin
 - [x] Navigation: bottom tab bar with centre ＋ (Home, Communities, ＋, Chat, Backpack)
 - [x] All main screens sketched; first version of the Arriv design system created
 - [x] **Stack: Expo + Expo Router + Supabase + RevenueCat** (one codebase for iOS, Android and web)
-- [x] **MVP (v1):** sign-up/onboarding, profile, communities, feed, chat, Backpack, Journey, Visa guide, safety, notifications
+- [x] **MVP (v1):** sign-up/onboarding, profile, communities, feed, chat, Backpack, Journey, safety, notifications (visa guide removed 26 Nov 2026)
 - [x] **Lawyers and agents come after v1**
 - [x] **Free at launch**; tiers switched on later
 - [x] **Sign-in v1:** email + password, Google, Apple

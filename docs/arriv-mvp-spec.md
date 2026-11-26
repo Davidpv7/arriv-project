@@ -19,7 +19,6 @@ This spec is the plan for building Arriv v1. Build it in the phase order in sect
 | Chat | 1:1 direct messages, small group chats, and one chat room per community. Text, images, files. Pinned "Customs notice" disclaimer in group and community chats |
 | My Backpack | Private document drive: default folders, upload (camera, photos, files), view, rename, move, delete. **Only the owner can ever read a Backpack file in v1** |
 | My Journey | Milestones as passport stamps (done or upcoming), notes, linked Backpack documents, reminders (e.g. visa expiry), share a milestone to the feed as a journey update |
-| Visa guide | Simplified visa "tickets" by category, entered by an admin, each linking to the official Home Affairs page. Placeholder text for fees and times until checked |
 | Safety | Report posts/comments/messages/users/communities, block users, basic admin moderation, account deletion in the app |
 | Notifications | Push + in-app: new message, reply, comment, like, connection request, community join (owner), milestone reminder |
 
@@ -28,11 +27,12 @@ This spec is the plan for building Arriv v1. Build it in the phase order in sect
 - Payments and tiers (every user is `free` in v1; the field exists)
 - Translations (English only, but all strings go through i18n from day one)
 - Phone sign-in, video, voice messages, stories, search across everything
+- A visa guide (removed from v1 on 26 Nov 2026: visa details change often and there's no official source to pull them from; see §9)
 
 ### Principles for the build
 1. **Security in the database.** Every table has Row Level Security (RLS). The app never decides who can see what on its own.
 2. **Private by default.** Backpack files, visa expiry dates, notes and reminders are visible only to their owner.
-3. **No advice.** Disclaimers on group chats and the visa guide; official info always links to Home Affairs.
+3. **No advice.** Disclaimers on group and community chats; for official information, people go to Home Affairs.
 4. **Design system first.** Screens are built from the shared components, never one-off styles.
 5. **One codebase.** iOS, Android and web from the same Expo app. Test mobile web as its own platform.
 
@@ -69,8 +69,6 @@ Conventions: `snake_case`; `id uuid primary key default gen_random_uuid()` unles
 | `folder_kind` | `identity`, `visa`, `police`, `education`, `work`, `health`, `other` |
 | `milestone_kind` | `visa`, `arrival`, `education`, `work`, `home`, `pr`, `citizenship`, `other` |
 | `milestone_status` | `done`, `upcoming` |
-| `visa_category` | `work`, `study`, `family`, `visitor`, `humanitarian`, `other` |
-| `stay_type` | `permanent`, `temporary`, `provisional` |
 | `report_target` | `post`, `comment`, `message`, `profile`, `community` |
 | `report_status` | `open`, `actioned`, `dismissed` |
 
@@ -96,8 +94,8 @@ Conventions: `snake_case`; `id uuid primary key default gen_random_uuid()` unles
 | Column | Type | Notes |
 |---|---|---|
 | user_id | uuid PK → profiles | |
-| visa_subclass | text null → visas.subclass | e.g. `500` |
-| visa_label | text null | free text if not in `visas` |
+| visa_subclass | text null | e.g. `500` |
+| visa_label | text null | free text, e.g. a visa name |
 | visibility | visibility | default `connections` |
 | updated_at | timestamptz | |
 
@@ -227,21 +225,8 @@ Rules: a done stamp has `happened_on` (no due or reminder date); an upcoming ite
 
 **Journey updates**: `posts.milestone_id` plus `posts.stamp jsonb`, a snapshot of the stamp's face that the database fills when the post is made (only from the author's own done stamp). Readers see the stamp, never the milestone row or its documents.
 
-### 3.7 Visa guide
-**`visas`**: admin-managed reference content
-| Column | Type | Notes |
-|---|---|---|
-| subclass | text PK | `189`, `500`… |
-| name | text | "Skilled Independent" |
-| category | visa_category | |
-| summary | text | one line, plain English |
-| stay_type | stay_type | |
-| key_points | text[] | short eligibility points |
-| processing_note | text null | shown as text, e.g. "Check Home Affairs" until verified |
-| fee_note | text null | same |
-| official_url | text | Home Affairs page |
-| last_checked_on | date null | shown as "Checked on …" |
-| is_published | boolean | default false |
+### 3.7 Visa guide (removed from v1)
+Removed on 26 Nov 2026 (see §9). There is no `visas` table. The work-in-progress version (tickets, admin entry, Home Affairs links) is kept in a local git stash named "Phase 6 visa guide (removed from v1…)" in case it returns.
 
 ### 3.8 Safety and system
 **`reports`**: `id`, `reporter_id`, `target_type report_target`, `target_id text`, `reason text` (spam, harassment, scam, false information, other), `details text null`, `status report_status default 'open'`, `created_at`, `resolved_by`, `resolved_at`.
@@ -278,7 +263,6 @@ erDiagram
   profiles ||--o{ milestones : records
   milestones ||--o{ milestone_documents : links
   documents ||--o{ milestone_documents : linked
-  visas ||--o{ profile_visas : describes
 ```
 
 ---
@@ -308,7 +292,6 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 | backpack_folders, documents | **Owner only** | **Owner only** |
 | milestones | Owner only; others see done stamps' faces through `get_stamps()` if `visibility` allows | Owner only |
 | milestone_documents | Owner only | Owner only, both rows owned |
-| visas | Signed-in users read `is_published`; admin reads all | Admin only |
 | reports | Reporter reads own; admin reads all | Insert: any signed-in user; update: admin |
 | notifications | Owner | System (service role / triggers); owner updates `read_at` |
 | push_tokens | Owner | Owner |
@@ -391,7 +374,6 @@ arriv/
 │  ├─ journey/index.tsx · journey/[id] (index, edit, documents)
 │  ├─ new-stamp/ (kind, when, details, remind | visibility, notes)   # full-screen wizard
 │  ├─ profile/[handle]/journey.tsx   # someone else's stamps, as they allow
-│  ├─ visas/index.tsx · visas/[subclass].tsx
 │  ├─ profile/[handle]/index.tsx
 │  ├─ compose.tsx                 # modal: post / question / journey update
 │  └─ settings/ (index, account, privacy, notifications, delete)
@@ -400,13 +382,13 @@ arriv/
 │  ├─ components/ds/              # Button, Stamp, Postmark, BoardingPass, Postcard,
 │  │                              # DepartureRow, LuggageTag, TabBar, Text, Input…
 │  ├─ features/                   # one folder per area: api.ts (queries), hooks, components
-│  │  ├─ auth/ feed/ communities/ chat/ backpack/ journey/ visas/ profile/ safety/
+│  │  ├─ auth/ feed/ communities/ chat/ backpack/ journey/ profile/ safety/
 │  ├─ lib/ supabase.ts · storage.ts · notifications.ts
 │  ├─ i18n/ en.json
 │  └─ types/database.ts           # generated by `supabase gen types`
 ├─ supabase/
 │  ├─ migrations/                 # one SQL file per change
-│  ├─ seed.sql                    # demo users, communities, visas
+│  ├─ seed.sql                    # demo users, communities, chats, stamps
 │  └─ functions/                  # Edge Functions
 ├─ docs/                          # this spec + context
 └─ CLAUDE.md
@@ -436,7 +418,7 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 | 3 | **Chat:** inbox, direct, group, community chat, attachments, read state, Customs notice, realtime | Messages arrive live; non-members can't read them (RLS test) |
 | 4 | **Backpack:** folders, upload, view, rename, move, delete, share-a-copy to chat | Another user can't read a file even with its path (RLS + storage test) |
 | 5 | **Journey:** stamps, upcoming items, linked documents, reminders, share to feed | A reminder push arrives on the set date; shared update shows the stamp only |
-| 6 | **Visa guide:** admin entry (Supabase dashboard is fine), list, detail, official link, disclaimer | Published visas show; unpublished don't |
+| 6 | ~~**Visa guide**~~ removed from v1 (26 Nov 2026) | |
 | 7 | **Safety + notifications:** reports, admin review, push + in-app notifications, delete account | Reported content can be removed; account deletion removes files |
 | 8 | **Launch prep:** privacy policy, terms, app icons, store listings, TestFlight + Play internal testing, web deploy | Testers install from TestFlight / Play and the web URL |
 
@@ -457,4 +439,5 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - ~~Journey reminders: server push or on-device? (Phase 5)~~ **Decided 26 Nov 2026:** real server push, sent at 9am in the person's city (from their profile; Sydney time if unknown). EAS project `@jdavid07/arriv`.
 - ~~Can upcoming items (e.g. visa expiry) show on a profile? (Phase 5)~~ **Decided 26 Nov 2026:** no. Only done stamps are ever shown to others, and only as their visibility allows.
 - **Deferred 26 Nov 2026:** the real-phone push check for Phase 5 (and the Apple Developer / Firebase push credentials it needs) moves to Phase 8 launch prep. Everything else in Phase 5 is built and tested; the server side was verified against Expo's push service.
-- **Home shortcuts (26 Nov 2026):** a row of large stamps fits three on a phone. v1: Journey, Passport, Visas (Phase 6). When Lawyers arrives (after v1), drop Passport (the avatar and boarding pass already open the profile) so the row stays at three.
+- **Home shortcuts (26 Nov 2026):** a row of large stamps fits three on a phone. v1: Journey and Passport. Lawyers (after v1) becomes the third.
+- ~~Visa guide: keep it?~~ **Decided 26 Nov 2026:** removed from v1. Visa rules, fees and processing times change often, and there's no official feed to pull them from, so a hand-written guide would go stale and could mislead. Profiles still show a person's visa subclass, crews can be about a visa, and Journey has visa stamps; none of these claim official facts.
