@@ -46,7 +46,101 @@
   },
   "backpack": {
     "files_one": "{{count}} file",
-    "files_other": "{{count}} files"
+    "files_other": "{{count}} files",
+    "title": "My Backpack",
+    "eyebrow": "Checked in · Private",
+    "privacy": "Only you can see what's in your Backpack. It's never shown to anyone else on Arriv.",
+    "pack": "Pack a document",
+    "folders": "Folders",
+    "newFolder": "New folder",
+    "recent": "Baggage receipt · Recent",
+    "empty": "Your Backpack is empty. Pack your passport, visa grant letter or police check so they're with you when you need them.",
+    "emptyFolder": "Nothing in this folder yet.",
+    "docMeta": "{{type}} · {{size}} · {{date}}",
+    "docA11y": "{{name}}, {{meta}}",
+    "folderKinds": {
+      "identity": "Identity",
+      "visa": "Visas",
+      "police": "Police checks",
+      "education": "Education",
+      "work": "Work",
+      "health": "Health",
+      "other": "Other"
+    },
+    "folder": {
+      "options": "Folder options",
+      "rename": "Rename folder",
+      "resetName": "Use the original name",
+      "delete": "Delete folder",
+      "deleteTitle": "Delete this folder?",
+      "deleteBody": "It's empty, so nothing else is removed.",
+      "notEmpty": "Move or delete the files in this folder first.",
+      "defaultHint": "Default folders can be renamed but not deleted.",
+      "limit": "You've reached the limit of 30 folders.",
+      "newTitle": "New folder",
+      "nameLabel": "Folder name",
+      "namePlaceholder": "e.g. Rental",
+      "create": "Create folder"
+    },
+    "upload": {
+      "title": "Pack a document",
+      "eyebrow": "Backpack · Private",
+      "source": "Add from",
+      "camera": "Take a photo",
+      "photo": "Choose a photo",
+      "file": "Choose a file",
+      "hint": "PDF, Word document or photo, up to 20 MB. Photos have their location data removed.",
+      "photoPicked": "Photo",
+      "change": "Choose something else",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Passport",
+      "nameRequired": "Give it a name.",
+      "folderLabel": "Folder",
+      "submit": "Pack it",
+      "privateNote": "Saved privately. Only you can see it.",
+      "cameraDenied": "Arriv needs camera access to photograph a document. You can allow it in your phone's Settings."
+    },
+    "problem": {
+      "type": "That file type can't go in the Backpack. Use a PDF, Word document or photo.",
+      "tooBig": "That file is over 20 MB."
+    },
+    "document": {
+      "notFound": "Document not found",
+      "notFoundBody": "It may have been deleted.",
+      "privacy": "Only you can see this file.",
+      "open": "Open",
+      "options": "Document options",
+      "rename": "Rename",
+      "move": "Move to another folder",
+      "moveTitle": "Move to",
+      "send": "Send a copy to a chat",
+      "delete": "Delete",
+      "deleteTitle": "Delete this document?",
+      "deleteBody": "It will be removed from your Backpack for good. Copies you've sent to chats stay in those chats.",
+      "nameLabel": "Name",
+      "type": "Type",
+      "size": "Size",
+      "packed": "Packed",
+      "folder": "Folder",
+      "previewA11y": "Photo of {{name}}. Opens full size.",
+      "previewError": "The preview couldn't load. Try Open."
+    },
+    "send": {
+      "eyebrow": "Send a copy",
+      "title": "Pick a chat",
+      "body": "A copy of “{{name}}” goes to the chat. The original stays private in your Backpack.",
+      "confirmTitle": "Send to {{chat}}?",
+      "confirmBody": "This file will be visible to everyone in this chat. Only a copy is sent; the original stays in your Backpack.",
+      "confirm": "Send copy",
+      "noChats": "You don't have any chats yet."
+    },
+    "picker": {
+      "eyebrow": "From your Backpack",
+      "title": "Send a document",
+      "body": "Pick a document. A copy is sent; the original stays private.",
+      "confirmTitle": "Send “{{name}}”?",
+      "empty": "Your Backpack is empty. Pack documents from the Backpack tab."
+    }
   },
   "notice": {
     "customsEyebrow": "Customs notice",
@@ -235,9 +329,7 @@
   },
   "tabsPlaceholder": {
     "chat": "Chat",
-    "chatBody": "Direct messages and community chats. Coming soon.",
-    "backpack": "My Backpack",
-    "backpackBody": "A private place for your documents. Only you can see it. Coming soon."
+    "chatBody": "Direct messages and community chats. Coming soon."
   },
   "profile": {
     "eyebrow": "Passport · Arriv",
@@ -538,7 +630,8 @@
       "editing": "Editing message",
       "cancelEdit": "Cancel editing",
       "save": "Save",
-      "blocked": "You can't send messages in this chat."
+      "blocked": "You can't send messages in this chat.",
+      "addFromBackpack": "Send from your Backpack"
     },
     "attachment": {
       "type": "Only photos, PDFs and Word documents can be sent.",

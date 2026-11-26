@@ -23,7 +23,27 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "blocks": {
+            "backpack_folders": {
+                  Row: {
+                    "created_at": string,"id": string,"kind": Database["public"]['Enums']["folder_kind"] | null,"name": string | null,"owner_id": string,"position": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["folder_kind"] | null,"name"?: string | null,"owner_id": string,"position"?: number
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["folder_kind"] | null,"name"?: string | null,"owner_id"?: string,"position"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "backpack_folders_owner_id_fkey"
+      columns: ["owner_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"blocks": {
                   Row: {
                     "blocked_id": string,"blocker_id": string,"created_at": string
                   }
@@ -232,6 +252,38 @@ isOneToOne: true
     },{
       foreignKeyName: "conversations_created_by_fkey"
       columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"documents": {
+                  Row: {
+                    "created_at": string,"folder_id": string,"id": string,"mime_type": string,"name": string,"owner_id": string,"size_bytes": number,"storage_path": string,"updated_at": string,"uploaded_by": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"folder_id": string,"id"?: string,"mime_type": string,"name": string,"owner_id": string,"size_bytes": number,"storage_path": string,"updated_at"?: string,"uploaded_by": string
+                  }
+                  Update: {
+                    "created_at"?: string,"folder_id"?: string,"id"?: string,"mime_type"?: string,"name"?: string,"owner_id"?: string,"size_bytes"?: number,"storage_path"?: string,"updated_at"?: string,"uploaded_by"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "documents_folder_id_owner_id_fkey"
+      columns: ["folder_id","owner_id"]
+isOneToOne: false
+      referencedRelation: "backpack_folders"
+      referencedColumns: ["id","owner_id"]
+    },{
+      foreignKeyName: "documents_owner_id_fkey"
+      columns: ["owner_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "documents_uploaded_by_fkey"
+      columns: ["uploaded_by"]
 isOneToOne: false
       referencedRelation: "profiles"
       referencedColumns: ["id"]
@@ -456,7 +508,7 @@ isOneToOne: true
                            }
           }
           Enums: {
-            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","conversation_kind": "direct"|"group"|"community","member_role": "owner"|"moderator"|"member","post_kind": "post"|"question"|"journey_update","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
+            "community_kind": "city"|"visa"|"language"|"culture"|"interest","connection_status": "pending"|"accepted","conversation_kind": "direct"|"group"|"community","folder_kind": "identity"|"visa"|"police"|"education"|"work"|"health"|"other","member_role": "owner"|"moderator"|"member","post_kind": "post"|"question"|"journey_update","tier": "free"|"member"|"professional","user_role": "user"|"admin","visibility": "public"|"connections"|"private"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -576,7 +628,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"conversation_kind": ["direct", "group", "community"],"member_role": ["owner", "moderator", "member"],"post_kind": ["post", "question", "journey_update"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
+            "community_kind": ["city", "visa", "language", "culture", "interest"],"connection_status": ["pending", "accepted"],"conversation_kind": ["direct", "group", "community"],"folder_kind": ["identity", "visa", "police", "education", "work", "health", "other"],"member_role": ["owner", "moderator", "member"],"post_kind": ["post", "question", "journey_update"],"tier": ["free", "member", "professional"],"user_role": ["user", "admin"],"visibility": ["public", "connections", "private"]
           }
         }
 } as const

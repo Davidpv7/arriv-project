@@ -20,6 +20,7 @@ export { PassportCover, type PassportCoverProps } from './PassportCover';
 export { PhotoGrid, type Photo, type PhotoGridProps } from './PhotoGrid';
 export { Postcard, type PostcardProps } from './Postcard';
 export { Postmark, type PostmarkProps } from './Postmark';
+export { PromptDialog, type PromptDialogProps } from './PromptDialog';
 export { ListScreen, Screen, type ListScreenProps } from './Screen';
 export { Stamp, type StampProps } from './Stamp';
 export { TabBar, type TabBarProps, type TabKey } from './TabBar';

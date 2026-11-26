@@ -8,12 +8,14 @@ import {
 import { useCallback, useEffect } from 'react';
 
 import { useUserId } from '@/features/auth/session';
+import { copyDocumentToChat, fileNameFor } from '@/features/backpack/files';
 import { supabase } from '@/lib/supabase';
 import type { Database, Tables } from '@/types/database';
 
 import {
   isImageMime,
   removeChatAttachment,
+  safeFileName,
   signChatAttachments,
   uploadChatAttachment,
   type PickedAttachment,
@@ -356,6 +358,53 @@ export function useSendMessage(conversationId: string) {
       return message;
     },
     onSuccess: (message) => {
+      if (message) upsert(conversationId, message);
+      void queryClient.invalidateQueries({ queryKey: chatKeys.inbox(me) });
+    },
+  });
+}
+
+/**
+ * Sends a copy of a Backpack document to this chat (after the person confirmed it will
+ * be visible to everyone here). The original stays owner-only in the Backpack.
+ */
+export function useSendDocumentCopy() {
+  const me = useUserId();
+  const queryClient = useQueryClient();
+  const upsert = useUpsertCachedMessage();
+  return useMutation({
+    mutationFn: async ({
+      conversationId,
+      doc,
+    }: {
+      conversationId: string;
+      doc: Pick<Tables<'documents'>, 'storage_path' | 'name' | 'mime_type'>;
+    }) => {
+      const fileName = fileNameFor(doc.name, doc.mime_type);
+      const path = await copyDocumentToChat(
+        doc.storage_path,
+        conversationId,
+        safeFileName(fileName),
+      );
+      const { data, error } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_id: me,
+          attachment_path: path,
+          attachment_name: fileName.slice(0, 200),
+          attachment_mime: doc.mime_type,
+        })
+        .select(MESSAGE_SELECT)
+        .single();
+      if (error) {
+        await removeChatAttachment(path);
+        throw error;
+      }
+      const [message] = await hydrateMessages([data]);
+      return message;
+    },
+    onSuccess: (message, { conversationId }) => {
       if (message) upsert(conversationId, message);
       void queryClient.invalidateQueries({ queryKey: chatKeys.inbox(me) });
     },
