@@ -42,6 +42,12 @@ export default function Settings() {
             />
             <Divider />
             <ListRow
+              icon="lock"
+              title={t('settings.changePassword')}
+              onPress={() => router.push('/reset-password')}
+            />
+            <Divider />
+            <ListRow
               icon="bell"
               title={t('settings.notifications')}
               onPress={() => router.push('/settings/notifications')}

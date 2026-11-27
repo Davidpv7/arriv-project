@@ -8,19 +8,21 @@ import { exchangeAuthCode } from '@/features/auth/api';
 import { useSession } from '@/features/auth/session';
 import { colors, space } from '@/theme/tokens';
 
-/** Landing point for email confirmation links and OAuth redirects (`?code=`). */
+/** Landing point for email links (confirm, reset password) and OAuth redirects (`?code=`). */
 export default function AuthCallback() {
   const { t } = useTranslation();
-  const { code, error_description } = useLocalSearchParams<{
+  const { code, error_description, next } = useLocalSearchParams<{
     code?: string;
     error_description?: string;
+    /** "reset-password" when the link came from a forgotten-password email. */
+    next?: string;
   }>();
   const { session } = useSession();
   const [failed, setFailed] = useState(!!error_description);
 
   useEffect(() => {
     if (session) {
-      router.replace('/');
+      router.replace(next === 'reset-password' ? '/reset-password' : '/');
       return;
     }
     if (!code || error_description) {
@@ -29,7 +31,7 @@ export default function AuthCallback() {
       return () => clearTimeout(timer);
     }
     exchangeAuthCode(code).catch(() => setFailed(true));
-  }, [code, error_description, session]);
+  }, [code, error_description, session, next]);
 
   return (
     <Screen>

@@ -221,7 +221,8 @@
       "title": "Welcome back",
       "eyebrow": "Check-in",
       "submit": "Sign in",
-      "noAccount": "New to Arriv? Get your boarding pass"
+      "noAccount": "New to Arriv? Get your boarding pass",
+      "forgot": "Forgot your password?"
     },
     "signUp": {
       "title": "Get your boarding pass",
@@ -265,7 +266,32 @@
       "notConfirmed": "Please confirm your email first. Check your inbox.",
       "rateLimited": "Too many tries. Please wait a minute and try again.",
       "network": "Can't reach Arriv. Check your connection.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "passwordMismatch": "The passwords don't match.",
+      "samePassword": "Use a different password from your current one."
+    },
+    "forgot": {
+      "eyebrow": "Check-in help",
+      "title": "Forgot your password?",
+      "body": "Enter the email you signed up with and we'll send you a link to choose a new password.",
+      "submit": "Send reset link",
+      "sentTitle": "Check your email",
+      "sentBody": "If there's an Arriv account for {{email}}, a link to choose a new password is on its way. It works once and expires after an hour.",
+      "sentHint": "Nothing after a few minutes? Check your spam folder, or try again.",
+      "backToSignIn": "Back to sign in"
+    },
+    "reset": {
+      "eyebrow": "Check-in",
+      "title": "Choose a new password",
+      "body": "Pick a new password for your Arriv account.",
+      "newPassword": "New password",
+      "hint": "At least 8 characters.",
+      "confirm": "Type it again",
+      "submit": "Save new password",
+      "doneTitle": "Password changed",
+      "doneBody": "Your new password is saved. Use it next time you sign in.",
+      "expired": "This reset link has expired or was already used. Ask for a new one.",
+      "requestAgain": "Send a new link"
     }
   },
   "onboarding": {
@@ -420,7 +446,8 @@
     "privacyNote": "Your Backpack, notes and visa expiry are only ever visible to you.",
     "admin": "Admin",
     "notifications": "Push notifications",
-    "about": "About"
+    "about": "About",
+    "changePassword": "Change password"
   },
   "time": {
     "now": "Now",

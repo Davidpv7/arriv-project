@@ -71,6 +71,11 @@ export default function SignIn() {
               />
             )}
           />
+          <Link href="/forgot-password" style={styles.forgot}>
+            <Text variant="meta" color="rust">
+              {t('auth.signIn.forgot')}
+            </Text>
+          </Link>
           {signIn.error ? (
             <Text variant="meta" color="rust" accessibilityLiveRegion="polite">
               {errorText(authErrorKey(signIn.error))}
@@ -98,4 +103,5 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   stack: { gap: space[4] },
   link: { alignSelf: 'center', paddingVertical: space[3] },
+  forgot: { alignSelf: 'flex-end', paddingVertical: space[2] },
 });
