@@ -6,46 +6,182 @@
     <meta name="color-scheme" content="light" />
     <title>Confirm your email</title>
   </head>
-  <body style="margin:0;padding:0;background:#F7F0E1;">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Confirm your email to finish signing up to Arriv.</div>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#F7F0E1;">
+  <body style="margin: 0; padding: 0; background: #f7f0e1">
+    <div style="display: none; max-height: 0; overflow: hidden; opacity: 0">
+      Confirm your email to finish signing up to Arriv.
+    </div>
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      style="background: #f7f0e1"
+    >
       <tr>
-        <td align="center" style="padding:32px 16px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:520px;">
+        <td align="center" style="padding: 32px 16px">
+          <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="max-width: 520px"
+          >
             <tr>
-              <td style="background:#1F2A44;border-radius:20px 20px 0 0;padding:20px 28px;">
+              <td style="background: #1f2a44; border-radius: 20px 20px 0 0; padding: 20px 28px">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                   <tr>
-                    <td style="padding-right:12px;"><img src="https://arrivsocial.com/apple-touch-icon.png" width="40" height="40" alt="" style="display:block;border-radius:10px;" /></td>
-                    <td style="font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:24px;font-weight:900;color:#F7F0E1;">Arriv</td>
+                    <td style="padding-right: 12px">
+                      <img
+                        src="https://arrivsocial.com/apple-touch-icon.png"
+                        width="40"
+                        height="40"
+                        alt=""
+                        style="display: block; border-radius: 10px"
+                      />
+                    </td>
+                    <td
+                      style="
+                        font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        font-size: 24px;
+                        font-weight: 900;
+                        color: #f7f0e1;
+                      "
+                    >
+                      Arriv
+                    </td>
                   </tr>
                 </table>
               </td>
             </tr>
             <tr>
-              <td style="height:6px;line-height:6px;font-size:0;background:repeating-linear-gradient(-45deg,#D64545 0 12px,#FFFDF7 12px 18px,#2E5AA8 18px 30px,#FFFDF7 30px 36px);background-color:#FFFDF7;">&nbsp;</td>
-            </tr>
-            <tr>
-              <td style="background:#FFFDF7;border-radius:0 0 20px 20px;padding:28px;">
-              <p style="margin:0 0 8px;font-family:'DM Mono','Courier New',Courier,monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#B8480C;">Boarding pass</p>
-              <h1 style="margin:0 0 18px;font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:26px;line-height:32px;font-weight:900;color:#1F2A44;">Confirm your email</h1>
-              <p style="margin:0 0 16px;font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;color:#1F2A44;">Welcome to Arriv! Confirm this is your email address and your boarding pass is ready.</p>
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:8px 0 24px;">
-                <tr>
-                  <td style="border-radius:999px;background:#FF7A2F;">
-                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 28px;font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:800;color:#1F2A44;text-decoration:none;border-radius:999px;">Confirm my email</a>
-                  </td>
-                </tr>
-              </table>
-              <p style="margin:0 0 6px;font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#5A6278;">If the button doesn't work, copy this link into your browser:</p>
-              <p style="margin:0 0 8px;font-family:'DM Mono','Courier New',Courier,monospace;font-size:12px;line-height:18px;color:#B8480C;word-break:break-all;">{{ .ConfirmationURL }}</p>
+              <td
+                style="
+                  height: 6px;
+                  line-height: 6px;
+                  font-size: 0;
+                  background: repeating-linear-gradient(
+                    -45deg,
+                    #d64545 0 12px,
+                    #fffdf7 12px 18px,
+                    #2e5aa8 18px 30px,
+                    #fffdf7 30px 36px
+                  );
+                  background-color: #fffdf7;
+                "
+              >
+                &nbsp;
               </td>
             </tr>
             <tr>
-              <td style="padding:20px 8px 0;font-family:'Nunito','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#5A6278;text-align:center;">
-                You're getting this because someone signed up to Arriv with {{ .Email }}. If you didn't ask for this, you can ignore this email: nothing will change.<br />
-                Questions? Write to <a href="mailto:hello@arrivsocial.com" style="color:#B8480C;">hello@arrivsocial.com</a>.<br />
-                Arriv connects people living in Australia on a visa. It doesn't give immigration advice.
+              <td style="background: #fffdf7; border-radius: 0 0 20px 20px; padding: 28px">
+                <p
+                  style="
+                    margin: 0 0 8px;
+                    font-family: 'DM Mono', 'Courier New', Courier, monospace;
+                    font-size: 12px;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    color: #b8480c;
+                  "
+                >
+                  Boarding pass
+                </p>
+                <h1
+                  style="
+                    margin: 0 0 18px;
+                    font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-size: 26px;
+                    line-height: 32px;
+                    font-weight: 900;
+                    color: #1f2a44;
+                  "
+                >
+                  Confirm your email
+                </h1>
+                <p
+                  style="
+                    margin: 0 0 16px;
+                    font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color: #1f2a44;
+                  "
+                >
+                  Welcome to Arriv! Confirm this is your email address and your boarding pass is
+                  ready.
+                </p>
+                <table
+                  role="presentation"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                  style="margin: 8px 0 24px"
+                >
+                  <tr>
+                    <td style="border-radius: 999px; background: #ff7a2f">
+                      <a
+                        href="{{ .ConfirmationURL }}"
+                        style="
+                          display: inline-block;
+                          padding: 14px 28px;
+                          font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                          font-size: 16px;
+                          font-weight: 800;
+                          color: #1f2a44;
+                          text-decoration: none;
+                          border-radius: 999px;
+                        "
+                        >Confirm my email</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <p
+                  style="
+                    margin: 0 0 6px;
+                    font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-size: 13px;
+                    line-height: 20px;
+                    color: #5a6278;
+                  "
+                >
+                  If the button doesn't work, copy this link into your browser:
+                </p>
+                <p
+                  style="
+                    margin: 0 0 8px;
+                    font-family: 'DM Mono', 'Courier New', Courier, monospace;
+                    font-size: 12px;
+                    line-height: 18px;
+                    color: #b8480c;
+                    word-break: break-all;
+                  "
+                >
+                  {{ .ConfirmationURL }}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 20px 8px 0;
+                  font-family: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                  font-size: 12px;
+                  line-height: 18px;
+                  color: #5a6278;
+                  text-align: center;
+                "
+              >
+                You're getting this because someone signed up to Arriv with {{ .Email }}. If you
+                didn't ask for this, you can ignore this email: nothing will change.<br />
+                Questions? Write to
+                <a href="mailto:hello@arrivsocial.com" style="color: #b8480c"
+                  >hello@arrivsocial.com</a
+                >.<br />
+                Arriv connects people living in Australia on a visa. It doesn't give immigration
+                advice.
               </td>
             </tr>
           </table>
