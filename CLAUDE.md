@@ -20,6 +20,7 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 
 ## Rules
 - **Security lives in the database.** Every new table gets RLS enabled and policies in the same migration, plus a test that a non-owner is denied.
+- **Grant table privileges explicitly.** The hosted project exposes nothing by default (local now matches): in the same migration, `grant` what `authenticated` needs (select/delete, plus column-level insert/update) and `grant select, insert, update, delete … to service_role`. RLS decides rows; grants decide whether the table is usable at all. `supabase/tests/100_api_privileges.test.sql` checks this.
 - **Backpack files are owner-only.** Never add a policy that lets another user read `documents` or the `backpack` bucket (lawyer sharing comes later via `document_shares`).
 - Never change an applied migration; add a new one.
 - Never put the Supabase service-role key in the app. It's only for Edge Functions.
