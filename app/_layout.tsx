@@ -56,6 +56,7 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
         <Stack.Screen name="(auth)/sign-in" />
         <Stack.Screen name="(auth)/sign-up" />
         <Stack.Screen name="(auth)/check-email" />
+        <Stack.Screen name="(auth)/forgot-password" />
       </Stack.Protected>
       <Stack.Protected guard={signedIn && !onboarded}>
         <Stack.Screen name="(onboarding)/origin" />
@@ -83,6 +84,8 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
       </Stack.Protected>
       <Stack.Screen name="index" />
       <Stack.Screen name="auth/callback" />
+      {/* Reached from a reset email (signed in by the link) or Settings; checks itself. */}
+      <Stack.Screen name="reset-password" />
       <Stack.Screen name="ds" />
       {/* Public legal pages: open signed in or out (the app stores link to them). */}
       <Stack.Screen name="privacy" />

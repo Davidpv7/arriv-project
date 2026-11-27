@@ -6,12 +6,19 @@ import { Platform } from 'react-native';
 import { unregisterPush } from '@/lib/notifications';
 import { env, supabase } from '@/lib/supabase';
 
-import type { SignInValues, SignUpValues } from './schemas';
+import type {
+  ForgotPasswordValues,
+  NewPasswordValues,
+  SignInValues,
+  SignUpValues,
+} from './schemas';
 
 WebBrowser.maybeCompleteAuthSession();
 
 /** Where email links and OAuth return to (app/auth/callback.tsx). */
-export const authRedirectUrl = () => Linking.createURL('auth/callback');
+/** Where auth emails and OAuth send people back. `next` picks the screen after it. */
+export const authRedirectUrl = (next?: 'reset-password') =>
+  Linking.createURL('auth/callback', next ? { queryParams: { next } } : undefined);
 
 export type OAuthProvider = 'google' | 'apple';
 
@@ -27,6 +34,8 @@ export function authErrorKey(error: unknown): string {
   if (message.includes('already registered')) return 'auth.errors.alreadyRegistered';
   if (message.includes('email not confirmed')) return 'auth.errors.notConfirmed';
   if (message.includes('rate limit')) return 'auth.errors.rateLimited';
+  if (message.includes('should be different')) return 'auth.errors.samePassword';
+  if (message.includes('weak') || message.includes('at least')) return 'auth.errors.passwordShort';
   if (message.includes('network') || message.includes('fetch')) return 'auth.errors.network';
   return 'auth.errors.generic';
 }
@@ -35,6 +44,34 @@ export function useSignIn() {
   return useMutation({
     mutationFn: async ({ email, password }: SignInValues) => {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+    },
+  });
+}
+
+/**
+ * Emails a link to choose a new password. Resolves the same way whether or not the
+ * email has an account, so the screen can't be used to find out who's on Arriv.
+ */
+export function useRequestPasswordReset() {
+  return useMutation({
+    mutationFn: async ({ email }: ForgotPasswordValues) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: authRedirectUrl('reset-password'),
+      });
+      // Only problems on our side are shown (rate limits, network); not "no such user".
+      if (error && (error.status === 429 || error.message.toLowerCase().includes('fetch'))) {
+        throw error;
+      }
+    },
+  });
+}
+
+/** Sets a new password for the signed-in person (after a reset link, or from Settings). */
+export function useUpdatePassword() {
+  return useMutation({
+    mutationFn: async ({ password }: NewPasswordValues) => {
+      const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
     },
   });
