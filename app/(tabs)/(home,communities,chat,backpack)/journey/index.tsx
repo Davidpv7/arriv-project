@@ -104,6 +104,21 @@ export default function JourneyScreen() {
 
 function UpcomingRow({ milestone }: { milestone: Milestone }) {
   const { t } = useTranslation();
+  if (milestone.lodged_on) {
+    const meta = t('journey.waitingMeta', {
+      date: formatDay(milestone.lodged_on),
+      day: -daysUntil(milestone.lodged_on),
+    });
+    return (
+      <ListRow
+        icon="send"
+        title={milestone.title}
+        meta={meta}
+        accessibilityLabel={`${milestone.title}, ${meta}`}
+        onPress={() => router.push(`/journey/${milestone.id}`)}
+      />
+    );
+  }
   const due = milestone.due_on ?? '';
   const days = daysUntil(due);
   const when =

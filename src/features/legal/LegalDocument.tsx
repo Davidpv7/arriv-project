@@ -9,7 +9,7 @@ export type LegalDoc = 'privacy' | 'terms' | 'guidelines';
 type Section = { heading: string; body: string[] };
 
 /** When the documents last changed. Update with every edit to their text. */
-export const LEGAL_UPDATED = '26 November 2026';
+export const LEGAL_UPDATED = '28 November 2026';
 /** True until a lawyer has reviewed the documents (decided 26 Nov 2026). */
 export const LEGAL_DRAFT = true;
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Input } from '@/components/ds';
+import { savedPath } from '@/features/journey/afterSave';
 import { useSaveMilestone } from '@/features/journey/api';
 import { StampPreview } from '@/features/journey/components/StampPreview';
 import { answers, NEW_STAMP_STEPS, useNewStamp } from '@/features/journey/newStampStore';
@@ -30,7 +31,7 @@ export default function StampNotesStep() {
           stamp.reset();
           // Replace the wizard with the new milestone; Back goes to the Journey page.
           router.dismissTo('/journey');
-          router.push(`/journey/${id}`);
+          router.push(savedPath(id, values));
         },
         onError: () => setError(t('common.error')),
       },

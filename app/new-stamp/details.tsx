@@ -24,7 +24,7 @@ export default function StampDetailsStep() {
   const next = () => {
     const found = stepErrors(answers(stamp), ['title', 'visaSubclass', 'place']);
     if (Object.keys(found).length > 0) return setErrors(found);
-    router.push(stamp.status === 'done' ? '/new-stamp/visibility' : '/new-stamp/remind');
+    router.push(stamp.status === 'upcoming' ? '/new-stamp/remind' : '/new-stamp/visibility');
   };
   const change = (patch: Parameters<typeof stamp.set>[0]) => {
     setErrors({});

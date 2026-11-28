@@ -34,6 +34,7 @@ Arriv is a **mobile-first social network for people living in Australia on a vis
 | My Backpack | Personal document drive |
 | My Journey | Timeline of the user's migration milestones |
 | Visas | ~~Simplified visa info~~ removed from v1 (26 Nov 2026); maybe later |
+| Visa stats | Waiting times reported by members who opt in, per visa subclass, with journey updates to comment on. Labelled not official; only groups of 5 or more (28 Nov 2026) |
 | Migration Lawyers | Directory of verified agents and lawyers, with reviews (after v1) |
 | Profile | Identity, visa status, posts, connections, communities |
 

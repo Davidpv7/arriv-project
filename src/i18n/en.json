@@ -358,7 +358,9 @@
     "journeyA11y": "My Journey: your stamps and reminders",
     "passport": "Passport",
     "passportA11y": "Your passport: your profile",
-    "crewsForYou": "Crews for you"
+    "crewsForYou": "Crews for you",
+    "visaStats": "Visa stats",
+    "visaStatsA11y": "Visa stats: how long members are waiting"
   },
   "tabsPlaceholder": {
     "chat": "Chat",
@@ -819,7 +821,13 @@
       "notesHint": "Only you can see these.",
       "visibilityLabel": "Who can see this stamp on your profile?",
       "visibilityHint": "Coming-up items, notes, reminders and documents are always only for you.",
-      "save": "Save stamp"
+      "save": "Save stamp",
+      "statusGranted": "Granted",
+      "statusWaiting": "Still waiting",
+      "grantedOn": "Date granted",
+      "lodgedOn": "Date lodged",
+      "lodgedOnOptional": "Date lodged (optional)",
+      "lodgedHint": "Add it to see how long you waited. You choose whether it counts in the visa stats."
     },
     "detail": {
       "options": "Stamp options",
@@ -841,7 +849,15 @@
       "pushOff": "Notifications are off, so this reminder can't reach you. Turn them on for Arriv in your phone's Settings.",
       "pushUnavailable": "Reminders arrive as notifications in the Arriv app on your phone.",
       "notFound": "Stamp not found",
-      "notFoundBody": "It may have been deleted."
+      "notFoundBody": "It may have been deleted.",
+      "lodged": "Lodged",
+      "waited": "Waiting",
+      "waitedValue_one": "{{count}} day",
+      "waitedValue_other": "{{count}} days",
+      "markGranted": "It was granted today",
+      "seeStats": "See visa {{subclass}} stats",
+      "waitedFor_one": "Granted after {{count}} day",
+      "waitedFor_other": "Granted after {{count}} days"
     },
     "link": {
       "eyebrow": "From your Backpack",
@@ -859,7 +875,10 @@
       "titleRequired": "Give it a title.",
       "subclass": "Use the 3-digit subclass, like 500.",
       "tooLong": "That's too long.",
-      "place": "Use up to 4 letters or numbers, like SYD."
+      "place": "Use up to 4 letters or numbers, like SYD.",
+      "lodgedFuture": "The lodged date can't be in the future.",
+      "lodgedAfterGrant": "The lodged date must be on or before the grant date.",
+      "waitingVisa": "Only a visa can be still waiting."
     },
     "wizard": {
       "kind": {
@@ -880,7 +899,11 @@
         "done": "Yes, it happened",
         "doneHint": "It becomes a stamp in your passport.",
         "upcoming": "Not yet, it's coming up",
-        "upcomingHint": "Keep track of it and get a reminder."
+        "upcomingHint": "Keep track of it and get a reminder.",
+        "granted": "Yes, it was granted",
+        "waiting": "Lodged, still waiting",
+        "waitingHint": "Keep track of how long you've been waiting.",
+        "visaUpcoming": "Not yet, it's coming up"
       },
       "details": {
         "title": "Name your stamp",
@@ -904,7 +927,8 @@
       "suggest": {
         "visa": {
           "done": "Visa granted",
-          "upcoming": "Visa expires"
+          "upcoming": "Visa expires",
+          "waiting": "Visa lodged"
         },
         "arrival": {
           "done": "Landed in Australia",
@@ -935,7 +959,53 @@
     "theirTitle": "{{name}}'s Journey",
     "theirEyebrow": "Passport · @{{handle}}",
     "theirEmpty": "No stamps to show. {{name}} may keep their Journey private.",
-    "theirNote": "You see the stamps {{name}} shares with you. Notes, documents and coming-up items are always private."
+    "theirNote": "You see the stamps {{name}} shares with you. Notes, documents and coming-up items are always private.",
+    "waitingMeta": "Lodged {{date}} · day {{day}}"
+  },
+  "visaStats": {
+    "title": "Visa stats",
+    "eyebrow": "Reported by members",
+    "notOfficialEyebrow": "Not official",
+    "notOfficial": "These figures come from Arriv members who chose to share their dates. They aren't official, and every application is different.",
+    "subclass": "Visa subclass",
+    "subclassPlaceholder": "e.g. 500",
+    "subclassError": "Use the 3-digit subclass, like 500.",
+    "pickSubclass": "Enter a visa subclass to see how long members are waiting.",
+    "show": "Show",
+    "waiting": "waiting",
+    "grantedWeek": "granted this week",
+    "medianWait": "median wait",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "daysShort": "{{count}} d",
+    "fromPeople_one": "from {{count}} person",
+    "fromPeople_other": "from {{count}} people",
+    "fewer": "<5",
+    "fewerA11y": "fewer than 5",
+    "range": "Half of them waited between {{p25}} and {{p75}} days.",
+    "notEnough": "Not enough reports yet. Figures show once at least 5 members share their dates.",
+    "weekly": "Grants per week",
+    "weeklyHint": "Last 12 weeks",
+    "weeklyA11y": "Grants per week over the last 12 weeks, oldest first: {{counts}}",
+    "byMonth": "Still waiting, by month lodged",
+    "byMonthEmpty": "No month has 5 or more members waiting yet.",
+    "byMonthA11y": "{{month}}: {{count}} waiting",
+    "updates": "Recent journey updates",
+    "updatesEmpty": "No journey updates for this visa yet.",
+    "official": "Official processing times",
+    "officialA11y": "Official processing times on the Home Affairs website",
+    "shareYours": "Share your dates",
+    "shareYoursHint": "Add a visa stamp with the date you lodged, and choose to count it.",
+    "askEyebrow": "Visa stats",
+    "askTitle": "Help others waiting on a {{subclass}}?",
+    "askBody": "Add your dates to the visa stats anonymously. Only totals from 5 or more people are shown, never your name or your stamp.",
+    "askShare": "Share anonymously",
+    "askLater": "Not now",
+    "askDone": "Thanks! Your dates now count in the visa stats.",
+    "switchLabel": "Included in visa stats (anonymous)",
+    "switchHint": "Only totals from 5 or more people are shown. Your name and stamp stay private.",
+    "switchNeeds": "Add the date lodged and the subclass to count in the visa stats.",
+    "moreUpdates": "Show more updates"
   },
   "report": {
     "action": "Report",
@@ -1147,7 +1217,8 @@
             "• Backpack documents are visible only to you. Other people, community owners and Arriv's admins can't open them in the app. If you send a copy of a document to a chat, that copy is visible to the people in the chat.",
             "• Journey stamps you mark as visible appear on your profile. Coming-up items, notes, reminders and linked documents stay private.",
             "• Reports are seen by Arriv's admins. We don't tell people who reported them.",
-            "• People you block can't see your profile or content, and you won't see theirs."
+            "• People you block can't see your profile or content, and you won't see theirs.",
+            "• Visa stats: if you choose to count a visa stamp in the visa stats, its subclass, the date you lodged and the date it was granted are added to anonymous totals that other members can see (how many are waiting, how many were granted, and how long people waited). Your name and your stamp are never shown, and a figure only appears once at least 5 members are counted in it. You can stop counting a stamp at any time by editing it."
           ]
         },
         {
@@ -1179,7 +1250,7 @@
         {
           "heading": "Your choices and rights",
           "body": [
-            "• You can see and correct most of your information yourself in the app, and choose who sees your visa status and your Journey stamps.",
+            "• You can see and correct most of your information yourself in the app, and choose who sees your visa status and your Journey stamps, and whether your visa dates count in the anonymous visa stats.",
             "• You can turn each kind of push notification on or off, mute chats, and block or report people.",
             "• You can delete your account in Settings.",
             "• You can ask us for a copy of your personal information, or to correct it, by contacting us.",

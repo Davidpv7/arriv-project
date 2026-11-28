@@ -29,7 +29,7 @@ Expo (React Native) + Expo Router, TypeScript strict · Supabase (Postgres, Auth
 - All user-facing text goes through i18n (`src/i18n/en.json`).
 - Colours, spacing, radii and fonts come from tokens. No hard-coded hex values in screens.
 - Text on coloured fills is navy, never white. Touch targets ≥ 44px. Rotate stamps/tags only, never text blocks or inputs.
-- Never state visa fees, processing times or rules in the app; point people to Home Affairs. Don't invent figures. (The visa guide was removed from v1 on 26 Nov 2026.)
+- Never state official visa fees, processing times or rules in the app; point people to Home Affairs. Don't invent figures. (The visa guide was removed from v1 on 26 Nov 2026.) The one exception is **member-reported visa stats** (28 Nov 2026): they're allowed only when labelled as not official, built only from stamps whose owners opted in, and shown only for groups of 5 or more (`get_visa_stats()` enforces this).
 - Test on iOS, Android and web (including mobile-width web) before calling a phase done.
 - Every new screen works at phone width and desktop width (≥ 1024px, `useIsWide()`): pick its desktop layout (centred column, side column, or list + detail panes like Chat and Communities) and check both. Phones must not change.
 

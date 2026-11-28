@@ -226,7 +226,16 @@ function PassAndShortcuts({ profile }: { profile: ProfileWithVisa }) {
           accessibilityLabel={t('home.passportA11y')}
           onPress={openProfile}
         />
-        {/* Three fit on a phone: Lawyers (after v1) becomes the third. */}
+        <Stamp
+          size="lg"
+          label={t('home.visaStats')}
+          icon="calendar"
+          fill="tangerine"
+          direction={1}
+          accessibilityLabel={t('home.visaStatsA11y')}
+          onPress={() => router.push('/visa-stats')}
+        />
+        {/* Three fit on a phone. Lawyers (after v1) needs a new place. */}
       </View>
     </View>
   );

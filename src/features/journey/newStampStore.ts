@@ -15,6 +15,8 @@ export const EMPTY_MILESTONE: MilestoneFormInput = {
   place: '',
   notes: '',
   visibility: 'private',
+  lodgedOn: null,
+  shareStats: false,
 };
 
 /** Answers for the "Add a stamp" wizard, saved together on the last step. */
@@ -42,6 +44,8 @@ export function answers(s: NewStampState): MilestoneFormInput {
     place: s.place,
     notes: s.notes,
     visibility: s.visibility,
+    lodgedOn: s.lodgedOn,
+    shareStats: s.shareStats,
   };
 }
 
@@ -69,5 +73,7 @@ export function stepErrors(
 /** i18n key for a suggested title, e.g. visa + done -> "Visa granted". Null for "other". */
 export function suggestionKey(kind: MilestoneKind, status: MilestoneFormInput['status']) {
   if (kind === 'other') return null;
+  if (status === 'waiting')
+    return kind === 'visa' ? ('journey.wizard.suggest.visa.waiting' as const) : null;
   return `journey.wizard.suggest.${kind}.${status}` as const;
 }

@@ -9,6 +9,11 @@ import type { Database, Tables } from '@/types/database';
 export type MilestoneKind = Database['public']['Enums']['milestone_kind'];
 export type MilestoneStatus = Database['public']['Enums']['milestone_status'];
 export type Milestone = Tables<'milestones'>;
+/**
+ * The form's status. "waiting" is a visa that's lodged and not yet decided; it's
+ * saved as an upcoming item with a lodged date and no due date.
+ */
+export type FormStatus = MilestoneStatus | 'waiting';
 
 export const MILESTONE_KINDS: MilestoneKind[] = [
   'visa',
@@ -51,8 +56,9 @@ export const milestoneFormSchema = z
       .trim()
       .min(1, 'journey.errors.titleRequired')
       .max(TITLE_MAX, 'journey.errors.tooLong'),
-    status: z.enum(['done', 'upcoming']),
+    status: z.enum(['done', 'upcoming', 'waiting']),
     happenedOn: isoDate.nullable(),
+    lodgedOn: isoDate.nullable(),
     dueOn: isoDate.nullable(),
     remindOn: isoDate.nullable(),
     visaSubclass: z
@@ -68,9 +74,26 @@ export const milestoneFormSchema = z
       .transform((v) => (v === '' ? null : v)),
     notes: optionalText(NOTES_MAX),
     visibility: visibilitySchema,
+    shareStats: z.boolean(),
   })
   .superRefine((v, ctx) => {
     const today = todayIso();
+    const lodgedOn = v.kind === 'visa' ? v.lodgedOn : null;
+    if (lodgedOn && lodgedOn > today) {
+      ctx.addIssue({ code: 'custom', path: ['lodgedOn'], message: 'journey.errors.lodgedFuture' });
+    }
+    if (v.status === 'waiting') {
+      if (v.kind !== 'visa') {
+        ctx.addIssue({ code: 'custom', path: ['status'], message: 'journey.errors.waitingVisa' });
+      } else if (!lodgedOn) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['lodgedOn'],
+          message: 'journey.errors.dateRequired',
+        });
+      }
+      return;
+    }
     if (v.status === 'done') {
       if (!v.happenedOn) {
         ctx.addIssue({
@@ -83,6 +106,12 @@ export const milestoneFormSchema = z
           code: 'custom',
           path: ['happenedOn'],
           message: 'journey.errors.dateFuture',
+        });
+      } else if (lodgedOn && lodgedOn > v.happenedOn) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['lodgedOn'],
+          message: 'journey.errors.lodgedAfterGrant',
         });
       }
       return;
@@ -110,14 +139,21 @@ export type MilestoneFormValues = z.output<typeof milestoneFormSchema>;
 /** The row to save: fields that don't apply to the status are cleared. */
 export function toMilestoneRow(v: MilestoneFormValues) {
   const done = v.status === 'done';
+  const due = v.status === 'upcoming';
+  const visaSubclass = SUBCLASS_KINDS.includes(v.kind) ? v.visaSubclass : null;
+  // A lodged date belongs to a visa that's waiting or granted, never to a due item.
+  const lodgedOn = v.kind === 'visa' && !due ? v.lodgedOn : null;
   return {
     kind: v.kind,
     title: v.title,
-    status: v.status,
+    status: done ? ('done' as const) : ('upcoming' as const),
     happened_on: done ? v.happenedOn : null,
-    due_on: done ? null : v.dueOn,
-    remind_on: done ? null : v.remindOn,
-    visa_subclass: SUBCLASS_KINDS.includes(v.kind) ? v.visaSubclass : null,
+    due_on: due ? v.dueOn : null,
+    remind_on: due ? v.remindOn : null,
+    lodged_on: lodgedOn,
+    visa_subclass: visaSubclass,
+    share_stats:
+      v.shareStats && canShareStats({ lodged_on: lodgedOn, visa_subclass: visaSubclass }),
     place: v.place,
     notes: v.notes,
     visibility: v.visibility,
@@ -129,16 +165,29 @@ export function toFormInput(m: Milestone): MilestoneFormInput {
   return {
     kind: m.kind,
     title: m.title,
-    status: m.status,
+    status: formStatus(m),
     happenedOn: m.happened_on,
+    lodgedOn: m.lodged_on,
     dueOn: m.due_on,
     remindOn: m.remind_on,
     visaSubclass: m.visa_subclass ?? '',
     place: m.place ?? '',
     notes: m.notes ?? '',
     visibility: m.visibility,
+    shareStats: m.share_stats,
   };
 }
+
+/** A visa that's lodged and waiting for a decision. */
+export const isWaiting = (m: Pick<Milestone, 'status' | 'lodged_on'>) =>
+  m.status === 'upcoming' && !!m.lodged_on;
+
+export const formStatus = (m: Pick<Milestone, 'status' | 'lodged_on'>): FormStatus =>
+  isWaiting(m) ? 'waiting' : m.status;
+
+/** Only visa stamps with a lodged date and a subclass can count in the visa stats. */
+export const canShareStats = (m: Pick<Milestone, 'lodged_on' | 'visa_subclass'>) =>
+  !!m.lodged_on && !!m.visa_subclass;
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

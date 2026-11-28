@@ -349,14 +349,14 @@ isOneToOne: false
                   ]
                 },"milestones": {
                   Row: {
-                    "created_at": string,"due_on": string | null,"happened_on": string | null,"id": string,"kind": Database["public"]['Enums']["milestone_kind"],"notes": string | null,"place": string | null,"remind_on": string | null,"reminded_at": string | null,"status": Database["public"]['Enums']["milestone_status"],"title": string,"updated_at": string,"user_id": string,"visa_subclass": string | null,"visibility": Database["public"]['Enums']["visibility"]
+                    "created_at": string,"due_on": string | null,"happened_on": string | null,"id": string,"kind": Database["public"]['Enums']["milestone_kind"],"lodged_on": string | null,"notes": string | null,"place": string | null,"remind_on": string | null,"reminded_at": string | null,"share_stats": boolean,"status": Database["public"]['Enums']["milestone_status"],"title": string,"updated_at": string,"user_id": string,"visa_subclass": string | null,"visibility": Database["public"]['Enums']["visibility"]
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"due_on"?: string | null,"happened_on"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["milestone_kind"],"notes"?: string | null,"place"?: string | null,"remind_on"?: string | null,"reminded_at"?: string | null,"status": Database["public"]['Enums']["milestone_status"],"title": string,"updated_at"?: string,"user_id": string,"visa_subclass"?: string | null,"visibility"?: Database["public"]['Enums']["visibility"]
+                    "created_at"?: string,"due_on"?: string | null,"happened_on"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["milestone_kind"],"lodged_on"?: string | null,"notes"?: string | null,"place"?: string | null,"remind_on"?: string | null,"reminded_at"?: string | null,"share_stats"?: boolean,"status": Database["public"]['Enums']["milestone_status"],"title": string,"updated_at"?: string,"user_id": string,"visa_subclass"?: string | null,"visibility"?: Database["public"]['Enums']["visibility"]
                   }
                   Update: {
-                    "created_at"?: string,"due_on"?: string | null,"happened_on"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["milestone_kind"],"notes"?: string | null,"place"?: string | null,"remind_on"?: string | null,"reminded_at"?: string | null,"status"?: Database["public"]['Enums']["milestone_status"],"title"?: string,"updated_at"?: string,"user_id"?: string,"visa_subclass"?: string | null,"visibility"?: Database["public"]['Enums']["visibility"]
+                    "created_at"?: string,"due_on"?: string | null,"happened_on"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["milestone_kind"],"lodged_on"?: string | null,"notes"?: string | null,"place"?: string | null,"remind_on"?: string | null,"reminded_at"?: string | null,"share_stats"?: boolean,"status"?: Database["public"]['Enums']["milestone_status"],"title"?: string,"updated_at"?: string,"user_id"?: string,"visa_subclass"?: string | null,"visibility"?: Database["public"]['Enums']["visibility"]
                   }
                   Relationships: [
                     {
@@ -636,6 +636,9 @@ isOneToOne: false
 { Args: { "p_user": string }; Returns: {
               "happened_on": string,"id": string,"kind": Database["public"]['Enums']["milestone_kind"],"place": string,"title": string,"visa_subclass": string
             }[]
+                           },
+"get_visa_stats":
+{ Args: { "p_subclass": string }; Returns: Json
                            },
 "invite_to_group":
 { Args: { "p_conversation": string,"p_user_ids": (string)[] }; Returns: number
