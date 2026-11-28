@@ -43,6 +43,7 @@ export const feedKeys = {
   home: (me: string) => ['feed', 'home', me] as const,
   community: (id: string) => ['feed', 'community', id] as const,
   author: (id: string) => ['feed', 'author', id] as const,
+  visa: (subclass: string) => ['feed', 'visa', subclass] as const,
   post: (id: string) => ['feed', 'post', id] as const,
   comments: (postId: string) => ['feed', 'comments', postId] as const,
 };
@@ -86,15 +87,23 @@ export function useHomeFeed() {
   });
 }
 
-/** Posts in one community, or by one author. */
-export function usePostList(scope: { communityId: string } | { authorId: string }) {
+type PostScope = { communityId: string } | { authorId: string } | { visaSubclass: string };
+
+/**
+ * Posts in one community, by one author, or journey updates sharing a visa stamp
+ * of one subclass (only the posts I may read anyway; RLS decides).
+ */
+export function usePostList(scope: PostScope, options: { enabled?: boolean } = {}) {
   const me = useUserId();
   const key =
     'communityId' in scope
       ? feedKeys.community(scope.communityId)
-      : feedKeys.author(scope.authorId);
+      : 'authorId' in scope
+        ? feedKeys.author(scope.authorId)
+        : feedKeys.visa(scope.visaSubclass);
   return useInfiniteQuery({
     queryKey: key,
+    enabled: options.enabled ?? true,
     initialPageParam: null as string | null,
     getNextPageParam: (last: Page) => last.nextCursor,
     queryFn: async ({ pageParam }): Promise<Page> => {
@@ -107,7 +116,12 @@ export function usePostList(scope: { communityId: string } | { authorId: string 
       query =
         'communityId' in scope
           ? query.eq('community_id', scope.communityId)
-          : query.eq('author_id', scope.authorId);
+          : 'authorId' in scope
+            ? query.eq('author_id', scope.authorId)
+            : query
+                .eq('kind', 'journey_update')
+                .eq('stamp->>kind', 'visa')
+                .eq('stamp->>visa_subclass', scope.visaSubclass);
       if (pageParam) query = query.lt('created_at', pageParam);
       const { data, error } = await query;
       if (error) throw error;

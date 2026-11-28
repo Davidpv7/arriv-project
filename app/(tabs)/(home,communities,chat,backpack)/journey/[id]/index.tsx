@@ -13,6 +13,7 @@ import {
   Header,
   Icon,
   IconButton,
+  ListRow,
   Notice,
   Screen,
   Text,
@@ -26,8 +27,15 @@ import {
   useUnlinkDocument,
 } from '@/features/journey/api';
 import { StampTile } from '@/features/journey/components/StampTile';
-import { daysUntil, formatDay, type Milestone } from '@/features/journey/rules';
+import {
+  canShareStats,
+  daysUntil,
+  formatDay,
+  isWaiting,
+  type Milestone,
+} from '@/features/journey/rules';
 import { todayIso } from '@/features/profile/places';
+import { useSetShareStats } from '@/features/visa-stats/api';
 import { pushStatus } from '@/lib/notifications';
 import { colors, space } from '@/theme/tokens';
 
@@ -66,11 +74,17 @@ export default function MilestoneScreen() {
 
 function MilestoneDetail({ milestone: m }: { milestone: Milestone }) {
   const { t } = useTranslation();
+  const { askStats } = useLocalSearchParams<{ askStats?: string }>();
   const remove = useDeleteMilestone();
   const markDone = useMarkDone();
   const [menu, setMenu] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  // Asked once: right after saving a lodged visa, or after marking it granted.
+  const [asking, setAsking] = useState(askStats === '1');
   const done = m.status === 'done';
+  const waiting = isWaiting(m);
+  const waitedDays =
+    done && m.lodged_on && m.happened_on ? -daysUntil(m.lodged_on, m.happened_on) : null;
 
   return (
     <Screen scroll>
@@ -94,6 +108,11 @@ function MilestoneDetail({ milestone: m }: { milestone: Milestone }) {
             <View style={styles.stamp}>
               <StampTile stamp={m} index={0} size={150} />
             </View>
+            {waitedDays != null && (
+              <Text variant="body" align="center">
+                {t('journey.detail.waitedFor', { count: waitedDays })}
+              </Text>
+            )}
             <Text variant="meta" color="muted" align="center">
               {t('journey.detail.seenBy', { who: t(`journey.visibility.${m.visibility}`) })}
             </Text>
@@ -109,12 +128,27 @@ function MilestoneDetail({ milestone: m }: { milestone: Milestone }) {
               </Text>
             </View>
           </>
+        ) : waiting ? (
+          <Waiting
+            milestone={m}
+            onGranted={() =>
+              markDone.mutate(
+                { id: m.id, happenedOn: todayIso() },
+                { onSuccess: () => setAsking(!m.share_stats && canShareStats(m)) },
+              )
+            }
+            marking={markDone.isPending}
+          />
         ) : (
           <Upcoming
             milestone={m}
             onMarkDone={() => markDone.mutate({ id: m.id, happenedOn: todayIso() })}
             marking={markDone.isPending}
           />
+        )}
+
+        {m.kind === 'visa' && (
+          <VisaStatsLink milestone={m} asking={asking} onAnswered={() => setAsking(false)} />
         )}
 
         {m.notes ? (
@@ -180,6 +214,113 @@ function MilestoneDetail({ milestone: m }: { milestone: Milestone }) {
         }
       />
     </Screen>
+  );
+}
+
+/** A lodged visa, still waiting: the lodged date, how long so far, and "it was granted". */
+function Waiting({
+  milestone: m,
+  onGranted,
+  marking,
+}: {
+  milestone: Milestone;
+  onGranted: () => void;
+  marking: boolean;
+}) {
+  const { t } = useTranslation();
+  const lodged = m.lodged_on ?? '';
+  return (
+    <View style={styles.group}>
+      <Card flush>
+        <Row label={t('journey.detail.lodged')} value={formatDay(lodged)} />
+        <Divider />
+        <Row
+          label={t('journey.detail.waited')}
+          value={t('journey.detail.waitedValue', { count: Math.max(0, -daysUntil(lodged)) })}
+        />
+      </Card>
+      <Button
+        label={t('journey.detail.markGranted')}
+        variant="secondary"
+        icon="check"
+        fullWidth
+        loading={marking}
+        onPress={onGranted}
+      />
+    </View>
+  );
+}
+
+/**
+ * For visa stamps: the "add your dates to the stats?" card when we're asking, or a
+ * thank-you once shared, and a link to the stats for the subclass.
+ */
+function VisaStatsLink({
+  milestone: m,
+  asking,
+  onAnswered,
+}: {
+  milestone: Milestone;
+  asking: boolean;
+  onAnswered: () => void;
+}) {
+  const { t } = useTranslation();
+  const share = useSetShareStats();
+  const [thanked, setThanked] = useState(false);
+  if (!m.visa_subclass) return null;
+  const subclass = m.visa_subclass;
+
+  return (
+    <View style={styles.group}>
+      {asking && canShareStats(m) && !m.share_stats ? (
+        <Card>
+          <View style={styles.group}>
+            <Text variant="label" color="rust">
+              {t('visaStats.askEyebrow')}
+            </Text>
+            <Text variant="heading">{t('visaStats.askTitle', { subclass })}</Text>
+            <Text variant="body">{t('visaStats.askBody')}</Text>
+            {share.isError && (
+              <Text variant="meta" color="rust" accessibilityLiveRegion="polite">
+                {t('common.error')}
+              </Text>
+            )}
+            <Button
+              label={t('visaStats.askShare')}
+              icon="check"
+              fullWidth
+              loading={share.isPending}
+              onPress={() =>
+                share.mutate(
+                  { id: m.id, share: true },
+                  {
+                    onSuccess: () => {
+                      setThanked(true);
+                      onAnswered();
+                    },
+                  },
+                )
+              }
+            />
+            <Button
+              label={t('visaStats.askLater')}
+              variant="secondary"
+              fullWidth
+              onPress={onAnswered}
+            />
+          </View>
+        </Card>
+      ) : thanked ? (
+        <Notice eyebrow={t('visaStats.askEyebrow')} body={t('visaStats.askDone')} tone="sky" />
+      ) : null}
+      <Card flush>
+        <ListRow
+          icon="calendar"
+          title={t('journey.detail.seeStats', { subclass })}
+          onPress={() => router.push({ pathname: '/visa-stats', params: { subclass } })}
+        />
+      </Card>
+    </View>
   );
 }
 

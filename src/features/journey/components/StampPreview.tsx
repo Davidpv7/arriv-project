@@ -23,7 +23,8 @@ export function StampPreview() {
         stamp={{
           kind: s.kind,
           title,
-          happened_on: s.status === 'done' ? s.happenedOn : s.dueOn,
+          happened_on:
+            s.status === 'done' ? s.happenedOn : s.status === 'upcoming' ? s.dueOn : null,
           visa_subclass: /^\d{3}$/.test(s.visaSubclass.trim()) ? s.visaSubclass.trim() : null,
           place: s.place.trim() || null,
         }}

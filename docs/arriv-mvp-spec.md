@@ -217,13 +217,18 @@ Upload: the app picks the document id, uploads to `{owner_id}/{id}`, then insert
 | place | text null | e.g. "SYD" on arrival stamp |
 | notes | text null | private, ≤ 2000 |
 | visibility | visibility | default `private` (controls who sees the stamp on the profile) |
+| lodged_on | date null | visa only: the day the application was lodged |
+| share_stats | boolean | default `false`: count this visa in the anonymous visa stats (needs `lodged_on` and `visa_subclass`) |
 | created_at, updated_at | timestamptz | |
 
-Rules: a done stamp has `happened_on` (no due or reminder date); an upcoming item has `due_on`, and `remind_on` (if set) is on or before it. `reminded_at` records when the reminder was sent and is cleared when `remind_on` changes. Others never read this table: `get_stamps(user)` returns only done stamps' faces (kind, title, date, subclass, place) as their visibility allows, never notes, upcoming items or reminders.
+Rules: a done stamp has `happened_on` (no due or reminder date); an upcoming item has either `due_on` (with `remind_on`, if set, on or before it) or, for a visa that's lodged and still waiting, `lodged_on` and no due date or reminder. `lodged_on` is on or before `happened_on`. Marking a waiting visa as granted turns it into a done stamp and keeps the lodged date. `reminded_at` records when the reminder was sent and is cleared when `remind_on` changes. Others never read this table: `get_stamps(user)` returns only done stamps' faces (kind, title, date, subclass, place) as their visibility allows, never notes, upcoming items or reminders.
 
 **`milestone_documents`**: `milestone_id`, `document_id`, `user_id` (PK on the pair). Composite foreign keys make both belong to the same user; owner-only RLS.
 
 **Journey updates**: `posts.milestone_id` plus `posts.stamp jsonb`, a snapshot of the stamp's face that the database fills when the post is made (only from the author's own done stamp). Readers see the stamp, never the milestone row or its documents.
+
+### 3.6a Visa stats (added 28 Nov 2026)
+Member-reported waiting times per visa subclass, from visa stamps whose owners turned on `share_stats` (they're asked once, right after adding a visa with a lodged date, and can switch it off when editing the stamp). `get_visa_stats(subclass)` (security definer, signed-in only) returns totals only: people waiting, granted in the last 7 and 30 days, wait days (median and quartiles) for grants in the last 180 days, grants per week for 12 weeks, and waiting counts by month lodged. **Any figure built from fewer than 5 people comes back as null.** No ids, names or single dates are ever returned. The screen (`/visa-stats`, a Home shortcut and a link on visa stamps) always says the figures are reported by members and not official, links to Home Affairs' official processing times, and lists journey updates that share a visa stamp of the same subclass (normal post rules apply, so people can like and comment).
 
 ### 3.7 Visa guide (removed from v1)
 Removed on 26 Nov 2026 (see §9). There is no `visas` table. The work-in-progress version (tickets, admin entry, Home Affairs links) is kept in a local git stash named "Phase 6 visa guide (removed from v1…)" in case it returns.
@@ -294,6 +299,7 @@ Helper SQL functions (`security definer`, `stable`, in a private schema):
 | backpack_folders, documents | **Owner only** | **Owner only** |
 | milestones | Owner only; others see done stamps' faces through `get_stamps()` if `visibility` allows | Owner only |
 | milestone_documents | Owner only | Owner only, both rows owned |
+| visa stats | Totals only, through `get_visa_stats()`, from opted-in stamps, groups of 5+ | Owner sets `share_stats` on their own stamp |
 | reports | Reporter reads own; admin reads all (the reported person never sees reports) | Insert: any signed-in user, only what they can see; resolve: admin via `resolve_report` |
 | notifications | Owner | System (service role / triggers); owner updates `read_at` |
 | push_tokens | Owner | Via `register_push_token`; owner deletes |
@@ -444,7 +450,8 @@ Each phase: migrations → RLS → generated types → screens → tests. Don't 
 - ~~Journey reminders: server push or on-device? (Phase 5)~~ **Decided 26 Nov 2026:** real server push, sent at 9am in the person's city (from their profile; Sydney time if unknown). EAS project `@jdavid07/arriv`.
 - ~~Can upcoming items (e.g. visa expiry) show on a profile? (Phase 5)~~ **Decided 26 Nov 2026:** no. Only done stamps are ever shown to others, and only as their visibility allows.
 - **Deferred 26 Nov 2026:** the real-phone push check for Phase 5 (and the Apple Developer / Firebase push credentials it needs) moves to Phase 8 launch prep. Everything else in Phase 5 is built and tested; the server side was verified against Expo's push service.
-- **Home shortcuts (26 Nov 2026):** a row of large stamps fits three on a phone. v1: Journey and Passport. Lawyers (after v1) becomes the third.
+- **Home shortcuts (26 Nov 2026):** a row of large stamps fits three on a phone. v1: Journey and Passport. Lawyers (after v1) becomes the third. **Updated 28 Nov 2026:** Visa stats takes the third slot; Lawyers will need a new place.
+- **Visa stats (28 Nov 2026):** added before launch. Waiting times reported by members are allowed (unlike official fees, times or rules) because they're labelled as not official, opt-in per stamp, and only shown for groups of 5 or more. See §3.6a.
 - ~~Visa guide: keep it?~~ **Decided 26 Nov 2026:** removed from v1. Visa rules, fees and processing times change often, and there's no official feed to pull them from, so a hand-written guide would go stale and could mislead. Profiles still show a person's visa subclass, crews can be about a visa, and Journey has visa stamps; none of these claim official facts.
 - **Phase 8 decisions (26 Nov 2026):** web app and the public legal pages are hosted on **Vercel** (project `arriv`, linked to GitHub: merges to `main` deploy, pull requests get previews), at **https://arrivsocial.com** (domain at Namecheap; `www` redirects to it; the old `arriv-sable.vercel.app` still works). Contact address: `hello@arrivsocial.com`, forwarded by Namecheap to `arrivsocial.app@gmail.com`. App icon: the tangerine perforated stamp with a navy plane on navy (`docs/design/app-icon.svg`). Arriv is **18+**. Privacy policy, terms and community guidelines are drafted at `/privacy`, `/terms`, `/guidelines` (public, no sign-in) and marked draft until a lawyer reviews them; operator name and ABN are placeholders; terms use **New South Wales** law. Apple Developer and Google Play enrolment come later; store work waits for them.
 - **Desktop web (27 Nov 2026):** on screens 1024px and wider the same app switches layout (mockups in `docs/design/web-mockups`): a navy sidebar replaces the tab bar (same navigator, `tabBarPosition: 'left'`); Home has a right column (boarding pass, shortcuts, suggested crews, latest notifications); Chat and Communities are list + detail panes (`?c=` on the tab, or the detail route, shows both); Profile and Backpack use two columns; signed-out visitors get a landing page. Shared components hold all logic; only arrangement differs. Phones and phone-width web are unchanged. Browser-tab titles per section and link previews (`public/index.html`, `public/og-image.png`) are web-only.

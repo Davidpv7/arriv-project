@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Chip, DateField, Input, Text } from '@/components/ds';
+import { Button, Card, Chip, DateField, Input, SwitchRow, Text } from '@/components/ds';
 import {
+  canShareStats,
   MILESTONE_KINDS,
   NOTES_MAX,
   PLACE_MAX,
   SUBCLASS_KINDS,
   TITLE_MAX,
   milestoneFormSchema,
+  type FormStatus,
   type MilestoneFormInput,
   type MilestoneFormValues,
 } from '@/features/journey/rules';
@@ -41,7 +43,7 @@ export function MilestoneForm({ initial, saving, saveError, onSubmit }: Props) {
   };
 
   const submit = () => {
-    const parsed = milestoneFormSchema.safeParse(v);
+    const parsed = milestoneFormSchema.safeParse({ ...v, status });
     if (!parsed.success) {
       const next: Errors = {};
       for (const issue of parsed.error.issues) {
@@ -54,7 +56,20 @@ export function MilestoneForm({ initial, saving, saveError, onSubmit }: Props) {
     onSubmit(parsed.data);
   };
 
-  const done = v.status === 'done';
+  const visa = v.kind === 'visa';
+  // "Still waiting" is only for visas.
+  const status: FormStatus = !visa && v.status === 'waiting' ? 'done' : v.status;
+  const statuses: FormStatus[] = visa ? ['done', 'waiting', 'upcoming'] : ['done', 'upcoming'];
+  const statusLabel = {
+    done: t(visa ? 'journey.form.statusGranted' : 'journey.form.statusDone'),
+    waiting: t('journey.form.statusWaiting'),
+    upcoming: t('journey.form.statusUpcoming'),
+  };
+  const lodgedOn = visa && status !== 'upcoming' ? v.lodgedOn : null;
+  const statsAllowed = canShareStats({
+    lodged_on: lodgedOn,
+    visa_subclass: /^\d{3}$/.test(v.visaSubclass.trim()) ? v.visaSubclass : null,
+  });
 
   return (
     <View style={styles.stack}>
@@ -88,28 +103,39 @@ export function MilestoneForm({ initial, saving, saveError, onSubmit }: Props) {
           {t('journey.form.status')}
         </Text>
         <View style={styles.chips} accessibilityRole="radiogroup">
-          <Chip
-            label={t('journey.form.statusDone')}
-            selected={done}
-            onPress={() => set('status', 'done')}
-          />
-          <Chip
-            label={t('journey.form.statusUpcoming')}
-            selected={!done}
-            onPress={() => set('status', 'upcoming')}
-          />
+          {statuses.map((st) => (
+            <Chip
+              key={st}
+              label={statusLabel[st]}
+              selected={status === st}
+              onPress={() => set('status', st)}
+            />
+          ))}
         </View>
       </View>
 
-      {done ? (
+      {status === 'done' && (
         <DateField
-          label={t('journey.form.happenedOn')}
+          label={t(visa ? 'journey.form.grantedOn' : 'journey.form.happenedOn')}
           value={v.happenedOn}
           onChange={(date) => set('happenedOn', date)}
           parts={dateParts}
           error={errorText(errors.happenedOn)}
         />
-      ) : (
+      )}
+      {visa && status !== 'upcoming' && (
+        <DateField
+          label={t(
+            status === 'waiting' ? 'journey.form.lodgedOn' : 'journey.form.lodgedOnOptional',
+          )}
+          value={v.lodgedOn}
+          onChange={(date) => set('lodgedOn', date)}
+          parts={dateParts}
+          hint={status === 'done' ? t('journey.form.lodgedHint') : undefined}
+          error={errorText(errors.lodgedOn)}
+        />
+      )}
+      {status === 'upcoming' && (
         <>
           <DateField
             label={t('journey.form.dueOn')}
@@ -127,6 +153,11 @@ export function MilestoneForm({ initial, saving, saveError, onSubmit }: Props) {
             error={errorText(errors.remindOn)}
           />
         </>
+      )}
+      {errors.status && (
+        <Text variant="meta" color="rust">
+          {errorText(errors.status)}
+        </Text>
       )}
 
       {SUBCLASS_KINDS.includes(v.kind) && (
@@ -163,7 +194,21 @@ export function MilestoneForm({ initial, saving, saveError, onSubmit }: Props) {
         error={errorText(errors.notes)}
       />
 
-      {done && (
+      {visa && status !== 'upcoming' && (
+        <View style={styles.group}>
+          <Card flush>
+            <SwitchRow
+              label={t('visaStats.switchLabel')}
+              description={statsAllowed ? t('visaStats.switchHint') : t('visaStats.switchNeeds')}
+              value={v.shareStats && statsAllowed}
+              disabled={!statsAllowed}
+              onValueChange={(on) => set('shareStats', on)}
+            />
+          </Card>
+        </View>
+      )}
+
+      {status !== 'upcoming' && (
         <View style={styles.group}>
           <Text variant="label" color="muted">
             {t('journey.form.visibilityLabel')}

@@ -3,6 +3,7 @@ import { todayIso } from '@/features/profile/places';
 import {
   daysUntil,
   formatDay,
+  formStatus,
   milestoneFormSchema,
   splitJourney,
   stampInk,
@@ -22,6 +23,8 @@ const base: MilestoneFormInput = {
   place: '',
   notes: '',
   visibility: 'private',
+  lodgedOn: null,
+  shareStats: false,
 };
 
 const issues = (input: MilestoneFormInput) => {
@@ -121,6 +124,60 @@ describe('toMilestoneRow', () => {
       remind_on: '2099-02-15',
       visa_subclass: '500',
     });
+  });
+});
+
+describe('lodged visas and stats', () => {
+  const waiting = {
+    ...base,
+    status: 'waiting' as const,
+    happenedOn: null,
+    lodgedOn: '2026-03-01',
+    shareStats: true,
+  };
+
+  it('a waiting visa needs a lodged date in the past', () => {
+    expect(issues(waiting)).toEqual([]);
+    expect(issues({ ...waiting, lodgedOn: null })).toEqual([
+      'lodgedOn:journey.errors.dateRequired',
+    ]);
+    expect(issues({ ...waiting, lodgedOn: '2099-01-01' })).toEqual([
+      'lodgedOn:journey.errors.lodgedFuture',
+    ]);
+    expect(issues({ ...waiting, kind: 'work' })).toEqual(['status:journey.errors.waitingVisa']);
+  });
+
+  it('a granted visa was lodged on or before the grant', () => {
+    expect(issues({ ...base, lodgedOn: '2026-01-01' })).toEqual([]);
+    expect(issues({ ...base, lodgedOn: '2026-03-01' })).toEqual([
+      'lodgedOn:journey.errors.lodgedAfterGrant',
+    ]);
+  });
+
+  it('saves waiting as upcoming with no due date, and shares only when it can', () => {
+    expect(toMilestoneRow(milestoneFormSchema.parse(waiting))).toMatchObject({
+      status: 'upcoming',
+      due_on: null,
+      remind_on: null,
+      lodged_on: '2026-03-01',
+      share_stats: true,
+    });
+    // No subclass: nothing to count it under.
+    expect(
+      toMilestoneRow(milestoneFormSchema.parse({ ...waiting, visaSubclass: '' })).share_stats,
+    ).toBe(false);
+    // A due item (e.g. visa expiry) never keeps a lodged date.
+    const due = { ...waiting, status: 'upcoming' as const, dueOn: '2099-03-15' };
+    expect(toMilestoneRow(milestoneFormSchema.parse(due))).toMatchObject({
+      lodged_on: null,
+      share_stats: false,
+    });
+  });
+
+  it('reads a lodged upcoming item back as waiting', () => {
+    expect(formStatus({ status: 'upcoming', lodged_on: '2026-03-01' })).toBe('waiting');
+    expect(formStatus({ status: 'upcoming', lodged_on: null })).toBe('upcoming');
+    expect(formStatus({ status: 'done', lodged_on: '2026-03-01' })).toBe('done');
   });
 });
 
