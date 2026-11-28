@@ -9,7 +9,10 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.arriv"
+      "bundleIdentifier": "app.arriv",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "app.arriv",
